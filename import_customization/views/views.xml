@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="import_customization.list">
+      <field name="name">import_customization list</field>
+      <field name="model">import_customization.import_customization</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="import_customization.action_window">
+      <field name="name">import_customization window</field>
+      <field name="res_model">import_customization.import_customization</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="import_customization.action_server">
+      <field name="name">import_customization server</field>
+      <field name="model_id" ref="model_import_customization_import_customization"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="import_customization" id="import_customization.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="import_customization.menu_1" parent="import_customization.menu_root"/>
+    <menuitem name="Menu 2" id="import_customization.menu_2" parent="import_customization.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="import_customization.menu_1_list" parent="import_customization.menu_1"
+              action="import_customization.action_window"/>
+    <menuitem name="Server to list" id="import_customization" parent="import_customization.menu_2"
+              action="import_customization.action_server"/>
+-->
+  </data>
+</odoo>
