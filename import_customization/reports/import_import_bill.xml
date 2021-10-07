@@ -208,17 +208,18 @@
                         </p>
                     </div>
                 </div>
-            </t>
+            </t>admin@example.com
         </template>
 -->
 
         <template id="import_import_bill">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
-                    <t t-call="web.external_layout">
+                    <t t-call="web.basic_layout">
                         <div class="header">
-                            <!--  code -->
+                            <!-- code -->
                         </div>
+
                         <div class="page">
                             <div class="oe_structure"/>
 
@@ -245,7 +246,7 @@
                                     <span t-field="o.invoice_date"/>
                                     <br/>
                                     <strong>Fecha de Vencimiento:</strong>
-                                    <span t-field="o.invoice_payment_term_id"/>
+                                    <span t-field="o.invoice_date_due"/>
                                     <br/>
                                     <strong>Nota de Entrega:</strong>
 <!--                                    <span t-field="o.name"/>-->
@@ -402,6 +403,88 @@
                                     </div>
                                 </div>
                             </div>
+                            <div t-if="o.currency_id.name == 'USD'" name="payment_currency">
+                                <br/>
+                                <br/>
+                                <p> TASA DE CAMBIO DE REFERENCIA SMC DEL BCV AL <b><span t-field="o.invoice_date"/></b></p>
+                                <div class="row justify-content-md-left">
+                                    <div class="col-4">
+                                        <b>Subtotal Bs </b>
+                                    </div>
+                                    <div class="col-6">
+                                        <p><span t-field="o.amount_untaxed" /> x <span t-field="o.rate" /> = <span t-field="o.amount_untaxed_rate" /></p>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-md-left">
+                                    <div class="col-4">
+                                        <b>IVA 16% Bs </b>
+                                    </div>
+                                    <div class="col-6">
+                                        <p><span t-field="o.amount_tax" /> x  <span t-field="o.rate" /> = <span t-field="o.amount_tax_rate" /></p>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-md-left">
+                                    <div class="col-4">
+                                        <b>Total Bs </b>
+                                    </div>
+                                    <div class="col-6">
+                                        <p><span t-field="o.amount_total" /> x  <span t-field="o.rate" /> = <span t-field="o.amount_total_rate" /></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--<div class="clearfix" t-if="o.currency_id.name == 'USD'" name="payment_currency">
+
+                                <p> TASA DE CAMBIO DE REFERENCIA SMC DEL BCV AL <b><span t-field="o.invoice_date"/></b></p>
+                                &lt;!&ndash;<p><b>Subtotal Bs  </b><span t-field="o.amount_untaxed" /> x  <span t-field="o.amount_untaxed" /> = <span t-field="o.amount_untaxed" /> </p>
+                                <p><b>IVA 16% Bs  </b><span t-field="o.amount_tax" /> x  <span t-field="o.amount_tax" /> = <span t-field="o.amount_tax" /> </p>
+                                <p><b>Total Bs  </b><span t-field="o.amount_total" /> x  <span t-field="o.amount_total" /> = <span t-field="o.amount_total" /> </p>&ndash;&gt;
+
+
+                                <div class="row">
+                                    <p> TASA DE CAMBIO DE REFERENCIA SMC DEL BCV AL <b><span t-field="o.invoice_date"/></b></p>
+                                    <div class="col">
+                                        <b>Subtotal Bs  </b>
+                                    </div>
+                                    <div class="col">
+                                        <span t-field="o.amount_untaxed" /> x  <span t-field="o.amount_untaxed" /> = <span t-field="o.amount_untaxed" />
+                                    </div>
+                                </div>
+
+
+
+                                &lt;!&ndash; <table class="table table-sm o_main_table" name="invoice_line_table_currency_change">
+                                    <tbody>
+                                        <tr class="border-black o2_subtotal" style="">
+                                            <td><strong>Subtotal Bs</strong></td>
+                                            <td class="text-letf">
+                                                <p>
+                                                    <span t-field="o.amount_untaxed" /> x  <span t-field="o.amount_untaxed" /> = <span t-field="o.amount_untaxed" />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr style="">
+                                            <td><strong>IVA 16% Bs</strong></td>
+                                            <td class="text-letf">
+                                                <p>
+                                                    <span t-field="o.amount_tax" /> x  <span t-field="o.amount_tax" /> = <span t-field="o.amount_tax" />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr style="">
+                                            <td><strong>Total Bs</strong></td>
+                                            <td class="text-letf">
+                                                <p>
+                                                    <span t-field="o.amount_total" /> x  <span t-field="o.amount_total" /> = <span t-field="o.amount_total" />
+                                                </p>
+                                            </td>
+                                        </tr>
+
+
+                                    </tbody>
+                                </table>&ndash;&gt;
+
+                            </div>-->
 
                             <div class="oe_structure"/>
                         </div>

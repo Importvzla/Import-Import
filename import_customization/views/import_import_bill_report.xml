@@ -9,6 +9,7 @@
         <field name="report_name">import_customization.import_import_bill</field>
         <field name="report_file">import_customization.import_import_bill</field>
         <field name="print_report_name">'Factura - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="invoice_paperformat"/>
     </record>
   </data>
 </odoo>
