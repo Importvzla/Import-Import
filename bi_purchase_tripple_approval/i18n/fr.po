@@ -1,0 +1,115 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* bi_purchase_tripple_approval
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-03-26 11:44+0000\n"
+"PO-Revision-Date: 2021-03-26 11:44+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: bi_purchase_tripple_approval
+#: model_terms:ir.ui.view,arch_db:bi_purchase_tripple_approval.view_purchase_order_inherit
+msgid "Approve PO"
+msgstr "PO goedkeuren"
+
+#. module: bi_purchase_tripple_approval
+#: model_terms:ir.ui.view,arch_db:bi_purchase_tripple_approval.view_purchase_order_inherit
+msgid "Cancel"
+msgstr "Annuleer"
+
+#. module: bi_purchase_tripple_approval
+#: model:ir.model.fields.selection,name:bi_purchase_tripple_approval.selection__purchase_order__state__cancel
+msgid "Cancelled"
+msgstr "Annulé"
+
+#. module: bi_purchase_tripple_approval
+#: model:ir.model,name:bi_purchase_tripple_approval.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
+
+#. module: bi_purchase_tripple_approval
+#: model:ir.model,name:bi_purchase_tripple_approval.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paramètres de config"
+
+#. module: bi_purchase_tripple_approval
+#: model_terms:ir.ui.view,arch_db:bi_purchase_tripple_approval.view_purchase_order_inherit
+msgid "Confirm Order"
+msgstr "Bevestig bestelling"
+
+#. module: bi_purchase_tripple_approval
+#: model:res.groups,name:bi_purchase_tripple_approval.purchase_CEO_limits_director_id
+msgid "Director(Purchase) "
+msgstr "Directeur (Aankoop)"
+
+#. module: bi_purchase_tripple_approval
+#: model:res.groups,name:bi_purchase_tripple_approval.purchase_leader_limits_finance_id
+msgid "Finance Manager(Purchase) "
+msgstr "Finance Manager (Aankoop)"
+
+#. module: bi_purchase_tripple_approval
+#: model:ir.model.fields.selection,name:bi_purchase_tripple_approval.selection__purchase_order__state__done
+msgid "Locked"
+msgstr "Bloqué"
+
+#. module: bi_purchase_tripple_approval
+#: model:ir.model,name:bi_purchase_tripple_approval.model_purchase_order
+#: model:ir.model.fields.selection,name:bi_purchase_tripple_approval.selection__purchase_order__state__purchase
+msgid "Purchase Order"
+msgstr "Commande fournisseur"
+
+#. module: bi_purchase_tripple_approval
+#: model_terms:ir.ui.view,arch_db:bi_purchase_tripple_approval.view_res_config_purchase_inherit
+msgid "Purchase Order Second Approval"
+msgstr "Aankooporder tweede goedkeuring"
+
+#. module: bi_purchase_tripple_approval
+#: model:ir.model.fields.selection,name:bi_purchase_tripple_approval.selection__purchase_order__state__draft
+msgid "RFQ"
+msgstr "Demande de prix"
+
+#. module: bi_purchase_tripple_approval
+#: model:ir.model.fields.selection,name:bi_purchase_tripple_approval.selection__purchase_order__state__sent
+msgid "RFQ Sent"
+msgstr "Demande de prix envoyée"
+
+#. module: bi_purchase_tripple_approval
+#: model:ir.model.fields,field_description:bi_purchase_tripple_approval.field_res_company__second_approval
+#: model:ir.model.fields,field_description:bi_purchase_tripple_approval.field_res_config_settings__second_approval
+msgid "Second Approval"
+msgstr "Tweede goedkeuring"
+
+#. module: bi_purchase_tripple_approval
+#: model:ir.model.fields,field_description:bi_purchase_tripple_approval.field_res_company__second_approval_minimum_amount
+#: model:ir.model.fields,field_description:bi_purchase_tripple_approval.field_res_config_settings__second_approval_minimum_amount
+msgid "Second Approval Minimum Amount"
+msgstr "Tweede goedkeuring minimumbedrag"
+
+#. module: bi_purchase_tripple_approval
+#: code:addons/bi_purchase_tripple_approval/models/inherited_purchase_config_setting.py:0
+#, python-format
+msgid "Second approval amount must be greater than Order approval amount"
+msgstr "Tweede goedkeuringsbedrag moet groter zijn dan Ordergoedkeuringsbedrag"
+
+#. module: bi_purchase_tripple_approval
+#: model:ir.model.fields,field_description:bi_purchase_tripple_approval.field_purchase_order__state
+msgid "Status"
+msgstr "État"
+
+#. module: bi_purchase_tripple_approval
+#: model:ir.model.fields.selection,name:bi_purchase_tripple_approval.selection__purchase_order__state__to_approve
+msgid "To Approve"
+msgstr "À approuver"
+
+#. module: bi_purchase_tripple_approval
+#: model:ir.model.fields.selection,name:bi_purchase_tripple_approval.selection__purchase_order__state__to_second_approval
+msgid "To Second Approval"
+msgstr "Tot tweede goedkeuring"
