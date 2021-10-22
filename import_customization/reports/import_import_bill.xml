@@ -220,7 +220,8 @@
                             <!-- code -->
                         </div>
 
-                        <div class="page">
+<!--                        <div class="page">-->
+                        <div class="page" style="font-size: 10pt;">
                             <div class="oe_structure"/>
 
                             <div class="row">
@@ -496,6 +497,5 @@
                 </t>
             </t>
         </template>
-
     </data>
 </odoo>
