@@ -13,33 +13,33 @@ class CustomAccountMove(models.Model):
     amount_tax_rate = fields.Float(compute='_compute_amount_tax_rate', store=True)
     amount_total_rate = fields.Float(compute='_compute_amount_total_rate', store=True)
 
-    @api.depends('amount_untaxed', 'rate')
+    @api.depends('amount_untaxed', 'x_tasa')
     def _compute_amount_untaxed(self):
         for record in self:
             print(record)
             if record.currency_id.name != 'VEF':
                 if record.rate and record.rate != 0:
-                    record.amount_untaxed_rate = record.amount_untaxed * record.rate
+                    record.amount_untaxed_rate = record.amount_untaxed * record.x_tasa
                 else:
                     record.amount_untaxed_rate = False
 
-    @api.depends('amount_tax', 'rate')
+    @api.depends('amount_tax', 'x_tasa')
     def _compute_amount_tax_rate(self):
         for record in self:
             print(record)
             if record.currency_id.name != 'VEF':
                 if record.rate and record.rate != 0:
-                    record.amount_tax_rate = record.amount_tax * record.rate
+                    record.amount_tax_rate = record.amount_tax * record.x_tasa
                 else:
                     record.amount_tax_rate = False
 
-    @api.depends('amount_total', 'rate')
+    @api.depends('amount_total', 'x_tasa')
     def _compute_amount_total_rate(self):
         for record in self:
             print(record)
             if record.currency_id.name != 'VEF':
                 if record.rate and record.rate != 0:
-                    record.amount_total_rate = record.amount_total * record.rate
+                    record.amount_total_rate = record.amount_total * record.x_tasa
                 else:
                     record.amount_total_rate = False
     # picking_out = fields.Char('picking id', compute='_search_picking_out', store=True)
