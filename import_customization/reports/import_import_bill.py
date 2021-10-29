@@ -4,7 +4,7 @@ from odoo.exceptions import ValidationError
 
 #class TaxBill(models.TransientModel):
 class ImportImportBill(models.AbstractModel):
-    _name = 'report.import_customization.import_import_bill'
+    _name = 'report.import_customization.custom_invoice'
     _description = 'Factura fiscal import import pdf'
 
     @api.model

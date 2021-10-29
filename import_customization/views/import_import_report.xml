@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+  <data>
+    <record id="invoice_report" model="ir.actions.report">
+        <field name="name">Facturación</field>
+        <field name="model">account.move</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">import_customization.custom_invoice</field>
+        <field name="report_file">import_customization.custom_invoice</field>
+        <field name="print_report_name">'Factura - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="invoice_paperformat"/>
+    </record>
+
+    <record id="islr_voucher_report" model="ir.actions.report">
+        <field name="name">Comprobante Retención ISLR</field>
+        <field name="model">account.move</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">import_customization.islr_voucher</field>
+        <field name="report_file">import_customization.islr_voucher</field>
+        <field name="print_report_name">'Comprobante ISLR - %s' % (object.name)</field>
+    </record>
+
+  </data>
+</odoo>

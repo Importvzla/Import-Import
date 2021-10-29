@@ -27,8 +27,9 @@
         # 'security/ir.model.access.csv',
         'data/invoice_paper_format.xml',
         'views/views.xml',
-        'views/import_import_bill_report.xml',
+        'views/import_import_report.xml',
         'reports/import_import_bill.xml',
+        'reports/import_import_ISLR_voucher.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
