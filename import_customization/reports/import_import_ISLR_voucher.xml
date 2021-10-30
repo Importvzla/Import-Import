@@ -26,7 +26,7 @@
                                     <div class="text-center" style="font-size: 10pt;">
                                         <span>Fecha de Retención</span>
                                         <br/>
-                                        <span t-field="o.invoice_date"/>
+                                        <span t-field="o.date"/>
                                     </div>
                                 </div>
                             </div>
@@ -160,42 +160,59 @@
                                             </tr>
                                         </thead>
                                         <tbody class="invoice_tbody">
-                                            <tr>
-                                                <td class="text-center">
-                                                    <span t-field="o.invoice_date"/>
-                                                </td>
-                                                <td class="text-center">
-                                                    <span t-field="o.ref"/>
-                                                </td>
-                                                <td class="text-center">
-                                                    <span t-field="o.x_studio_nro_control"/>
-                                                </td>
-                                                <td class="text-center">
-                                                    <span t-field="o.amount_total"/>
-                                                </td>
-                                                <td class="text-center">
-                                                    <span t-field="o.invoice_date"/>
-                                                </td>
-                                                <td class="text-center">
-                                                    <span t-field="o.invoice_date"/>
-                                                </td>
-                                                <td class="text-center">
-                                                    <span t-field="o.invoice_date"/>
-                                                </td>
-                                                <td class="text-center">
-                                                    <span t-field="o.invoice_date"/>
-                                                </td>
-                                                <td class="text-center">
-                                                    <span t-field="o.invoice_date"/>
-                                                </td>
-                                                <td class="text-center">
-                                                    <span t-field="o.invoice_date"/>
-                                                </td>
-
-                                            </tr>
+                                            <t t-foreach="data_islr" t-as="islr">
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <span t-esc="islr['payment_date']"/>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span t-esc="islr['document_number']"/>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span t-esc="islr['control_No']"/>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span t-esc="islr['amount_document']"/>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span t-esc="islr['amount_paid']"/>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span t-esc="islr['amount_obt']"/>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span t-esc="islr['retention_percentage']"/>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span t-esc="islr['ret_cod']"/>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span t-esc="islr['description']"/>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span t-esc="islr['tax_withheld']"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
                                         </tbody>
 
                                     </table>
+
+                                    <div class="clearfix">
+                                        <div id="total" class="row">
+                                            <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ml-auto">
+                                                <table class="table table-sm" style="page-break-inside: avoid;">
+                                                    <tr class="border-black o_subtotal" style="">
+                                                        <td><strong>Total Retenido al Proveedor:</strong></td>
+                                                        <td class="text-right">
+                                                            <span t-esc="tax_withheld"/>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
 
