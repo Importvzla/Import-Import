@@ -25,5 +25,17 @@
         <field name="print_report_name">'Comprobante ISLR - %s' % (object.name)</field>
     </record>
 
+    <record id="iva_voucher_report" model="ir.actions.report">
+        <field name="name">Comprobante Retención IVA</field>
+        <field name="model">account.move</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">import_customization.iva_voucher</field>
+        <field name="report_file">import_customization.iva_voucher</field>
+        <field name="print_report_name">'Comprobante IVA - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="voucher_iva_paperformat"/>
+    </record>
+
   </data>
 </odoo>

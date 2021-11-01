@@ -30,6 +30,7 @@
         'views/import_import_report.xml',
         'reports/import_import_bill.xml',
         'reports/import_import_ISLR_voucher.xml',
+        'reports/import_import_IVA_voucher.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
