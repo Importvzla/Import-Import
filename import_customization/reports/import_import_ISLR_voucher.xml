@@ -102,7 +102,7 @@
                                             <div class="text-left">
                                                 <strong>PERSONA:</strong>
                                                 <br/>
-<!--                                                <span t-field="o.invoice_date"/>-->
+                                                <span t-field="o.partner_id.x_tipopersona"/>
                                             </div>
                                         </div>
                                         <div class="col-9">
