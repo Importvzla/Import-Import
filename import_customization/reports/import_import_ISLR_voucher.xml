@@ -189,7 +189,7 @@
                                                         <span t-esc="islr['description']"/>
                                                     </td>
                                                     <td class="text-center">
-                                                        <span t-esc="islr['tax_withheld']"/>
+                                                        <span t-esc="islr['tax_withheld_line']"/>
                                                     </td>
                                                 </tr>
                                             </t>

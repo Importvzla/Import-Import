@@ -24,25 +24,31 @@ class ImportImportIslrVoucher(models.AbstractModel):
             'retention_percentage': 0.0,
             'ret_cod': '',
             'description': '',
-            'tax_withheld': 0.0,
+            'tax_withheld_line': 0.0,
         }
-
 
         for ili in docs.invoice_line_ids:
             for ti in ili.tax_ids:
                 if ti.x_tipoimpuesto == 'ISLR':
                     line_id = docs.line_ids.search([('name', '=', ti.name), ('move_id', '=', docs.id)])
                     print(line_id)
+                    if docs.x_tipodoc == 'Nota de Crédito':
+                        tax_withheld_line = line_id.credit
+                        tax_withheld += line_id.credit
+                    else:
+                        tax_withheld_line = line_id.debit
+                        tax_withheld += line_id.debit
+
                     islr_voucher_line.update(
                         amount_document=ili.price_subtotal,
                         amount_obt=ili.price_subtotal,
                         retention_percentage=ti.amount,
                         ret_cod=ti.name[:6],
                         description=ti.name[7:],
-                        tax_withheld=line_id.debit,
+                        tax_withheld_line=tax_withheld_line,
                     )
                     data_islr.append(islr_voucher_line)
-                    tax_withheld += line_id.debit
+
 
         if not data_islr:
             data_islr.append(islr_voucher_line)

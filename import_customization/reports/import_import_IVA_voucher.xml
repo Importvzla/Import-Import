@@ -37,7 +37,12 @@
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <span  t-field="o.x_ncomprobante"/>
+                                                        <t t-if="o.x_ncomprobante">
+                                                            <span  t-field="o.x_ncomprobante"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span>&#160;</span>
+                                                        </t>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -244,6 +249,7 @@
                                                     <span  t-field="o.ref"/>
                                                 </t>
                                                 <t t-else="">
+                                                    <spa>&#160;</spa>
                                                 </t>
 
                                             </td>
@@ -252,6 +258,7 @@
                                                     <span  t-field="o.x_studio_nro_control"/>
                                                 </t>
                                                 <t t-else="">
+                                                    <span>&#160;</span>
                                                 </t>
 
                                             </td>
@@ -260,6 +267,7 @@
                                                     <span  t-field="o.ref"/>
                                                 </t>
                                                 <t t-else="">
+                                                    <span>&#160;</span>
                                                 </t>
                                             </td>
                                             <td class="text-center">
@@ -267,20 +275,27 @@
                                                     <span  t-field="o.ref"/>
                                                 </t>
                                                 <t t-else="">
+                                                    <span>&#160;</span>
                                                 </t>
                                             </td>
                                             <td class="text-center">
-
+                                                <span t-esc="transaction_type"/>
                                             </td>
                                             <td class="text-center">
                                                 <t t-if="o.x_tipodoc=='Nota de Crédito'">
-                                                    <span  t-field="o.reserved_entry_id"/>
+                                                    <span  t-field="o.reversed_entry_id"/>
                                                 </t>
                                                 <t t-else="">
+                                                    <span>&#160;</span>
                                                 </t>
                                             </td>
                                             <td class="text-center">
-                                                <span t-field="o.amount_total"/>
+                                                <t t-if="amount_total">
+                                                    <span  t-esc="amount_total"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span>&#160;</span>
+                                                </t>
                                             </td>
                                             <td class="text-center">
                                                 <span  t-esc="exempt_sum"/>
@@ -305,7 +320,6 @@
                                                 <hr color="black" style="width: 100%"/>
                                             </td>
                                         </tr>
-                                            <td colspan="8"/>
 
                                         <tr>
                                             <td class="text-center"  colspan="7">
@@ -314,7 +328,12 @@
                                                 <span>Total</span>
                                             </td>
                                             <td class="text-center">
-                                                <span t-field="o.amount_total"/>
+                                                <t t-if="amount_total">
+                                                    <span  t-esc="amount_total"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span>&#160;</span>
+                                                </t>
                                             </td>
                                             <td class="text-center">
                                                 <span  t-esc="exempt_sum"/>
