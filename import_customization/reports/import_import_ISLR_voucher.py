@@ -14,20 +14,32 @@ class ImportImportIslrVoucher(models.AbstractModel):
         data_islr = []
         tax_withheld = 0.0
 
-        islr_voucher_line = {
-            'payment_date': docs.invoice_date,
-            'document_number': docs.ref,
-            'control_No': docs.x_studio_nro_control,
-            'amount_paid': 0.0,
-            'amount_document': 0.0,
-            'amount_obt': 0.0,
-            'retention_percentage': 0.0,
-            'ret_cod': '',
-            'description': '',
-            'tax_withheld_line': 0.0,
-        }
+        # islr_voucher_line = {
+        #     'payment_date': docs.invoice_date,
+        #     'document_number': docs.ref,
+        #     'control_No': docs.x_studio_nro_control,
+        #     'amount_paid': 0.0,
+        #     'amount_document': 0.0,
+        #     'amount_obt': 0.0,
+        #     'retention_percentage': 0.0,
+        #     'ret_cod': '',
+        #     'description': '',
+        #     'tax_withheld_line': 0.0,
+        # }
 
         for ili in docs.invoice_line_ids:
+            islr_voucher_line = {
+                'payment_date': docs.invoice_date,
+                'document_number': docs.ref,
+                'control_No': docs.x_studio_nro_control,
+                'amount_paid': 0.0,
+                'amount_document': 0.0,
+                'amount_obt': 0.0,
+                'retention_percentage': 0.0,
+                'ret_cod': '',
+                'description': '',
+                'tax_withheld_line': 0.0,
+            }
             for ti in ili.tax_ids:
                 if ti.x_tipoimpuesto == 'ISLR':
                     line_id = docs.line_ids.search([('name', '=', ti.name), ('move_id', '=', docs.id)])
@@ -47,10 +59,24 @@ class ImportImportIslrVoucher(models.AbstractModel):
                         description=ti.name[7:],
                         tax_withheld_line=tax_withheld_line,
                     )
+
                     data_islr.append(islr_voucher_line)
+                    break
 
 
         if not data_islr:
+            islr_voucher_line = {
+                'payment_date': docs.invoice_date,
+                'document_number': docs.ref,
+                'control_No': docs.x_studio_nro_control,
+                'amount_paid': 0.0,
+                'amount_document': 0.0,
+                'amount_obt': 0.0,
+                'retention_percentage': 0.0,
+                'ret_cod': '',
+                'description': '',
+                'tax_withheld_line': 0.0,
+            }
             data_islr.append(islr_voucher_line)
 
         print(data_islr)
