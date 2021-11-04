@@ -255,7 +255,7 @@
                                             </td>
                                             <td class="text-center">
                                                 <t t-if="o.x_tipodoc=='Factura'">
-                                                    <span  t-field="o.x_studio_nro_control"/>
+                                                    <span  t-field="o.x_ncontrol"/>
                                                 </t>
                                                 <t t-else="">
                                                     <span>&#160;</span>

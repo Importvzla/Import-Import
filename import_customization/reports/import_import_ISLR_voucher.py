@@ -17,7 +17,7 @@ class ImportImportIslrVoucher(models.AbstractModel):
         # islr_voucher_line = {
         #     'payment_date': docs.invoice_date,
         #     'document_number': docs.ref,
-        #     'control_No': docs.x_studio_nro_control,
+        #     'control_No': docs.x_ncontrol,
         #     'amount_paid': 0.0,
         #     'amount_document': 0.0,
         #     'amount_obt': 0.0,
@@ -31,7 +31,7 @@ class ImportImportIslrVoucher(models.AbstractModel):
             islr_voucher_line = {
                 'payment_date': docs.invoice_date,
                 'document_number': docs.ref,
-                'control_No': docs.x_studio_nro_control,
+                'control_No': docs.x_ncontrol,
                 'amount_paid': 0.0,
                 'amount_document': 0.0,
                 'amount_obt': 0.0,
@@ -68,7 +68,7 @@ class ImportImportIslrVoucher(models.AbstractModel):
             islr_voucher_line = {
                 'payment_date': docs.invoice_date,
                 'document_number': docs.ref,
-                'control_No': docs.x_studio_nro_control,
+                'control_No': docs.x_ncontrol,
                 'amount_paid': 0.0,
                 'amount_document': 0.0,
                 'amount_obt': 0.0,
