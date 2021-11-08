@@ -1,4 +1,5 @@
 from odoo import api, models
+import locale
 from odoo.exceptions import ValidationError
 
 
@@ -32,7 +33,7 @@ class ImportImportIslrVoucher(models.AbstractModel):
                 'payment_date': docs.invoice_date,
                 'document_number': docs.ref,
                 'control_No': docs.x_ncontrol,
-                'amount_paid': 0.0,
+                'amount_paid': '0,0',
                 'amount_document': 0.0,
                 'amount_obt': 0.0,
                 'retention_percentage': 0.0,
@@ -52,12 +53,12 @@ class ImportImportIslrVoucher(models.AbstractModel):
                         tax_withheld += line_id.debit
 
                     islr_voucher_line.update(
-                        amount_document=ili.price_subtotal,
-                        amount_obt=ili.price_subtotal,
-                        retention_percentage=ti.amount,
+                        amount_document=locale.format_string('%10.2f', ili.price_subtotal, grouping=True),
+                        amount_obt=locale.format_string('%10.2f', ili.price_subtotal, grouping=True),
+                        retention_percentage=locale.format_string('%10.2f', ti.amount, grouping=True),
                         ret_cod=ti.name[:6],
                         description=ti.name[7:],
-                        tax_withheld_line=tax_withheld_line,
+                        tax_withheld_line=locale.format_string('%10.2f', tax_withheld_line, grouping=True),
                     )
 
                     data_islr.append(islr_voucher_line)
@@ -69,13 +70,13 @@ class ImportImportIslrVoucher(models.AbstractModel):
                 'payment_date': docs.invoice_date,
                 'document_number': docs.ref,
                 'control_No': docs.x_ncontrol,
-                'amount_paid': 0.0,
-                'amount_document': 0.0,
-                'amount_obt': 0.0,
-                'retention_percentage': 0.0,
+                'amount_paid': '0,0',
+                'amount_document': '0,0',
+                'amount_obt': '0,0',
+                'retention_percentage': '0,0',
                 'ret_cod': '',
                 'description': '',
-                'tax_withheld_line': 0.0,
+                'tax_withheld_line': '0,0',
             }
             data_islr.append(islr_voucher_line)
 
@@ -87,6 +88,6 @@ class ImportImportIslrVoucher(models.AbstractModel):
             'data': data,
             'docs': docs,
             'data_islr': data_islr,
-            'tax_withheld': tax_withheld,
+            'tax_withheld': locale.format_string('%10.2f', tax_withheld, grouping=True),
         }
         return docargs

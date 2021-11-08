@@ -32,22 +32,88 @@
                             </div>
 
                             <br/>
-                            <br/>
 
                             <div>
-                                <div class="text-center" style="font-size: 12pt;">
-                                    <strong>AGENTE DE RETENCIÓN</strong>
+<!--                                <div class="text-center" style="font-size: 10pt;">-->
+<!--                                    <table class="table table-sm table-bordered">-->
+<!--                                        <tr>-->
+<!--                                            <td colspan="4">-->
+<!--                                                <div class="text-center" style="font-size: 12pt;">-->
+<!--                                                    <strong>AGENTE DE RETENCIÓN</strong>-->
+<!--                                                </div>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td>-->
+<!--                                                <div class="text-left">-->
+<!--                                                    <strong>EMPRESA:</strong>-->
+<!--                                                    <br/>-->
+<!--                                                    <span t-field="o.company_id.name"/>-->
+<!--                                                </div>-->
+<!--                                            </td>-->
+<!--                                            <td colspan="3">-->
+<!--                                                <div class="text-left">-->
+<!--                                                    <strong>DIRECCIÓN:</strong>-->
+<!--                                                    <br/>-->
+<!--                                                    <span t-field="o.company_id.street"/>-->
+<!--                                                </div>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td>-->
+<!--                                                <div class="text-left">-->
+<!--                                                    <strong>CIUDAD:</strong>-->
+<!--                                                    <br/>-->
+<!--                                                    <span t-field="o.company_id.city"/>-->
+<!--                                                </div>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <div class="text-left">-->
+<!--                                                    <strong>TELÉFONO:</strong>-->
+<!--                                                    <br/>-->
+<!--                                                    <span t-field="o.company_id.phone"/>-->
+<!--                                                </div>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <div class="text-left">-->
+<!--                                                    <strong>R.I.F.:</strong>-->
+<!--                                                    <br/>-->
+<!--                                                    <span t-field="o.company_id.vat"/>-->
+<!--                                                </div>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <div class="text-left">-->
+<!--                                                    <strong>N.I.T.:</strong>-->
+<!--                                                    <br/>-->
+<!--    &lt;!&ndash;                                                <span t-field="o.invoice_date"/>&ndash;&gt;-->
+<!--                                                </div>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                    </table>-->
+
+<!--                                </div>-->
+
+                                <div style="font-size: 12pt;">
+                                    <div class="row">
+                                        <div class="col" style="border:1px solid black;">
+                                            <div class="text-center">
+                                                <strong>AGENTE DE RETENCIÓN</strong>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+
+
                                 <div style="font-size: 10pt;">
                                     <div class="row">
-                                        <div class="col-3">
+                                        <div class="col-3" style="border-left: 1px solid black; border-right: 1px solid black;">
                                             <div class="text-left">
                                                 <strong>EMPRESA:</strong>
                                                 <br/>
                                                 <span t-field="o.company_id.name"/>
                                             </div>
                                         </div>
-                                        <div class="col-9">
+                                        <div class="col-9" style="border-right: 1px solid black;">
                                             <div class="text-left">
                                                 <strong>DIRECCIÓN:</strong>
                                                 <br/>
@@ -55,30 +121,29 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <br/>
                                     <div class="row">
-                                        <div class="col-3">
+                                        <div class="col-3" style="border:1px solid black;">
                                             <div class="text-left">
                                                 <strong>CIUDAD:</strong>
                                                 <br/>
                                                 <span t-field="o.company_id.city"/>
                                             </div>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-3" style="border:1px solid black;">
                                             <div class="text-left">
                                                 <strong>TELÉFONO:</strong>
                                                 <br/>
                                                 <span t-field="o.company_id.phone"/>
                                             </div>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-3" style="border:1px solid black;">
                                             <div class="text-left">
                                                 <strong>R.I.F.:</strong>
                                                 <br/>
                                                 <span t-field="o.company_id.vat"/>
                                             </div>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-3" style="border:1px solid black;">
                                             <div class="text-left">
                                                 <strong>N.I.T.:</strong>
                                                 <br/>
@@ -92,20 +157,79 @@
                             <br/>
                             <br/>
 
+<!--                            <div>-->
+<!--                                 <div class="text-center" style="font-size: 10pt;">-->
+<!--                                    <table class="table table-sm table-bordered">-->
+<!--                                        <tr>-->
+<!--                                            <td colspan="4">-->
+<!--                                                <div class="text-center" style="font-size: 12pt;">-->
+<!--                                                    <strong>CONTRIBUYENTE</strong>-->
+<!--                                                </div>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td>-->
+<!--                                                <div class="text-left">-->
+<!--                                                    <strong>PERSONA:</strong>-->
+<!--                                                    <br/>-->
+<!--                                                    <span t-field="o.partner_id.x_tipopersona"/>-->
+<!--                                                </div>-->
+<!--                                            </td>-->
+<!--                                            <td colspan="3">-->
+<!--                                                <div class="text-left">-->
+<!--                                                    <strong>NOMBRE:</strong>-->
+<!--                                                    <br/>-->
+<!--                                                    <span t-field="o.partner_id.name"/>-->
+<!--                                                </div>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td colspan="2">-->
+<!--                                                <div class="text-left">-->
+<!--                                                    <strong>DIRECCIÓN:</strong>-->
+<!--                                                    <br/>-->
+<!--                                                    <span t-field="o.partner_id.contact_address_complete"/>-->
+<!--                                                </div>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <div class="text-left">-->
+<!--                                                    <strong>R.I.F.:</strong>-->
+<!--                                                    <br/>-->
+<!--                                                    <span t-field="o.partner_id.vat"/>-->
+<!--                                                </div>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <div class="text-left">-->
+<!--                                                    <strong>N.I.T.:</strong>-->
+<!--                                                    <br/>-->
+<!--    &lt;!&ndash;                                                <span t-field="o.invoice_date"/>&ndash;&gt;-->
+<!--                                                </div>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                    </table>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
                             <div>
-                                <div class="text-center" style="font-size: 12pt;">
-                                    <strong>CONTRIBUYENTE</strong>
+                                <div style="font-size: 12pt;">
+                                    <div class="row">
+                                        <div class="col" style="border:1px solid black;">
+                                            <div class="text-center">
+                                                <strong >CONTRIBUYENTE</strong>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div style="font-size: 10pt;">
                                     <div class="row">
-                                        <div class="col-3">
+                                        <div class="col-3" style="border-left: 1px solid black; border-right: 1px solid black;">
                                             <div class="text-left">
                                                 <strong>PERSONA:</strong>
                                                 <br/>
                                                 <span t-field="o.partner_id.x_tipopersona"/>
                                             </div>
                                         </div>
-                                        <div class="col-9">
+                                        <div class="col-9" style="border-right: 1px solid black;">
                                             <div class="text-left">
                                                 <strong>NOMBRE:</strong>
                                                 <br/>
@@ -113,23 +237,22 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <br/>
-                                    <div class="row">
-                                        <div class="col-6">
+                                    <div class="row" >
+                                        <div class="col-6" style="border:1px solid black;">
                                             <div class="text-left">
                                                 <strong>DIRECCIÓN:</strong>
                                                 <br/>
                                                 <span t-field="o.partner_id.contact_address_complete"/>
                                             </div>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-3" style="border:1px solid black;">
                                             <div class="text-left">
                                                 <strong>R.I.F.:</strong>
                                                 <br/>
                                                 <span t-field="o.partner_id.vat"/>
                                             </div>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-3" style="border:1px solid black;">
                                             <div class="text-left">
                                                 <strong>N.I.T.:</strong>
                                                 <br/>
@@ -149,7 +272,7 @@
                                                 <th name="th_payment_date" class="text-center"><strong>Fecha Pago/Abono</strong></th>
                                                 <th name="th_document_number" class="text-center"><strong>Número Documento</strong></th>
                                                 <th name="th_control_No" class="text-center"><strong>Nº Control</strong></th>
-                                                <th name="th_amount_document" class="text-center"><strong>Monto del Documento</strong></th>
+<!--                                                <th name="th_amount_document" class="text-center"><strong>Monto del Documento</strong></th>-->
                                                 <th name="th_amount_paid" class="text-center"><strong>Monto Pagado/Abonado</strong></th>
                                                 <th name="th_amount_obt" class="text-center"><strong>Monto Obt/Ret.</strong></th>
                                                 <th name="th_retention_percentage" class="text-center"><strong>% Ret</strong></th>
@@ -170,9 +293,9 @@
                                                     <td class="text-center">
                                                         <span t-esc="islr['control_No']"/>
                                                     </td>
-                                                    <td class="text-center">
-                                                        <span t-esc="islr['amount_document']"/>
-                                                    </td>
+<!--                                                    <td class="text-center">-->
+<!--                                                        <span t-esc="islr['amount_document']"/>-->
+<!--                                                    </td>-->
                                                     <td class="text-center">
                                                         <span t-esc="islr['amount_paid']"/>
                                                     </td>

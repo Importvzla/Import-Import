@@ -1,4 +1,5 @@
 from odoo import api, models
+import locale
 from odoo.exceptions import ValidationError
 
 
@@ -26,13 +27,19 @@ class ImportImportIslrVoucher(models.AbstractModel):
                 if ti.x_tipoimpuesto == 'IVA':
                     tax_base += ili.price_subtotal
                     line_iva_id = docs.line_ids.search([('name', '=', ti.name), ('move_id', '=', docs.id)])
-                    tax_iva = line_iva_id.debit
+                    if docs.x_tipodoc == 'Nota de Crédito':
+                        tax_iva = line_iva_id.credit
+                    else:
+                        tax_iva = line_iva_id.debit
                     percentage = line_iva_id.name
                 if ti.x_tipoimpuesto == 'EXENTO':
                     exempt_sum += ili.price_subtotal
                 if ti.x_tipoimpuesto == 'RIVA':
                     line_riva_id = docs.line_ids.search([('name', '=', ti.name), ('move_id', '=', docs.id)])
-                    iva_withheld = line_riva_id.credit
+                    if docs.x_tipodoc == 'Nota de Crédito':
+                        iva_withheld = line_riva_id.debit
+                    else:
+                        iva_withheld = line_riva_id.credit
 
         if percentage != '':
             retention_percentage = percentage[4:]
@@ -55,14 +62,12 @@ class ImportImportIslrVoucher(models.AbstractModel):
             'data': data,
             'docs': docs,
             'fiscal_period': fiscal_period,
-            'exempt_sum': str(exempt_sum).replace('.', ','),
-            'tax_base': str(tax_base).replace('.', ','),
+            'exempt_sum': locale.format_string('%10.2f', exempt_sum, grouping=True),
+            'tax_base': locale.format_string('%10.2f', tax_base, grouping=True),
             'retention_percentage': retention_percentage,
-            'tax_iva': str(tax_iva).replace('.', ','),
-            'iva_withheld': str(iva_withheld).replace('.', ','),
-            'amount_total': str(amount_total).replace('.', ','),
+            'tax_iva': locale.format_string('%10.2f', tax_iva, grouping=True),
+            'iva_withheld': locale.format_string('%10.2f', iva_withheld, grouping=True),
+            'amount_total': locale.format_string('%10.2f', amount_total, grouping=True),
             'transaction_type': transaction_type,
-            # 'data_islr': data_islr,
-            # 'tax_withheld': tax_withheld,
         }
         return docargs

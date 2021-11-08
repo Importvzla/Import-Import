@@ -70,9 +70,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
-                                                            /&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
-                                                            /&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</span>
+                                                        <span>&#160;</span>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -283,7 +281,8 @@
                                             </td>
                                             <td class="text-center">
                                                 <t t-if="o.x_tipodoc=='Nota de Crédito'">
-                                                    <span  t-field="o.reversed_entry_id"/>
+<!--                                                    <span t-field="o.reversed_entry_id"/>-->
+                                                    <span t-if="o.reversed_entry_id" t-esc="str(o.reversed_entry_id.ref)"/>
                                                 </t>
                                                 <t t-else="">
                                                     <span>&#160;</span>
