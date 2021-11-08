@@ -10,6 +10,7 @@ class ImportImportIslrVoucher(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         print('funcion para obtener datos del cliente para el reporte')
+        locale.setlocale(locale.LC_ALL, 'es_VE.utf8')
         docs = self.env['account.move'].browse(docids[0])
 
         data_islr = []
