@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+        <template id="iva_voucher">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.basic_layout">
+                        <div class="head">
+                            <!-- code -->
+                        </div>
+
+                        <div class="page">
+                            <div class="oe_structure"/>
+
+                            <div class="row">
+                                <div class="col-6" style="font-size: 10pt;">
+                                    <div class="text-center" >
+                                        <strong>COMPROBANTE DE RETENCION DEL IMPUESTO DE VALOR AGREGADO</strong>
+                                    </div>
+                                    <div class="text-center">
+                                        <p>
+                                            (Ley IVA - Art 11: "La administración Tributaria podrá designar como responsables del pago del impuesto, en
+                                            calidad de agentes de retención a quienes por sus funciones públicas o por razón de sus actividades privadas
+                                            intervengan en operaciones gravadas con el impuesto establecido en este Decreto con Rango, Valor y Fuerza de Ley")
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-6" style="font-size: 10pt;">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <table class="table table-sm table-bordered">
+                                                <tr>
+                                                    <td class="table-secondary">
+                                                        <span>Nro. Comprobante:</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <t t-if="o.x_ncomprobante">
+                                                            <span  t-field="o.x_ncomprobante"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span>&#160;</span>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-4">
+                                            <table class="table table-sm table-bordered">
+                                                <tr>
+                                                    <td class="table-secondary">
+                                                        <span>Fecha Emisión:</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <span t-field="o.date"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-4">
+                                            <table class="table table-sm table-bordered">
+                                                <tr>
+                                                    <td class="table-secondary">
+                                                        <span>Fecha Entrega:</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <span>&#160;</span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br/>
+
+                            <div class="row">
+                                <div class="col-5" style="font-size: 10pt;">
+                                    <table class="table table-sm table-bordered" >
+                                        <tr>
+                                            <td class="table-secondary">
+                                                <span>Nombre o Razón Social del Agente de Retención</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span t-field="o.company_id.name"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="col-5" style="font-size: 10pt;" >
+                                    <table class="table table-sm table-bordered">
+                                        <tr>
+                                            <td class="table-secondary">
+                                                <span>Registro de Información Fiscal del Agente de Retención</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span t-field="o.company_id.vat"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <br/>
+
+                            <div class="row">
+                                <div class="col-10" style="font-size: 10pt;">
+                                    <table class="table table-sm table-bordered">
+                                        <tr>
+                                            <td class="table-secondary">
+                                                <span>Dirección Fiscal del Agente de Retención</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span t-field="o.company_id.street"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="col-2" style="font-size: 10pt;">
+                                    <div class="row">
+                                        <div class="col-1"/>
+                                        <div class="col-10">
+                                            <table class="table table-sm table-bordered" >
+                                                <tr>
+                                                    <td class="table-secondary">
+                                                        <span>Período Fiscal</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <span t-esc="fiscal_period"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br/>
+
+                            <div class="row">
+                                <div class="col-5" style="font-size: 10pt;">
+                                    <table class="table table-sm table-bordered">
+                                        <tr>
+                                            <td class="table-secondary">
+                                                <span>Nombre o Razón Social del Sujeto Retenido</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span t-field="o.fiscal_provider.name"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="col-5" style="font-size: 10pt;">
+                                    <table class="table table-sm table-bordered">
+                                        <tr>
+                                            <td class="table-secondary">
+                                                <span>Registro de Información Fiscal del Sujeto Retenido</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span t-field="o.fiscal_provider.vat"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <br/>
+
+                            <div class="row">
+                                <div class="col-10" style="font-size: 10pt;">
+                                    <table class="table table-sm table-bordered">
+                                        <tr>
+                                            <td class="table-secondary">
+                                                <span>Dirección Fiscal del Sujeto Retenido</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span t-field="o.fiscal_provider.contact_address_complete"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <br/>
+
+                            <div style="font-size: 9pt;">
+                                <table class="table table-sm o_main_table" name="invoice_line_table">
+<!--                                <table class="table table-sm o_main_table table-bordered" name="invoice_line_table">-->
+                                    <thead>
+                                        <tr>
+                                            <th name="th_1"  colspan="10"/>
+                                            <th name="th_11" class="text-center table-secondary" colspan="3"><span>COMPRAS INTERNAS O IMPORTACIONES</span></th>
+                                            <th name="th_14"/>
+                                        </tr>
+                                        <tr>
+                                            <th name="th_ref_no" class="text-center table-secondary"><span>Ref No.</span></th>
+                                            <th name="th_invoice_date" class="text-center table-secondary"><span>Fecha de la Factura</span></th>
+                                            <th name="th_invoice_number" class="text-center table-secondary"><span>Número de Factura</span></th>
+                                            <th name="th_invoice_number_control" class="text-center table-secondary"><span>Número Control de Factura</span></th>
+                                            <th name="th_debit_note_number" class="text-center table-secondary"><span>Número Nota Débito</span></th>
+                                            <th name="th_credit_note_number" class="text-center table-secondary"><span>Número Nota Crédito</span></th>
+                                            <th name="th_transaction_type" class="text-center table-secondary"><span>Tipo de Trans</span></th>
+                                            <th name="th_affected_invoice_number" class="text-center table-secondary"><span>Número de Factura Afectada</span></th>
+                                            <th name="th_tot_purch_incl_iva" class="text-center table-secondary"><span>Total Compras Incluyendo IVA</span></th>
+                                            <th name="th_purch_without_iva_credit" class="text-center table-secondary"><span>Compras sin derecho a Crédito IVA</span></th>
+                                            <th name="th_tax_base" class="text-center table-secondary"><span>Base Imponible</span></th>
+                                            <th name="th_aliquot_percentage" class="text-center table-secondary"><span>% Alicuota</span></th>
+                                            <th name="th_iva_tax" class="text-center table-secondary"><span>Impuesto IVA</span></th>
+                                            <th name="th_iva_withheld" class="text-center table-secondary"><span>IVA Retenido</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="invoice_tbody">
+
+                                        <tr>
+                                            <td class="text-center">
+
+                                            </td>
+                                            <td class="text-center">
+                                                <span  t-field="o.invoice_date"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <t t-if="o.x_tipodoc=='Factura'">
+                                                    <span  t-field="o.ref"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <spa>&#160;</spa>
+                                                </t>
+
+                                            </td>
+                                            <td class="text-center">
+                                                <t t-if="o.x_tipodoc=='Factura'">
+                                                    <span  t-field="o.x_ncontrol"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span>&#160;</span>
+                                                </t>
+
+                                            </td>
+                                            <td class="text-center">
+                                                <t t-if="o.x_tipodoc=='Nota de Débito'">
+                                                    <span  t-field="o.ref"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span>&#160;</span>
+                                                </t>
+                                            </td>
+                                            <td class="text-center">
+                                                <t t-if="o.x_tipodoc=='Nota de Crédito'">
+                                                    <span  t-field="o.ref"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span>&#160;</span>
+                                                </t>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-esc="transaction_type"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <t t-if="o.x_tipodoc=='Nota de Crédito'">
+<!--                                                    <span t-field="o.reversed_entry_id"/>-->
+                                                    <span t-if="o.reversed_entry_id" t-esc="str(o.reversed_entry_id.ref)"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span>&#160;</span>
+                                                </t>
+                                            </td>
+                                            <td class="text-center">
+                                                <t t-if="amount_total">
+                                                    <span  t-esc="amount_total"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span>&#160;</span>
+                                                </t>
+                                            </td>
+                                            <td class="text-center">
+                                                <span  t-esc="exempt_sum"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span  t-esc="tax_base"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span  t-esc="retention_percentage"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span  t-esc="tax_iva"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span  t-esc="iva_withheld"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="8"/>
+                                            <td colspan="8">
+                                                <hr color="black" style="width: 100%"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="text-center"  colspan="7">
+                                            </td>
+                                            <td class="text-center">
+                                                <span>Total</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <t t-if="amount_total">
+                                                    <span  t-esc="amount_total"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span>&#160;</span>
+                                                </t>
+                                            </td>
+                                            <td class="text-center">
+                                                <span  t-esc="exempt_sum"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span  t-esc="tax_base"/>
+                                            </td>
+                                            <td class="text-center">
+                                            </td>
+                                            <td class="text-center">
+                                                <span  t-esc="tax_iva"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span  t-esc="iva_withheld"/>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                        <div class="footer">
+                            <div class="text-center" style="font-size: 10pt;">
+                                <p>
+                                    Este comprobante se emite en función a lo establecido en el articulo 16 de la Providencia Administrativa No. SNAT/2015/0049 de fecha 10/08/2015
+                                </p>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
