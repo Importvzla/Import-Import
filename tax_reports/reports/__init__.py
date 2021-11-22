@@ -2,3 +2,4 @@
 
 from . import islr_voucher
 from . import iva_voucher
+from . import iva_txt

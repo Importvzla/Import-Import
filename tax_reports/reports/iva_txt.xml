@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" ?><odoo><data><template id="iva_txt"><t t-foreach="docs" t-as="o">
-columnna 1  columna 2   columna 3
-            </t>
+<?xml version="1.0" encoding="UTF-8" ?><odoo><data><template id="iva_txt"><t t-foreach="data_txt_iva" t-as="txt_iva">
+<t t-esc="txt_iva['rif_company']"/>  <t t-esc="txt_iva['fiscal_period']"/>  <t t-esc="txt_iva['date']"/>  <t t-esc="txt_iva['column_4']"/>  <t t-esc="txt_iva['transaction_type']"/>  <t t-esc="txt_iva['rif_supplier']"/>  <t t-esc="txt_iva['invoice_number']"/>  <t t-esc="txt_iva['control_number']"/>  <t t-esc="txt_iva['amount_total']"/>  <t t-esc="txt_iva['tax_base']"/>  <t t-esc="txt_iva['iva_withheld']"/>  <t t-esc="txt_iva['column_12']"/>  <t t-esc="txt_iva['retention_percentage']"/>  <t t-esc="txt_iva['column_14']"/>  <t t-esc="txt_iva['tax_iva']"/>  <t t-esc="txt_iva['column_16']"/></t>
         </template>
     </data>
 </odoo>

@@ -26,16 +26,16 @@
         <field name="paperformat_id" ref="voucher_iva_paperformat"/>
     </record>
 
-    <!--<record id="iva_txt_report" model="ir.actions.report">
+    <record id="iva_txt_report" model="ir.actions.report">
         <field name="name">Reporte txt IVA</field>
         <field name="model">account.move</field>
         <field name="binding_model_id" ref="account.model_account_move"/>
         <field name="binding_type">report</field>
         <field name="report_type">qweb-text</field>
-        <field name="report_name">res_partner.xml.iva_txt</field>
-        <field name="report_file">res_partner.xml.iva_txt</field>
+        <field name="report_name">tax_reports.iva_txt</field>
+        <field name="report_file">tax_reports.iva_txt</field>
         <field name="print_report_name">'Reporte_txt_IVA-%s' % (object.name)</field>
-    </record>-->
+    </record>
 
   </data>
 </odoo>

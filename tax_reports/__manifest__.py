@@ -30,7 +30,7 @@
         'views/account_move.xml',
         'reports/islr_voucher.xml',
         'reports/iva_voucher.xml',
-        # 'reports/iva_txt.xml',
+        'reports/iva_txt.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

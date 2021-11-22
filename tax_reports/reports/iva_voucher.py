@@ -3,7 +3,7 @@ import locale
 from odoo.exceptions import ValidationError
 
 
-class IslrVoucher(models.AbstractModel):
+class IvaVoucher(models.AbstractModel):
     _name = 'report.tax_reports.iva_voucher'
     _description = 'comprobante de retencion de iva pdf'
 
