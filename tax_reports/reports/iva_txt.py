@@ -9,7 +9,7 @@ class IvaTxt(models.AbstractModel):
 
     @staticmethod
     def rif_format(rif):
-        characters = "-./_"
+        characters = "-./_ "
         for x in range(len(characters)):
             rif = rif.replace(characters[x], "")
         return rif
