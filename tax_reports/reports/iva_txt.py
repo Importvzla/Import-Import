@@ -61,12 +61,12 @@ class IvaTxt(models.AbstractModel):
             percentage = ''
             tax_iva = 0.0
 
-            for ili in docs.invoice_line_ids:
+            for ili in invoice.invoice_line_ids:
                 for ti in ili.tax_ids:
                     if ti.x_tipoimpuesto == 'IVA':
                         tax_base += ili.price_subtotal
-                        line_iva_id = docs.line_ids.search([('name', '=', ti.name), ('move_id', '=', docs.id)])
-                        if docs.x_tipodoc == 'Nota de Crédito':
+                        line_iva_id = invoice.line_ids.search([('name', '=', ti.name), ('move_id', '=', invoice.id)])
+                        if invoice.x_tipodoc == 'Nota de Crédito':
                             tax_iva = line_iva_id.credit
                         else:
                             tax_iva = line_iva_id.debit
@@ -74,8 +74,8 @@ class IvaTxt(models.AbstractModel):
                     if ti.x_tipoimpuesto == 'EXENTO':
                         exempt_sum += ili.price_subtotal
                     if ti.x_tipoimpuesto == 'RIVA':
-                        line_riva_id = docs.line_ids.search([('name', '=', ti.name), ('move_id', '=', docs.id)])
-                        if docs.x_tipodoc == 'Nota de Crédito':
+                        line_riva_id = invoice.line_ids.search([('name', '=', ti.name), ('move_id', '=', invoice.id)])
+                        if invoice.x_tipodoc == 'Nota de Crédito':
                             iva_withheld = line_riva_id.debit
                         else:
                             iva_withheld = line_riva_id.credit
