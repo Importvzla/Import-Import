@@ -13,7 +13,7 @@ class IvaVoucher(models.AbstractModel):
         locale.setlocale(locale.LC_ALL, 'es_ES.utf8')
         docs = self.env['account.move'].browse(docids[0])
 
-        fiscal_period = str(docs.invoice_date.month) + "-" + str(docs.invoice_date.year)
+        fiscal_period = str(docs.date.month) + "-" + str(docs.date.year)
         print(fiscal_period)
 
         exempt_sum = 0.0

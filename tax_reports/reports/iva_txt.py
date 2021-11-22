@@ -20,7 +20,7 @@ class IvaTxt(models.AbstractModel):
         locale.setlocale(locale.LC_ALL, 'es_ES.utf8')
         docs = self.env['account.move'].browse(docids[0])
         invoice_ids = self.env['account.move'].search([
-            ('id', 'in', docids), ('x_ncontrol', '!=', False)
+            ('id', 'in', docids), ('x_ncomprobante', '!=', False)
         ])
         data_txt_iva = []
 
@@ -35,25 +35,31 @@ class IvaTxt(models.AbstractModel):
             else:
                 document_type = ''
 
+            if invoice.reversed_entry_id:
+                affected_invoice_no = invoice.reversed_entry_id.name
+            else:
+                affected_invoice_no = 0
+
             rif_company = self.rif_format(invoice.company_id.vat)
-            fiscal_period = str(docs.invoice_date.year) + str(docs.invoice_date.month)
-            date = invoice.date
+            fiscal_period = str(invoice.date.year) + str(invoice.date.month)
+            date = invoice.invoice_date
             column_4 = 'C'
             transaction_type = document_type
             rif_supplier = self.rif_format(invoice.fiscal_provider.vat)
-            invoice_number = invoice.name
+            invoice_number = invoice.ref
             control_number = invoice.x_ncontrol
-            amount_total = invoice.amount_total
+            # amount_total = 0.0
             tax_base = 0.0
             iva_withheld = 0.0
-            column_12 = '0'
+            affected_invoice_number = affected_invoice_no
+            voucher_number = invoice.x_ncomprobante #todo campo 13 agregar el xml
+            # exempt_amount = 0.0
             # retention_percentage = ''
-            column_14 = '0'
-            tax_iva = 0.0
             column_16 = '0'
 
             exempt_sum = 0.0
             percentage = ''
+            tax_iva = 0.0
 
             for ili in docs.invoice_line_ids:
                 for ti in ili.tax_ids:
@@ -74,11 +80,14 @@ class IvaTxt(models.AbstractModel):
                         else:
                             iva_withheld = line_riva_id.credit
 
-
             if percentage != '':
-                retention_percentage = percentage[4:]
+                retention_percentage = float(percentage[4:-1])
             else:
-                retention_percentage = ''
+                retention_percentage = 0.0
+
+            amount_total = tax_iva + tax_base + exempt_sum
+            exempt_amount = exempt_sum
+
 
             iva_txt_line = {
                 'rif_company': rif_company,
@@ -92,10 +101,10 @@ class IvaTxt(models.AbstractModel):
                 'amount_total': amount_total,
                 'tax_base': tax_base,
                 'iva_withheld': iva_withheld,
-                'column_12': column_12,
+                'affected_invoice_number': affected_invoice_number,
+                'voucher_number': voucher_number,
+                'exempt_amount': exempt_amount,
                 'retention_percentage': retention_percentage,
-                'column_14': column_14,
-                'tax_iva': tax_iva,
                 'column_16': column_16,
             }
             data_txt_iva.append(iva_txt_line)
