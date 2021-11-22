@@ -86,7 +86,11 @@ class IvaTxt(models.AbstractModel):
                 retention_percentage = 0.0
 
             amount_total = tax_iva + tax_base + exempt_sum
-            exempt_amount = exempt_sum
+
+            if exempt_sum == 0.0:
+                exempt_amount = 0
+            else:
+                exempt_amount = exempt_sum
 
 
             iva_txt_line = {
