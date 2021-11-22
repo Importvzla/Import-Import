@@ -20,7 +20,7 @@ class IvaTxt(models.AbstractModel):
         locale.setlocale(locale.LC_ALL, 'es_ES.utf8')
         docs = self.env['account.move'].browse(docids[0])
         invoice_ids = self.env['account.move'].search([
-            ('id', 'in', docids), ('x_ncontrol', '=', False)
+            ('id', 'in', docids), ('x_ncontrol', '!=', False)
         ])
         data_txt_iva = []
 
