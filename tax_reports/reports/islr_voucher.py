@@ -34,16 +34,16 @@ class IslrVoucher(models.AbstractModel):
                     line_id = docs.line_ids.search([('name', '=', ti.name), ('move_id', '=', docs.id)])
                     print(line_id)
                     if docs.x_tipodoc == 'Nota de Crédito':
-                        tax_withheld_line = line_id.credit
-                        tax_withheld += line_id.credit
-                    else:
                         tax_withheld_line = line_id.debit
                         tax_withheld += line_id.debit
+                    else:
+                        tax_withheld_line = line_id.credit
+                        tax_withheld += line_id.credit
 
                     islr_voucher_line.update(
                         amount_document=locale.format_string('%10.2f', ili.price_subtotal, grouping=True),
                         amount_obt=locale.format_string('%10.2f', ili.price_subtotal, grouping=True),
-                        retention_percentage=locale.format_string('%10.2f', ti.amount, grouping=True),
+                        retention_percentage=locale.format_string('%10.2f', ti.amount, grouping=True).replace("-", ""),
                         ret_cod=ti.name[:6],
                         description=ti.name[7:],
                         tax_withheld_line=locale.format_string('%10.2f', tax_withheld_line, grouping=True),
