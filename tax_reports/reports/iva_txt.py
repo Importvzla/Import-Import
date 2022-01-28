@@ -66,11 +66,19 @@ class IvaTxt(models.AbstractModel):
                     if ti.x_tipoimpuesto == 'IVA':
                         tax_base += ili.price_subtotal
                         line_iva_id = invoice.line_ids.search([('name', '=', ti.name), ('move_id', '=', invoice.id)])
-                        if invoice.x_tipodoc == 'Nota de Crédito':
-                            tax_iva = line_iva_id.credit
+                        if len(line_iva_id) > 1:
+                            tax_iva = 0.0
+                            for lii in line_iva_id:
+                                if docs.x_tipodoc == 'Nota de Crédito':
+                                    tax_iva += lii.credit
+                                else:
+                                    tax_iva += lii.debit
                         else:
-                            tax_iva = line_iva_id.debit
-                        percentage = line_iva_id.name
+                            if docs.x_tipodoc == 'Nota de Crédito':
+                                tax_iva = line_iva_id.credit
+                            else:
+                                tax_iva = line_iva_id.debit
+                        percentage = line_iva_id[0].name
                     if ti.x_tipoimpuesto == 'EXENTO':
                         exempt_sum += ili.price_subtotal
                     if ti.x_tipoimpuesto == 'RIVA':
@@ -85,7 +93,9 @@ class IvaTxt(models.AbstractModel):
             else:
                 retention_percentage = 0.0
 
-            amount_total = tax_iva + tax_base + exempt_sum
+            tax_base_format = "{0:.2f}".format(tax_base)
+
+            amount_total = "{0:.2f}".format(tax_iva + tax_base + exempt_sum)
 
             if exempt_sum == 0.0:
                 exempt_amount = 0
@@ -103,7 +113,7 @@ class IvaTxt(models.AbstractModel):
                 'invoice_number': invoice_number,
                 'control_number': control_number,
                 'amount_total': amount_total,
-                'tax_base': tax_base,
+                'tax_base': tax_base_format,
                 'iva_withheld': iva_withheld,
                 'affected_invoice_number': affected_invoice_number,
                 'voucher_number': voucher_number,

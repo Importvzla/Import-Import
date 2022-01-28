@@ -37,5 +37,29 @@
         <field name="print_report_name">'Reporte_txt_IVA-%s' % (object.name)</field>
     </record>
 
+    <record id="sales_book_report" model="ir.actions.report">
+        <field name="name">Libro de Ventas</field>
+        <field name="model">account.move</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tax_reports.sales_book</field>
+        <field name="report_file">tax_reports.sales_book</field>
+        <field name="print_report_name">'Libro_Ventas_%s' % (object.name)</field>
+        <field name="paperformat_id" ref="voucher_iva_paperformat"/>
+    </record>
+
+    <record id="purchase_book_report" model="ir.actions.report">
+        <field name="name">Libro de Compras</field>
+        <field name="model">account.move</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tax_reports.purchase_book</field>
+        <field name="report_file">tax_reports.purchase_book</field>
+        <field name="print_report_name">'Libro_Compras_%s' % (object.name)</field>
+        <field name="paperformat_id" ref="voucher_iva_paperformat"/>
+    </record>
+
   </data>
 </odoo>

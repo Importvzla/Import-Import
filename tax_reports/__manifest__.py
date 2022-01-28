@@ -28,9 +28,12 @@
         'views/actions_report.xml',
         'views/res_partner.xml',
         'views/account_move.xml',
+        'views/books.xml',
         'reports/islr_voucher.xml',
         'reports/iva_voucher.xml',
         'reports/iva_txt.xml',
+        'reports/sales_book.xml',
+        'reports/purchase_book.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

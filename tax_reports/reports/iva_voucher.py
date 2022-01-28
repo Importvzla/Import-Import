@@ -27,12 +27,21 @@ class IvaVoucher(models.AbstractModel):
             for ti in ili.tax_ids:
                 if ti.x_tipoimpuesto == 'IVA':
                     tax_base += ili.price_subtotal
+                    #line_iva_id = docs.line_ids.search([('account_id', '=', ili.account_id.id), ('name', '=', ti.name), ('move_id', '=', docs.id)]) #fix: no sirvio
                     line_iva_id = docs.line_ids.search([('name', '=', ti.name), ('move_id', '=', docs.id)])
-                    if docs.x_tipodoc == 'Nota de Crédito':
-                        tax_iva = line_iva_id.credit
+                    if len(line_iva_id) > 1:
+                        tax_iva = 0.0
+                        for lii in line_iva_id:
+                            if docs.x_tipodoc == 'Nota de Crédito':
+                                tax_iva += lii.credit
+                            else:
+                                tax_iva += lii.debit
                     else:
-                        tax_iva = line_iva_id.debit
-                    percentage = line_iva_id.name
+                        if docs.x_tipodoc == 'Nota de Crédito':
+                            tax_iva = line_iva_id.credit
+                        else:
+                            tax_iva = line_iva_id.debit
+                    percentage = line_iva_id[0].name
                 if ti.x_tipoimpuesto == 'EXENTO':
                     exempt_sum += ili.price_subtotal
                 if ti.x_tipoimpuesto == 'RIVA':
@@ -48,6 +57,8 @@ class IvaVoucher(models.AbstractModel):
             retention_percentage = percentage[4:]
         else:
             retention_percentage = ''
+
+        #tax_iva = round(tax_base * 0.16, 2)
 
         if docs.x_tipodoc == 'Factura':
             transaction_type = '01'

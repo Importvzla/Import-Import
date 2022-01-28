@@ -56,7 +56,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <span t-field="o.invoice_date"/>
+                                                        <span t-field="o.date"/>
                                                     </td>
                                                 </tr>
                                             </table>
