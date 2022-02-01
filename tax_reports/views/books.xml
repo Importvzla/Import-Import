@@ -42,7 +42,7 @@
             <field name="name">Libro de Compras</field>
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,kanban,form</field>
-            <field name="view_id" ref="account.view_in_invoice_bill_tree"/>
+            <field name="view_id" ref="account.view_in_invoice_tree"/>
             <field name="search_view_id" ref="account.view_account_invoice_filter"/>
             <field name="domain">[('move_type', 'in', ['in_invoice','in_refund']), ('state', '=', 'posted')]</field>
             <field name="context">{'default_move_type': 'in_invoice'}</field>
