@@ -138,6 +138,10 @@ class PurchaseBook(models.AbstractModel):
             else:
                 retention_percentage = 0
 
+            if invoice.currency_id.name == 'USD':
+                tax_base = tax_base * invoice.x_tasa
+                exempt_sum = exempt_sum * invoice.x_tasa
+
             if invoice.x_tipodoc == 'Nota de Crédito':
                 amount_total = -1 * (tax_iva + tax_base + exempt_sum)
                 tax_base_amount = -1 * tax_base
