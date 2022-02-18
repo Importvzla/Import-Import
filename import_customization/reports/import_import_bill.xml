@@ -136,40 +136,8 @@
 
 
                             <div>
-                             <!--   <div id="tax" class="row">
-                                    <div class="col-sm-6 ml-auto">
-                                        <table class="table table-sm">
-                                            <tr style="">
-                                            </tr>
-                                            <tr style="">
-                                                <td><span class="text-nowrap">Impuesto al Valor Agregado (IVA) 16% sobre BASE IMPONIBLE USD</span></td>
-                                                <td class="text-right o_price_total">
-                                                    <span class="text-nowrap">xxxxx</span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>-->
-
-
                                 <div id="total" class="row">
                                     <div class="col-3">
-<!--                                        <table class="table table-sm">-->
-<!--                                            <tr style="">-->
-<!--                                                <span>&#160;</span>-->
-<!--                                            </tr>-->
-<!--                                            <tr style="">-->
-<!--                                                <td><span class="text-nowrap">Impuesto al Valor Agregado (IVA) 16% sobre BASE IMPONIBLE USD</span></td>-->
-<!--                                                <td class="text-right o_price_total">-->
-<!--                                                    <span class="text-nowrap">xxxxx</span>-->
-<!--                                                </td>-->
-<!--                                            </tr>-->
-<!--                                            <tr style="">-->
-<!--                                                <span>&#160;</span>-->
-<!--                                            </tr>-->
-<!--                                        </table>-->
                                     </div>
                                     <div class="col-9">
                                         <table class="table table-borderless table-sm">
@@ -203,102 +171,27 @@
                                                 </tr>
                                             </t>
                                             <tr class="border-black o_total">
-                                                <td class="text-right" colspan="2"><strong>Total</strong></td>
+                                                <t t-if="o.currency_id.name == 'VES'" name="tax_conversion_rate">
+                                                    <t t-set="tax_rate" t-value="o.amount_untaxed / o.x_tasa"/>
+                                                    <td class="text-left">
+                                                        <p>
+                                                            Tasa del dia <span t-field="o.invoice_date"/> BCV <span t-field="o.x_tasa" /> lo que representa una Base Imponible de <span t-esc="'{0:,.2f}'.format(tax_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
+                                                        </p>
+                                                    </td>
+                                                    <td class="text-right"><strong>Total</strong></td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td class="text-right" colspan="2"><strong>Total</strong></td>
+                                                </t>
                                                 <td class="text-right">
                                                     <span class="text-nowrap" t-field="o.amount_total"/>
                                                 </td>
                                             </tr>
-<!--                                            <t t-if="print_with_payments">-->
-<!--                                                <t t-if="o.payment_state != 'invoicing_legacy'">-->
-<!--                                                    <t t-set="payments_vals" t-value="o.sudo()._get_reconciled_info_JSON_values()"/>-->
-<!--                                                    <t t-foreach="payments_vals" t-as="payment_vals">-->
-<!--                                                        <tr>-->
-<!--                                                            <td>-->
-<!--                                                                <i class="oe_form_field text-right oe_payment_label">Paid on <t t-esc="payment_vals['date']" t-options='{"widget": "date"}'/></i>-->
-<!--                                                            </td>-->
-<!--                                                            <td class="text-right">-->
-<!--                                                                <span t-esc="payment_vals['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>-->
-<!--                                                            </td>-->
-<!--                                                        </tr>-->
-<!--                                                    </t>-->
-<!--                                                    <t t-if="len(payments_vals) > 0">-->
-<!--                                                        <tr class="border-black">-->
-<!--                                                            <td><strong>Amount Due</strong></td>-->
-<!--                                                            <td class="text-right">-->
-<!--                                                                <span t-field="o.amount_residual"/>-->
-<!--                                                            </td>-->
-<!--                                                        </tr>-->
-<!--                                                    </t>-->
-<!--                                                </t>-->
-<!--                                            </t>-->
                                         </table>
                                     </div>
                                 </div>
-                                <!--<div id="total" class="row">
-                                    <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ml-auto">
-                                        <table class="table table-sm" style="page-break-inside: avoid;">
-                                            <tr class="border-black o_subtotal" style="">
-                                                <td><strong>Subtotal</strong></td>
-                                                <td class="text-right">
-                                                    <span t-field="o.amount_untaxed"/>
-                                                </td>
-                                            </tr>
-                                            <t t-foreach="o.amount_by_group" t-as="amount_by_group">
-                                                <tr style="">
-                                                    <t t-if="len(o.line_ids.filtered(lambda line: line.tax_line_id)) in [0, 1] and o.amount_untaxed == amount_by_group[2]">
-&lt;!&ndash;                                                        <td><span class="text-nowrap" t-esc="amount_by_group[0]"/></td>&ndash;&gt;
-                                                        <td><span class="text-nowrap"/>Impuesto al Valor Agregado (IVA) 16% sobre BASE IMPONIBLE USD</td>
-                                                        <td class="text-right o_price_total">
-                                                            <span class="text-nowrap" t-esc="amount_by_group[3]" />
-                                                        </td>
-                                                    </t>
-                                                    <t t-else="">
-                                                        <td>
-                                                            <span t-esc="amount_by_group[0]"/>
-                                                            <span class="text-nowrap"> on
-                                                                <t t-esc="amount_by_group[4]"/>
-                                                            </span>
-                                                        </td>
-                                                        <td class="text-right o_price_total">
-                                                            <span class="text-nowrap" t-esc="amount_by_group[3]"/>
-                                                        </td>
-                                                    </t>
-                                                </tr>
-                                            </t>
-                                            <tr class="border-black o_total">
-                                                <td><strong>Total</strong></td>
-                                                <td class="text-right">
-                                                    <span class="text-nowrap" t-field="o.amount_total"/>
-                                                </td>
-                                            </tr>
-                                            <t t-if="print_with_payments">
-                                                <t t-if="o.payment_state != 'invoicing_legacy'">
-                                                    <t t-set="payments_vals" t-value="o.sudo()._get_reconciled_info_JSON_values()"/>
-                                                    <t t-foreach="payments_vals" t-as="payment_vals">
-                                                        <tr>
-                                                            <td>
-                                                                <i class="oe_form_field text-right oe_payment_label">Paid on <t t-esc="payment_vals['date']" t-options='{"widget": "date"}'/></i>
-                                                            </td>
-                                                            <td class="text-right">
-                                                                <span t-esc="payment_vals['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                                                            </td>
-                                                        </tr>
-                                                    </t>
-                                                    <t t-if="len(payments_vals) > 0">
-                                                        <tr class="border-black">
-                                                            <td><strong>Amount Due</strong></td>
-                                                            <td class="text-right">
-                                                                <span t-field="o.amount_residual"/>
-                                                            </td>
-                                                        </tr>
-                                                    </t>
-                                                </t>
-                                            </t>
-                                        </table>
-                                    </div>
-                                </div>-->
-
                             </div>
+
                             <div t-if="o.currency_id.name == 'USD'" name="payment_currency">
                                 <br/>
                                 <p> TASA DE CAMBIO DE REFERENCIA SMC DEL BCV AL <b><span t-field="o.invoice_date"/></b></p>
@@ -327,7 +220,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="footer">
