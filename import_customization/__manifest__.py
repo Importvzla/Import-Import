@@ -28,6 +28,7 @@
         'data/invoice_paper_format.xml',
         'views/views.xml',
         'views/import_import_report.xml',
+        'views/res_partner_views.xml',
         'reports/import_import_bill.xml',
     ],
     # only loaded in demonstration mode

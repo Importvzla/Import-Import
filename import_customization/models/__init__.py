@@ -2,3 +2,4 @@
 
 from . import account_move
 from . import printing_printer
+from . import res_partner
