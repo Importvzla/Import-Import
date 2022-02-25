@@ -35,12 +35,13 @@
 
         <template id="default_total_tagline">
             <div id="total_tagline">
-                <div id="total" class="row">
+                <div id="total" class="row border-top border-dark">
                     <div class="col-3">
                     </div>
                     <div class="col-9">
                         <table class="table table-borderless table-sm">
-                            <tr class="border-black o_subtotal" style="">
+<!--                            <tr class="border-black o_subtotal" style="">-->
+                            <tr style="">
                                 <td class="text-right" colspan="2"><strong>Subtotal</strong></td>
                                 <td class="text-right">
                                     <span t-field="o.amount_untaxed"/>
@@ -69,19 +70,8 @@
                                     </t>
                                 </tr>
                             </t>
-                            <tr class="border-black o_total">
-                                <t t-if="o.currency_id.name == 'VES' and o.partner_id.type_invoice_ves == 'type_1'" name="tax_conversion_rate_2">
-                                    <t t-set="tax_rate" t-value="o.amount_untaxed / o.x_tasa"/>
-                                    <td class="text-left">
-                                        <p>
-                                            Tasa del dia <span t-field="o.invoice_date"/> BCV <span t-field="o.x_tasa" /> lo que representa una Base Imponible de <span t-esc="'{0:,.2f}'.format(tax_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
-                                        </p>
-                                    </td>
-                                    <td class="text-right"><strong>Total</strong></td>
-                                </t>
-                                <t t-else="">
-                                    <td class="text-right" colspan="2"><strong>Total</strong></td>
-                                </t>
+                            <tr style="">
+                                <td class="text-right" colspan="2"><strong>Total</strong></td>
                                 <td class="text-right">
                                     <span class="text-nowrap" t-field="o.amount_total"/>
                                 </td>
@@ -89,6 +79,46 @@
                         </table>
                     </div>
                 </div>
+
+                <t t-if="o.currency_id.name == 'VES' and o.partner_id.type_invoice_ves == 'type_1'" name="tax_conversion_rate_2">
+                    <t t-set="amount_untaxed_rate" t-value="o.amount_untaxed / o.x_tasa"/>
+                    <t t-set="amount_tax_rate" t-value="o.amount_tax / o.x_tasa"/>
+                    <t t-set="amount_total_rate" t-value="o.amount_total / o.x_tasa"/>
+                    <div class="row">
+                        <div class="col" style="width: 50%;">
+                            <p>
+                                FECHA VALOR B.C.V. <span t-field="o.invoice_date"/> TASA B.C.V: BS/USD <span t-field="o.x_tasa" />
+                            </p>
+                            <table class="table table-borderless table-sm">
+                                <tr>
+                                    <td class="text-left">
+                                        <span>T.N. BASE IMPONIBLE: $ USD</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.2f}'.format(amount_untaxed_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">
+                                        <span>TOTAL I.V.A: $ USD</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.2f}'.format(amount_tax_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">
+                                        <span>TOTAL A PAGAR: $ USD</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.2f}'.format(amount_total_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+
             </div>
         </template>
 
