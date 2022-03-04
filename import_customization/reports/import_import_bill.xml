@@ -11,7 +11,7 @@
                         <b>Subtotal Bs </b>
                     </div>
                     <div class="col-6">
-                        <p><span t-field="o.amount_untaxed" /> x <span t-field="o.x_tasa" /> = <span t-field="o.amount_untaxed_rate" /></p>
+                        <p><span t-field="o.amount_untaxed" /> x <span t-field="o.x_tasa" /> = <span t-esc="'{0:,.2f}'.format(o.amount_untaxed_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')" /></p>
                     </div>
                 </div>
                 <div class="row justify-content-md-left">
@@ -19,7 +19,7 @@
                         <b>IVA 16% Bs </b>
                     </div>
                     <div class="col-6">
-                        <p><span t-field="o.amount_tax" /> x  <span t-field="o.x_tasa" /> = <span t-field="o.amount_tax_rate" /></p>
+                        <p><span t-field="o.amount_tax" /> x  <span t-field="o.x_tasa" /> = <span t-esc="'{0:,.2f}'.format(o.amount_tax_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/></p>
                     </div>
                 </div>
                 <div class="row justify-content-md-left">
@@ -27,7 +27,7 @@
                         <b>Total Bs </b>
                     </div>
                     <div class="col-6">
-                        <p><span t-field="o.amount_total" /> x  <span t-field="o.x_tasa" /> = <span t-field="o.amount_total_rate" /></p>
+                        <p><span t-field="o.amount_total" /> x  <span t-field="o.x_tasa" /> = <span t-esc="'{0:,.2f}'.format(o.amount_total_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/></p>
                     </div>
                 </div>
             </div>
@@ -251,11 +251,13 @@
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
                     <t t-call="web.basic_layout">
-                        <div class="head">
-                            <!-- code -->
+                        <div class="head" style="font-size: 12pt; font-family: Arial, Helvetica, sans-serif;">
+                            <div class="text-center" style="height:15mm;">
+                                IMPORT IMPORT, C.A.
+                            </div>
                         </div>
 
-                        <div class="page" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif;">
+                        <div class="page" style="font-size: 12pt; font-family: Arial, Helvetica, sans-serif;">
                             <div class="oe_structure"/>
 
                             <div class="row">
