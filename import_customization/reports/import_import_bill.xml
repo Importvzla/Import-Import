@@ -261,7 +261,7 @@
                             <div class="oe_structure"/>
 
                             <div class="row">
-                                <div class="col-7">
+                                <div class="col-8">
                                     <strong>Razón Social:</strong>
                                     <span t-field="o.partner_id"/>
                                     <br/>
@@ -275,7 +275,7 @@
                                     <span t-field="o.invoice_user_id.id"/>
                                     <br/>
                                 </div>
-                                <div class="col-5">
+                                <div class="col-4">
                                     <strong>Factura:</strong>
                                     <span t-field="o.ref"/>
                                     <br/>
