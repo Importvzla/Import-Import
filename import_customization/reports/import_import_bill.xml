@@ -5,7 +5,8 @@
         <template id="usd_type_1_tagline">
             <div name="payment_currency">
                 <br/>
-                <p> TASA DE CAMBIO DE REFERENCIA SMC DEL BCV AL <b><span t-field="o.invoice_date"/></b></p>
+                <span> TASA DE CAMBIO DE REFERENCIA SMC DEL BCV AL </span>
+                <b><span t-field="o.invoice_date"/></b>
                 <div class="row justify-content-md-left">
                     <div class="col-4">
                         <b>Subtotal Bs </b>
@@ -85,10 +86,10 @@
                     <t t-set="amount_tax_rate" t-value="o.amount_tax / o.x_tasa"/>
                     <t t-set="amount_total_rate" t-value="o.amount_total / o.x_tasa"/>
                     <div class="row">
-                        <div class="col" style="width: 50%;">
-                            <p>
-                                FECHA VALOR B.C.V. <span t-field="o.invoice_date"/> TASA B.C.V: BS/USD <span t-field="o.x_tasa" />
-                            </p>
+                        <div class="col" style="width: 57%;">
+                            <span>FECHA VALOR B.C.V. </span>
+                            <span t-field="o.invoice_date"/> <span>TASA B.C.V: BS/USD </span>
+                            <span t-field="o.x_tasa" />
                             <table class="table table-borderless table-sm">
                                 <tr>
                                     <td class="text-left">
