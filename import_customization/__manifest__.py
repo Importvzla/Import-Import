@@ -30,6 +30,7 @@
         'views/import_import_report.xml',
         'views/res_partner_views.xml',
         'reports/import_import_bill.xml',
+        'reports/budget_official_rate.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
