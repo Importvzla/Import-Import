@@ -269,8 +269,18 @@
 
         <template id="report_saleorder_document_inherit_import_customization" inherit_id="sale.report_saleorder_document">
 
+            <xpath expr="//div[@id='informations']" position="inside">
+                <div t-if="budget_type == 'official_rate'" class="col-auto col-3 mw-100 mb-2">
+                    <strong>Tasa:</strong>
+                    <p class="m-0" t-field="doc.x_studio_tasa_venta"/>
+                </div>
+                <div t-elif="budget_type == 'negotiated_rate'" class="col-auto col-3 mw-100 mb-2">
+                    <strong>Tasa:</strong>
+                    <p class="m-0" t-field="doc.x_studio_tasa_ref_negociada"/>
+                </div>
+            </xpath>
 
-<!--            falta una conversion aqui-->
+<!--        falta la conversion de current_subtotal aqui -->
 
             <xpath expr="//td[@name='td_priceunit']" position="replace">
                 <td name="td_priceunit" class="text-right">
@@ -280,6 +290,15 @@
                         </t>
                         <t t-elif="doc.pricelist_id.currency_id.name == 'USD'">
                             <t t-set="price_unit" t-value="line.price_unit * doc.x_studio_tasa_venta"/>
+                        </t>
+                        <span t-esc="price_unit" t-options='{"widget": "float", "precision": 2}'/>
+                    </t>
+                    <t t-elif="budget_type == 'negotiated_rate'">
+                        <t t-if="doc.pricelist_id.currency_id.name == 'VES'">
+                            <t t-set="price_unit" t-value="line.price_unit / doc.x_studio_tasa_ref_negociada"/>
+                        </t>
+                        <t t-elif="doc.pricelist_id.currency_id.name == 'USD'">
+                            <t t-set="price_unit" t-value="line.price_unit * doc.x_studio_tasa_ref_negociada"/>
                         </t>
                         <span t-esc="price_unit" t-options='{"widget": "float", "precision": 2}'/>
                     </t>
@@ -302,6 +321,20 @@
                         </t>
                         <span t-esc="price_subtotal" t-options='{"widget": "float", "precision": 2}' groups="account.group_show_line_subtotals_tax_excluded"/>
                         <span t-esc="price_total" t-options='{"widget": "float", "precision": 2}' groups="account.group_show_line_subtotals_tax_included"/>
+                        <span t-esc="currency"/>
+                    </t>
+                    <t t-elif="budget_type == 'negotiated_rate'">
+                        <t t-if="doc.pricelist_id.currency_id.name == 'VES'">
+                            <t t-set="price_subtotal" t-value="line.price_subtotal / doc.x_studio_tasa_ref_negociada"/>
+                            <t t-set="price_total" t-value="line.price_total / doc.x_studio_tasa_ref_negociada"/>
+                        </t>
+                        <t t-elif="doc.pricelist_id.currency_id.name == 'USD'">
+                            <t t-set="price_subtotal" t-value="line.price_subtotal * doc.x_studio_tasa_ref_negociada"/>
+                            <t t-set="price_total" t-value="line.price_total * doc.x_studio_tasa_ref_negociada"/>
+                        </t>
+                        <span t-esc="price_subtotal" t-options='{"widget": "float", "precision": 2}' groups="account.group_show_line_subtotals_tax_excluded"/>
+                        <span t-esc="price_total" t-options='{"widget": "float", "precision": 2}' groups="account.group_show_line_subtotals_tax_included"/>
+                        <span t-esc="currency"/>
                     </t>
                     <t t-else="">
                         <span t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
@@ -320,6 +353,17 @@
                             <t t-set="amount_untaxed" t-value="doc.amount_untaxed * doc.x_studio_tasa_venta"/>
                         </t>
                         <span t-esc="amount_untaxed" t-options='{"widget": "float", "precision": 2}'/>
+                        <span t-esc="currency"/>
+                    </t>
+                    <t t-elif="budget_type == 'negotiated_rate'">
+                        <t t-if="doc.pricelist_id.currency_id.name == 'VES'">
+                            <t t-set="amount_untaxed" t-value="doc.amount_untaxed / doc.x_studio_tasa_ref_negociada"/>
+                        </t>
+                        <t t-elif="doc.pricelist_id.currency_id.name == 'USD'">
+                            <t t-set="amount_untaxed" t-value="doc.amount_untaxed * doc.x_studio_tasa_ref_negociada"/>
+                        </t>
+                        <span t-esc="amount_untaxed" t-options='{"widget": "float", "precision": 2}'/>
+                        <span t-esc="currency"/>
                     </t>
                     <t t-else="">
                         <span t-field="doc.amount_untaxed"/>
@@ -340,7 +384,19 @@
                             <t t-set="display" t-value="'Bs.'"/>
                         </t>
 <!--                        <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group_2" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></span>-->
-                        <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group_2" t-options='{"widget": "float", "precision": 2}'/></span>
+                        <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group_2" t-options='{"widget": "float", "precision": 2}'/></span><span t-esc="currency"/>
+                    </t>
+                    <t t-elif="budget_type == 'negotiated_rate'">
+                        <t t-if="doc.pricelist_id.currency_id.name == 'VES'">
+                            <t t-set="amount_by_group_2" t-value="amount_by_group[2] / doc.x_studio_tasa_ref_negociada"/>
+                            <t t-set="display_currency" t-value="'$'"/>
+                        </t>
+                        <t t-elif="doc.pricelist_id.currency_id.name == 'USD'">
+                            <t t-set="amount_by_group_2" t-value="amount_by_group[2] * doc.x_studio_tasa_ref_negociada"/>
+                            <t t-set="display" t-value="'Bs.'"/>
+                        </t>
+<!--                        <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group_2" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></span>-->
+                        <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group_2" t-options='{"widget": "float", "precision": 2}'/></span><span t-esc="currency"/>
                     </t>
                     <t t-else="">
                         <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group[2]" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></span>
@@ -358,6 +414,17 @@
                             <t t-set="amount_by_group_1" t-value="amount_by_group[1] * doc.x_studio_tasa_venta"/>
                         </t>
                         <span t-esc="amount_by_group_1" t-options='{"widget": "float", "precision": 2}'/>
+                        <span t-esc="currency"/>
+                    </t>
+                    <t t-elif="budget_type == 'negotiated_rate'">
+                        <t t-if="doc.pricelist_id.currency_id.name == 'VES'">
+                            <t t-set="amount_by_group_1" t-value="amount_by_group[1] / doc.x_studio_tasa_ref_negociada"/>
+                        </t>
+                        <t t-elif="doc.pricelist_id.currency_id.name == 'USD'">
+                            <t t-set="amount_by_group_1" t-value="amount_by_group[1] * doc.x_studio_tasa_ref_negociada"/>
+                        </t>
+                        <span t-esc="amount_by_group_1" t-options='{"widget": "float", "precision": 2}'/>
+                        <span t-esc="currency"/>
                     </t>
                     <t t-else="">
                         <span t-esc="amount_by_group[1]"
@@ -366,7 +433,62 @@
                 </td>
             </xpath>
 
-<!--            Faltan 2 conversiones-->
+            <xpath expr="//td[@name='td_amount_by_group_label']" position="replace">
+                <td name="td_amount_by_group_label">
+                    <t t-if="budget_type == 'official_rate'">
+                        <t t-if="doc.pricelist_id.currency_id.name == 'VES'">
+                            <t t-set="amount_by_group_0" t-value="amount_by_group[0] / doc.x_studio_tasa_venta"/>
+                        </t>
+                        <t t-elif="doc.pricelist_id.currency_id.name == 'USD'">
+                            <t t-set="amount_by_group_0" t-value="amount_by_group[0] * doc.x_studio_tasa_venta"/>
+                        </t>
+                        <span t-esc="amount_by_group_0" t-options='{"widget": "float", "precision": 2}'/>
+                        <span t-esc="currency"/>
+                    </t>
+                    <t t-elif="budget_type == 'negotiated_rate'">
+                        <t t-if="doc.pricelist_id.currency_id.name == 'VES'">
+                            <t t-set="amount_by_group_0" t-value="amount_by_group[0] / doc.x_studio_tasa_ref_negociada"/>
+                        </t>
+                        <t t-elif="doc.pricelist_id.currency_id.name == 'USD'">
+                            <t t-set="amount_by_group_0" t-value="amount_by_group[0] * doc.x_studio_tasa_ref_negociada"/>
+                        </t>
+                        <span t-esc="amount_by_group_0" t-options='{"widget": "float", "precision": 2}'/>
+                        <span t-esc="currency"/>
+                    </t>
+                    <t t-else="">
+                        <span t-esc="amount_by_group[0]"/>
+                    </t>
+                </td>
+            </xpath>
+
+            <xpath expr="//td[@name='td_amount_by_group']" position="replace">
+                <td name="td_amount_by_group" class="text-right o_price_total">
+                    <t t-if="budget_type == 'official_rate'">
+                        <t t-if="doc.pricelist_id.currency_id.name == 'VES'">
+                            <t t-set="amount_by_group_1" t-value="amount_by_group[1] / doc.x_studio_tasa_venta"/>
+                        </t>
+                        <t t-elif="doc.pricelist_id.currency_id.name == 'USD'">
+                            <t t-set="amount_by_group_1" t-value="amount_by_group[1] * doc.x_studio_tasa_venta"/>
+                        </t>
+                        <span t-esc="amount_by_group_1" t-options='{"widget": "float", "precision": 2}'/>
+                        <span t-esc="currency"/>
+                    </t>
+                    <t t-elif="budget_type == 'negotiated_rate'">
+                        <t t-if="doc.pricelist_id.currency_id.name == 'VES'">
+                            <t t-set="amount_by_group_1" t-value="amount_by_group[1] / doc.x_studio_tasa_ref_negociada"/>
+                        </t>
+                        <t t-elif="doc.pricelist_id.currency_id.name == 'USD'">
+                            <t t-set="amount_by_group_1" t-value="amount_by_group[1] * doc.x_studio_tasa_ref_negociada"/>
+                        </t>
+                        <span t-esc="amount_by_group_1" t-options='{"widget": "float", "precision": 2}'/>
+                        <span t-esc="currency"/>
+                    </t>
+                    <t t-else="">
+                        <span t-esc="amount_by_group[1]"
+                              t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                    </t>
+                </td>
+            </xpath>
 
             <xpath expr="//td[@name='td_amount_total']" position="replace">
                 <td name="td_amount_total" class="text-right">
@@ -378,6 +500,17 @@
                             <t t-set="amount_total" t-value="doc.amount_total * doc.x_studio_tasa_venta"/>
                         </t>
                         <span t-esc="amount_total" t-options='{"widget": "float", "precision": 2}'/>
+                        <span t-esc="currency"/>
+                    </t>
+                    <t t-elif="budget_type == 'negotiated_rate'">
+                        <t t-if="doc.pricelist_id.currency_id.name == 'VES'">
+                            <t t-set="amount_total" t-value="doc.amount_total / doc.x_studio_tasa_ref_negociada"/>
+                        </t>
+                        <t t-elif="doc.pricelist_id.currency_id.name == 'USD'">
+                            <t t-set="amount_total" t-value="doc.amount_total * doc.x_studio_tasa_ref_negociada"/>
+                        </t>
+                        <span t-esc="amount_total" t-options='{"widget": "float", "precision": 2}'/>
+                        <span t-esc="currency"/>
                     </t>
                     <t t-else="">
                         <span t-field="doc.amount_total"/>
@@ -391,7 +524,27 @@
             <t t-call="web.html_container">
                 <t t-set="budget_type" t-value="'official_rate'"/>
                 <t t-foreach="docs" t-as="doc">
-<!--                    <t t-call="import_customization.official_rate" t-lang="doc.partner_id.lang"/>-->
+                    <t t-if="doc.pricelist_id.currency_id.name == 'VES'">
+                        <t t-set="currency" t-value="'$'"/>
+                    </t>
+                    <t t-elif="doc.pricelist_id.currency_id.name == 'USD'">
+                        <t t-set="currency" t-value="'Bs'"/>
+                    </t>
+                    <t t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
+                </t>
+            </t>
+        </template>
+
+        <template id="budget_negotiated_rate">
+            <t t-call="web.html_container">
+                <t t-set="budget_type" t-value="'negotiated_rate'"/>
+                <t t-foreach="docs" t-as="doc">
+                    <t t-if="doc.pricelist_id.currency_id.name == 'VES'">
+                        <t t-set="currency" t-value="'$'"/>
+                    </t>
+                    <t t-elif="doc.pricelist_id.currency_id.name == 'USD'">
+                        <t t-set="currency" t-value="'Bs'"/>
+                    </t>
                     <t t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
                 </t>
             </t>

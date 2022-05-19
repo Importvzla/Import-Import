@@ -25,5 +25,16 @@
         <field name="print_report_name">'Presupuesto tasa oficial - %s' % (object.name)</field>
     </record>
 
+    <record id="budget_negotiated_rate_report" model="ir.actions.report">
+        <field name="name">Presupuesto Tasa Negociada</field>
+        <field name="model">sale.order</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">import_customization.budget_negotiated_rate</field>
+        <field name="report_file">import_customization.budget_negotiated_rate</field>
+        <field name="print_report_name">'Presupuesto tasa Negociada - %s' % (object.name)</field>
+    </record>
+
   </data>
 </odoo>
