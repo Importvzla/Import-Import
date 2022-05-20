@@ -273,18 +273,18 @@
                 <h2 class="mt16">
                     <t t-if="not (env.context.get('proforma', False) or is_pro_forma)">
                         <t t-if="doc.state not in ['draft','sent']">
-                            <span>Order # </span>
+                            <span>Pedido # </span>
                             <span t-field="doc.x_npedido"/>
 <!--                            <span>PRUEBAAAA</span>-->
                         </t>
                         <t t-elif="doc.state in ['draft','sent']">
-                            <span>Quotation # </span>
+                            <span>Presupuesto # </span>
                             <span t-field="doc.name"/>
                         </t>
 
                     </t>
                     <t t-if="env.context.get('proforma', False) or is_pro_forma">
-                        <span>Pro-Forma Invoice # </span>
+                        <span>Pro-Forma Factura # </span>
                         <span t-field="doc.name"/>
                     </t>
                 </h2>
