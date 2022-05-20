@@ -269,6 +269,27 @@
 
         <template id="report_saleorder_document_inherit_import_customization" inherit_id="sale.report_saleorder_document">
 
+            <xpath expr="//div[@class='page']//h2[1]" position="replace">
+                <h2 class="mt16">
+                    <t t-if="not (env.context.get('proforma', False) or is_pro_forma)">
+                        <t t-if="doc.state not in ['draft','sent']">
+                            <span>Order # </span>
+                            <span t-field="doc.x_npedido"/>
+<!--                            <span>PRUEBAAAA</span>-->
+                        </t>
+                        <t t-elif="doc.state in ['draft','sent']">
+                            <span>Quotation # </span>
+                            <span t-field="doc.name"/>
+                        </t>
+
+                    </t>
+                    <t t-if="env.context.get('proforma', False) or is_pro_forma">
+                        <span>Pro-Forma Invoice # </span>
+                        <span t-field="doc.name"/>
+                    </t>
+                </h2>
+            </xpath>
+
             <xpath expr="//div[@id='informations']" position="inside">
                 <div t-if="budget_type == 'official_rate'" class="col-auto col-3 mw-100 mb-2">
                     <strong>Tasa:</strong>
