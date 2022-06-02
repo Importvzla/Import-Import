@@ -30,6 +30,7 @@
         'views/views.xml',
         'views/import_import_report.xml',
         'views/res_partner_views.xml',
+        'views/sale_order_line.xml',
         'reports/import_import_bill.xml',
         'reports/budget_official_rate.xml',
     ],

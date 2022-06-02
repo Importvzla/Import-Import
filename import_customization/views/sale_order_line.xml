@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!--         <record id="view_sale_order_line_form" model="ir.ui.view">-->
+<!--            <field name="name">sale.order.line.form</field>-->
+<!--            <field name="model">sale.order.line</field>-->
+<!--            <field eval="2" name="priority"/>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <form string="Journal Item" create="false">-->
+<!--                    <sheet>-->
+<!--                        <group>-->
+<!--                            <field name="name"/>-->
+<!--                        </group>-->
+<!--                    </sheet>-->
+<!--                </form>-->
+<!--            </field>-->
+<!--        </record>-->
+
+<!--         <record id="view_sale_order_line_tree" model="ir.ui.view">-->
+<!--            <field name="name">sale.order.line.tree.</field>-->
+<!--            <field name="model">sale.order.line</field>-->
+<!--            <field name="priority">1</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <tree string="Lineas de Ordenes de Venta" create="false" expand="context.get('expand', False)" multi_edit="1">-->
+<!--                    <field name="name"/>-->
+<!--                </tree>-->
+<!--            </field>-->
+<!--        </record>-->
+
+<!--        <record id="action_sale_order_line_tree" model="ir.actions.act_window">-->
+<!--            <field name="name">Lineas de Ordenes de Venta</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="res_model">sale.order.line</field>-->
+<!--            <field name="view_mode">tree, form</field>-->
+<!--            <field name="view_id" ref="sale.view_order_line_tree"/>-->
+<!--        </record>-->
+
+        <act_window name="Lineas de Ordenes de Venta"
+        id="action_sale_order_line_tree"
+        res_model="sale.order.line"
+        binding_model="sale.order.line"
+        binding_views="tree,form"
+        view_mode="tree,form"
+        />
+
+         <menuitem
+              name="Lineas de Ordenes de Venta"
+              id="menu_sale_order_line"
+              parent="sale.sale_order_menu"
+              action="action_sale_order_line_tree"
+              sequence="41"/>
+    </data>
+</odoo>
