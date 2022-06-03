@@ -36,19 +36,61 @@
 <!--            <field name="view_id" ref="sale.view_order_line_tree"/>-->
 <!--        </record>-->
 
+
+        <record id="custom_view_order_line_tree_inherit_sale_stock" model="ir.ui.view">
+            <field name="name">custom.order.line.tree.inherit.sale.stock</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale_stock.view_order_line_tree_inherit_sale_stock"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='route_id']" position="replace">
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="custom_view_order_line_tree" model="ir.ui.view">
+            <field name="name">custom.sale.order.line.tree</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale.view_order_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_id']" position="attributes">
+                    <attribute name="string">Número de Cotización</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_id']" position="after">
+                    <field name="x_npedido"/>
+                </xpath>
+                <xpath expr="//field[@name='salesman_id']" position="attributes">
+                    <attribute name="string">Vendedor</attribute>
+                </xpath>
+                <xpath expr="//field[@name='salesman_id']" position="after">
+                    <field name="x_n_orden_de_compra"/>
+                    <field name="date_order"/>
+                </xpath>
+<!--                <xpath expr="//field[@name='route_id']" position="replace">-->
+<!--                </xpath>-->
+                <xpath expr="//field[@name='product_uom']" position="after">
+                    <field name="x_tasa_venta"/>
+                    <field name="price_unit_rate"/>
+                    <field name="price_unit"/>
+                    <field name="price_subtotal_rate"/>
+                </xpath>
+            </field>
+        </record>
+
         <act_window name="Lineas de Ordenes de Venta"
         id="action_sale_order_line_tree"
         res_model="sale.order.line"
         binding_model="sale.order.line"
         binding_views="tree,form"
         view_mode="tree,form"
+        domain="[('product_uom', '!=', False)]"
         />
 
          <menuitem
               name="Lineas de Ordenes de Venta"
               id="menu_sale_order_line"
-              parent="sale.sale_order_menu"
+              parent="sale.menu_sale_report"
               action="action_sale_order_line_tree"
-              sequence="41"/>
+              sequence="10"/>
     </data>
 </odoo>
