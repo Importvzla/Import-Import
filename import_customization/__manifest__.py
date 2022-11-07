@@ -32,7 +32,7 @@
         'views/res_partner_views.xml',
         'views/sale_order_line.xml',
         'reports/import_import_bill.xml',
-        'reports/budget_official_rate.xml',
+        # 'reports/budget_official_rate.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
