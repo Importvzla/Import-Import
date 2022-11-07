@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of BrowseInfo. See LICENSE file for full copyright and licensing details.
 {
-    "name" : "Currency Exchange Rate on Invoice/Payment/Sale/Purchase in Odoo",
-    "version" : "14.0.1.3",
-    "depends" : ['base','account','purchase','sale_management','stock'],
+    "name" : "Manual Currency Exchange Rate on Invoice/Payment/Sale/Purchase in Odoo",
+    "version" : "15.0.0.0",
+    # "depends" : ['base','account','purchase','sale_management','stock'],
+    "depends" : ['base','account'],
     "author": "BrowseInfo",
-    "summary": "Apps apply manual currency rate on invoice manual currency rate on payment manual currency rate on sales manual currency rate on purchase custom currency rate on invoice custom Currency Exchange Rate on Invoice custom Currency Exchange Rate on sales order",
+    "summary": "Apps apply manual currency rate on invoice manual currency rate on payment manual currency rate on sales manual currency rate on purchase custom currency rate on invoice manual Currency Exchange Rate on Invoice custom Currency Exchange Rate on sales order",
     "description": """
     Odoo/OpenERP module for manul currency rate converter
     Currency Exchange Rate on Invoice/Payment/Sale/Purchase, manual multi currency process on invoice, multi currency payment
@@ -125,21 +126,21 @@
     if you are using Odoo multi-currency working to provide invoices, sale order, purchase order to customers from different countries along with currency rates according to their country? For Odoo This module is designed to provide currency rate exchange in real time can be really useful Currency Exchange Rates in Odoo. 
 
     """,
-    "price": 35,
+    "price": 22,
     "currency": "EUR",
     'category': 'Accounting',
     "website" : "https://www.browseinfo.in",
     "data" :[
              "views/customer_invoice.xml",
              "views/account_payment_view.xml",
-             "views/purchase_view.xml",
-             "views/sale_view.xml",
-    ],
-    'qweb':[
-    ],
+             # "views/purchase_view.xml",
+             # "views/sale_view.xml",
+        ],
+    'qweb':[],
     "auto_install": False,
     "installable": True,
     'live_test_url':'https://youtu.be/nRdIuuxi9yI',
 	"images":['static/description/Banner.png'],
+    "license": "OPL-1",
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

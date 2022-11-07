@@ -2,6 +2,7 @@
 # Part of BrowseInfo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models,api, _
+from odoo.exceptions import UserError, Warning, ValidationError
 
 
 class account_payment(models.TransientModel):
@@ -21,12 +22,37 @@ class account_payment(models.TransientModel):
             return rec
         invoices = self.env['account.move'].browse(active_ids).filtered(
             lambda move: move.is_invoice(include_receipts=True))
-        for move in invoices:
-            rec.update({
-                'manual_currency_rate_active': move.manual_currency_rate_active,
-                'manual_currency_rate': move.manual_currency_rate
-            })
+        if len(invoices or []) > 1:
+            if all(inv.manual_currency_rate_active == False for inv in invoices):
+                return rec;
+            if any(inv.manual_currency_rate_active == False for inv in invoices):
+                raise ValidationError(_("Selected invoice to make payment have not similer currency or currency rate is not same.\n Make sure selected invoices have same currency and same manual currency rate."));
+            else:
+                rate = invoices[0].manual_currency_rate
+                if any(inv.manual_currency_rate != rate for inv in invoices):
+                    raise ValidationError(_("Selected invoice to make payment have not similer currency or currency rate is not same.\n Make sure selected invoices have same currency and same manual currency rate."));
+        rec.update({
+            'manual_currency_rate_active': invoices[0].manual_currency_rate_active,
+            'manual_currency_rate': invoices[0].manual_currency_rate
+        })
         return rec
+
+    @api.onchange('manual_currency_rate_active')
+    def _onchange_manual_currency_rate_active(self):
+        for wizard in self:
+            active_ids = self._context.get('active_ids') or self._context.get('active_id')
+            active_model = self._context.get('active_model')
+            invoices = self.env['account.move'].browse(active_ids).filtered(
+            lambda move: move.is_invoice(include_receipts=True))
+            if active_model =="account.move" and len(invoices) > 1:
+                if any(inv.manual_currency_rate_active and inv.currency_id.id == inv.company_id.currency_id.id for inv in invoices):
+                    raise UserError(_('Company currency and invoice currency same for one or more selected invoices, You can not add manual Exchange rate for same currency.'));
+            else:
+                if wizard.manual_currency_rate_active and wizard.currency_id == wizard.company_currency_id:
+                    wizard.manual_currency_rate_active = False
+                    raise UserError(_('Company currency and invoice currency same, You can not add manual Exchange rate for same currency.'))
+
+
 
     @api.depends('source_amount', 'source_amount_currency', 'source_currency_id', 'company_id', 'currency_id', 'payment_date', 'manual_currency_rate')
     def _compute_amount(self):
@@ -39,7 +65,11 @@ class account_payment(models.TransientModel):
                 wizard.amount = wizard.source_amount
             else:
                 # Foreign currency on payment different than the one set on the journal entries.
-                amount_payment_currency = wizard.company_id.currency_id._convert(wizard.source_amount, wizard.currency_id, wizard.company_id, wizard.payment_date)
+                if self.manual_currency_rate_active and self.manual_currency_rate > 0:
+                    currency_rate = self.manual_currency_rate
+                    amount_payment_currency = wizard.source_amount * currency_rate
+                else:
+                    amount_payment_currency = wizard.company_id.currency_id._convert(wizard.source_amount, wizard.currency_id, wizard.company_id, wizard.payment_date)
                 wizard.amount = amount_payment_currency
 
     @api.depends('amount')
@@ -53,7 +83,11 @@ class account_payment(models.TransientModel):
                 wizard.payment_difference = wizard.source_amount - wizard.amount
             else:
                 # Foreign currency on payment different than the one set on the journal entries.
-                amount_payment_currency = wizard.company_id.currency_id._convert(wizard.source_amount, wizard.currency_id, wizard.company_id, wizard.payment_date)
+                if self.manual_currency_rate_active and self.manual_currency_rate > 0:
+                    currency_rate = self.manual_currency_rate
+                    amount_payment_currency = wizard.source_amount * currency_rate
+                else:
+                    amount_payment_currency = wizard.company_id.currency_id._convert(wizard.source_amount, wizard.currency_id, wizard.company_id, wizard.payment_date)
                 wizard.payment_difference = amount_payment_currency - wizard.amount
 
 
@@ -82,12 +116,12 @@ class AccountPayment(models.Model):
             return rec
         invoices = self.env['account.move'].browse(active_ids).filtered(
             lambda move: move.is_invoice(include_receipts=True))
-        for move in invoices:
-            rec.update({
-                'manual_currency_rate_active': move.manual_currency_rate_active,
-                'manual_currency_rate': move.manual_currency_rate
-            })
+        rec.update({
+            'manual_currency_rate_active': invoices[0].manual_currency_rate_active,
+            'manual_currency_rate': invoices[0].manual_currency_rate
+        })
         return rec
+
 
     @api.model
     def _compute_payment_amount(self, invoices, currency, journal, date):
@@ -138,6 +172,7 @@ class AccountPayment(models.Model):
                         total += res['residual_currency'] * inv.manual_currency_rate
         return total
 
+
     @api.depends('invoice_ids', 'amount', 'payment_date', 'currency_id', 'payment_type', 'manual_currency_rate')
     def _compute_payment_difference(self):
         draft_payments = self.filtered(lambda p: p.invoice_ids and p.state == 'draft')
@@ -160,38 +195,51 @@ class AccountPayment(models.Model):
         self.ensure_one()
         write_off_line_vals = write_off_line_vals or {}
 
-        if not self.journal_id.payment_debit_account_id or not self.journal_id.payment_credit_account_id:
+        if not self.outstanding_account_id:
             raise UserError(_(
-                "You can't create a new payment without an outstanding payments/receipts accounts set on the %s journal."
-            ) % self.journal_id.display_name)
+                "You can't create a new payment without an outstanding payments/receipts account set either on the company or the %s payment method in the %s journal.",
+                self.payment_method_line_id.name, self.journal_id.display_name))
 
         # Compute amounts.
-        write_off_amount = write_off_line_vals.get('amount', 0.0)
+        write_off_amount_currency = write_off_line_vals.get('amount', 0.0)
 
         if self.payment_type == 'inbound':
             # Receive money.
-            counterpart_amount = -self.amount
-            write_off_amount *= -1
+            liquidity_amount_currency = self.amount
         elif self.payment_type == 'outbound':
             # Send money.
-            counterpart_amount = self.amount
+            liquidity_amount_currency = -self.amount
+            write_off_amount_currency *= -1
         else:
-            counterpart_amount = 0.0
-            write_off_amount = 0.0
+            liquidity_amount_currency = write_off_amount_currency = 0.0
 
-        if self.manual_currency_rate_active:
+
+        if self.manual_currency_rate_active and self.manual_currency_rate > 0:
             currency_rate = self.company_id.currency_id.rate / self.manual_currency_rate
-            balance = counterpart_amount * currency_rate
-            counterpart_amount_currency = counterpart_amount
-            write_off_balance = write_off_amount * currency_rate
-            write_off_amount_currency = write_off_amount
+            liquidity_balance = liquidity_amount_currency * currency_rate            
+            counterpart_amount_currency = -liquidity_amount_currency - write_off_amount_currency            
+            write_off_balance = write_off_amount_currency * currency_rate
+            counterpart_balance = -liquidity_balance - write_off_balance
             currency_id = self.currency_id.id
+        
         else:
-            balance = self.currency_id._convert(counterpart_amount, self.company_id.currency_id, self.company_id, self.date)
-            counterpart_amount_currency = counterpart_amount
-            write_off_balance = self.currency_id._convert(write_off_amount, self.company_id.currency_id, self.company_id, self.date)
-            write_off_amount_currency = write_off_amount
+
+            write_off_balance = self.currency_id._convert(
+                write_off_amount_currency,
+                self.company_id.currency_id,
+                self.company_id,
+                self.date,
+            )
+            liquidity_balance = self.currency_id._convert(
+                liquidity_amount_currency,
+                self.company_id.currency_id,
+                self.company_id,
+                self.date,
+            )
+            counterpart_amount_currency = -liquidity_amount_currency - write_off_amount_currency
+            counterpart_balance = -liquidity_balance - write_off_balance
             currency_id = self.currency_id.id
+
 
         if self.is_internal_transfer:
             if self.payment_type == 'inbound':
@@ -211,7 +259,7 @@ class AccountPayment(models.Model):
         }
 
         default_line_name = self.env['account.move.line']._get_default_line_name(
-            payment_display_name['%s-%s' % (self.payment_type, self.partner_type)],
+            _("Internal Transfer") if self.is_internal_transfer else payment_display_name['%s-%s' % (self.payment_type, self.partner_type)],
             self.amount,
             self.currency_id,
             self.date,
@@ -223,37 +271,37 @@ class AccountPayment(models.Model):
             {
                 'name': liquidity_line_name or default_line_name,
                 'date_maturity': self.date,
-                'amount_currency': -counterpart_amount_currency,
+                'amount_currency': liquidity_amount_currency,
                 'currency_id': currency_id,
-                'debit': balance < 0.0 and -balance or 0.0,
-                'credit': balance > 0.0 and balance or 0.0,
+                'debit': liquidity_balance if liquidity_balance > 0.0 else 0.0,
+                'credit': -liquidity_balance if liquidity_balance < 0.0 else 0.0,
                 'partner_id': self.partner_id.id,
-                'account_id': self.journal_id.payment_debit_account_id.id if balance < 0.0 else self.journal_id.payment_credit_account_id.id,
+                'account_id': self.outstanding_account_id.id,
             },
             # Receivable / Payable.
             {
                 'name': self.payment_reference or default_line_name,
                 'date_maturity': self.date,
-                'amount_currency': counterpart_amount_currency + write_off_amount_currency if currency_id else 0.0,
+                'amount_currency': counterpart_amount_currency,
                 'currency_id': currency_id,
-                'debit': balance + write_off_balance > 0.0 and balance + write_off_balance or 0.0,
-                'credit': balance + write_off_balance < 0.0 and -balance - write_off_balance or 0.0,
+                'debit': counterpart_balance if counterpart_balance > 0.0 else 0.0,
+                'credit': -counterpart_balance if counterpart_balance < 0.0 else 0.0,
                 'partner_id': self.partner_id.id,
                 'account_id': self.destination_account_id.id,
             },
         ]
-        if write_off_balance:
+        if not self.currency_id.is_zero(write_off_amount_currency):
             # Write-off line.
             line_vals_list.append({
                 'name': write_off_line_vals.get('name') or default_line_name,
-                'amount_currency': -write_off_amount_currency,
+                'amount_currency': write_off_amount_currency,
                 'currency_id': currency_id,
-                'debit': write_off_balance < 0.0 and -write_off_balance or 0.0,
-                'credit': write_off_balance > 0.0 and write_off_balance or 0.0,
+                'debit': write_off_balance if write_off_balance > 0.0 else 0.0,
+                'credit': -write_off_balance if write_off_balance < 0.0 else 0.0,
                 'partner_id': self.partner_id.id,
                 'account_id': write_off_line_vals.get('account_id'),
             })
-
         return line_vals_list
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
