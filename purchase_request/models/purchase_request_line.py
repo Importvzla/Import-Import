@@ -25,7 +25,9 @@ class PurchaseRequestLine(models.Model):
         comodel_name="uom.uom",
         string="UoM",
         tracking=True,
+        domain="[('category_id', '=', product_uom_category_id)]",
     )
+    product_uom_category_id = fields.Many2one(related="product_id.uom_id.category_id")
     product_qty = fields.Float(
         string="Quantity", tracking=True, digits="Product Unit of Measure"
     )
@@ -79,10 +81,8 @@ class PurchaseRequestLine(models.Model):
         tracking=True,
         default=fields.Date.context_today,
     )
-    is_editable = fields.Boolean(
-        string="Is editable", compute="_compute_is_editable", readonly=True
-    )
-    specifications = fields.Text(string="Specifications")
+    is_editable = fields.Boolean(compute="_compute_is_editable", readonly=True)
+    specifications = fields.Text()
     request_state = fields.Selection(
         string="Request state",
         related="request_id.state",
@@ -95,9 +95,7 @@ class PurchaseRequestLine(models.Model):
         compute_sudo=True,
         store=True,
     )
-    cancelled = fields.Boolean(
-        string="Cancelled", readonly=True, default=False, copy=False
-    )
+    cancelled = fields.Boolean(readonly=True, default=False, copy=False)
 
     purchased_qty = fields.Float(
         string="RFQ/PO Qty",
@@ -135,7 +133,6 @@ class PurchaseRequestLine(models.Model):
     )
 
     qty_in_progress = fields.Float(
-        string="Qty In Progress",
         digits="Product Unit of Measure",
         readonly=True,
         compute="_compute_qty",
@@ -143,7 +140,6 @@ class PurchaseRequestLine(models.Model):
         help="Quantity in progress.",
     )
     qty_done = fields.Float(
-        string="Qty Done",
         digits="Product Unit of Measure",
         readonly=True,
         compute="_compute_qty",
@@ -151,7 +147,6 @@ class PurchaseRequestLine(models.Model):
         help="Quantity completed",
     )
     qty_cancelled = fields.Float(
-        string="Qty Cancelled",
         digits="Product Unit of Measure",
         readonly=True,
         compute="_compute_qty_cancelled",
@@ -171,7 +166,6 @@ class PurchaseRequestLine(models.Model):
         store=True,
     )
     estimated_cost = fields.Monetary(
-        string="Estimated Cost",
         currency_field="currency_id",
         default=0.0,
         help="Estimated cost of Purchase Request Line, not propagated to PO.",
@@ -191,6 +185,7 @@ class PurchaseRequestLine(models.Model):
         "purchase_request_allocation_ids.purchase_line_id",
         "purchase_request_allocation_ids.purchase_line_id.state",
         "request_id.state",
+        "product_qty",
     )
     def _compute_qty_to_buy(self):
         for pr in self:
@@ -286,7 +281,7 @@ class PurchaseRequestLine(models.Model):
         if self.product_id:
             name = self.product_id.name
             if self.product_id.code:
-                name = "[{}] {}".format(name, self.product_id.code)
+                name = "[{}] {}".format(self.product_id.code, name)
             if self.product_id.description_purchase:
                 name += "\n" + self.product_id.description_purchase
             self.product_uom_id = self.product_id.uom_id.id
@@ -399,3 +394,20 @@ class PurchaseRequestLine(models.Model):
                     )
                 )
         return super(PurchaseRequestLine, self).unlink()
+
+    def action_show_details(self):
+        self.ensure_one()
+        view = self.env.ref("purchase_request.view_purchase_request_line_details")
+        return {
+            "name": _("Detailed Line"),
+            "type": "ir.actions.act_window",
+            "view_mode": "form",
+            "res_model": "purchase.request.line",
+            "views": [(view.id, "form")],
+            "view_id": view.id,
+            "target": "new",
+            "res_id": self.id,
+            "context": dict(
+                self.env.context,
+            ),
+        }

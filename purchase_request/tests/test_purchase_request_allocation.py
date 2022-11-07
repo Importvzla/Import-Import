@@ -72,10 +72,12 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
         wiz_id.make_purchase_order()
         purchase_request1.action_view_purchase_order()
         po_line = purchase_request_line1.purchase_lines[0]
+        # Add unit price in PO Line
+        po_line.write({"price_unit": 10})
         purchase = po_line.order_id
         purchase.order_line.action_open_request_line_tree_view()
         purchase.button_confirm()
-        purchase_request1.action_view_stock_move()
+        purchase_request1.action_view_stock_picking()
         self.assertEqual(purchase_request_line1.qty_in_progress, 2.0)
         self.assertEqual(purchase_request_line2.qty_in_progress, 2.0)
         picking = purchase.picking_ids[0]
@@ -83,7 +85,7 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
         backorder_wiz_id = picking.button_validate()
         common.Form(
             self.env[backorder_wiz_id["res_model"]].with_context(
-                backorder_wiz_id["context"]
+                **backorder_wiz_id["context"]
             )
         ).save().process()
         self.assertEqual(purchase_request_line1.qty_done, 2.0)
@@ -94,7 +96,7 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
         backorder_wiz_id2 = backorder_picking.button_validate()
         common.Form(
             self.env[backorder_wiz_id2["res_model"]].with_context(
-                backorder_wiz_id2["context"]
+                **backorder_wiz_id2["context"]
             )
         ).save().process()
 
@@ -131,10 +133,11 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
         wiz_id.make_purchase_order()
         purchase_request1.action_view_purchase_order()
         po_line = purchase_request_line1.purchase_lines[0]
+        # Add unit price in PO Line
+        po_line.write({"price_unit": 10})
         purchase = po_line.order_id
         purchase.button_confirm()
         self.assertEqual(purchase_request_line1.qty_in_progress, 2.0)
-        purchase_request1.action_view_stock_move()
         # manually set in the PO line
         po_line.write({"qty_received": 0.5})
         self.assertEqual(purchase_request_line1.qty_done, 0.5)
@@ -167,7 +170,7 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
         purchase2 = po_line.order_id
         purchase2.button_confirm()
         self.assertEqual(purchase_request_line2.qty_in_progress, 2.0)
-        purchase_request1.action_view_stock_move()
+        purchase_request1.action_view_stock_picking()
         # manually set in the PO line
         po_line.write({"qty_received": 2.0})
         self.assertEqual(purchase_request_line2.qty_done, 2.0)
