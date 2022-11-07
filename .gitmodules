@@ -1,4 +1,4 @@
 [submodule "tax_report"]
 	path = tax_report
 	url = git@gitlab.com:addons_arkisoft/tax_report.git
-	branch = 14.0
+	branch = 15.0
