@@ -10,3 +10,5 @@
 * Jairo Llopis <jairo.llopis@tecnativa.com>
 * Graeme Gellatly <graeme@o4sb.com>
 * Rod Schouteden <rod@schout-it.be>
+* Alexandre Fayolle <alexandre.fayolle@camptocamp.com>
+* Matias Peralta <mnp@adhoc.com.ar>

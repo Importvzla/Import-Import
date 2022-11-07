@@ -6,6 +6,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, exceptions, fields, models
+from odoo.tools.safe_eval import safe_eval, time
 
 
 class IrActionsReport(models.Model):
@@ -33,7 +34,7 @@ class IrActionsReport(models.Model):
 
     @api.onchange("printing_printer_id")
     def onchange_printing_printer_id(self):
-        """ Reset the tray when the printer is changed """
+        """Reset the tray when the printer is changed"""
         self.printer_tray_id = False
 
     @api.model
@@ -97,7 +98,7 @@ class IrActionsReport(models.Model):
         return result
 
     def print_document(self, record_ids, data=None):
-        """ Print a document, do not return the document file """
+        """Print a document, do not return the document file"""
         document, doc_format = self.with_context(
             must_skip_send_to_printer=True
         )._render_qweb_pdf(record_ids, data=data)
@@ -105,7 +106,18 @@ class IrActionsReport(models.Model):
         printer = behaviour.pop("printer", None)
 
         if not printer:
-            raise exceptions.Warning(_("No printer configured to print this report."))
+            raise exceptions.UserError(_("No printer configured to print this report."))
+        if self.print_report_name:
+            report_file_names = [
+                safe_eval(self.print_report_name, {"object": obj, "time": time})
+                for obj in self.env[self.model].browse(record_ids)
+            ]
+            title = " ".join(report_file_names)
+            if len(title) > 80:
+                title = title[:80] + "…"
+        else:
+            title = self.report_name
+        behaviour["title"] = title
         # TODO should we use doc_format instead of report_type
         return printer.print_document(
             self, document, doc_format=self.report_type, **behaviour

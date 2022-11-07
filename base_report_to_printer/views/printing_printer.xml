@@ -31,6 +31,12 @@
                         string="Cancel all running jobs"
                         confirm="Are you sure to want to cancel all jobs of this printer?"
                     />
+                    <button
+                        name="print_test_page"
+                        type="object"
+                        string="Print Test Page"
+                        confirm="Are you sure to want to print a test page?"
+                    />
                 </header>
                 <sheet>
                     <widget
@@ -47,6 +53,7 @@
                     </div>
                     <group name="name">
                         <field name="system_name" />
+                        <field name="server_id" />
                     </group>
                     <group col="4" colspan="4" name="default">
                         <field name="default" />
@@ -100,6 +107,7 @@
                 <field name="default" />
                 <field name="name" />
                 <field name="system_name" />
+                <field name="server_id" />
                 <field name="status" />
             </tree>
         </field>

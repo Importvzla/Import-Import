@@ -41,6 +41,7 @@ msgstr "Acciones"
 
 #. module: base_report_to_printer
 #: model:ir.model.fields,field_description:base_report_to_printer.field_printing_job__active
+#: model:ir.model.fields,field_description:base_report_to_printer.field_printing_printer__active
 #: model:ir.model.fields,field_description:base_report_to_printer.field_printing_server__active
 msgid "Active"
 msgstr "Activo"
@@ -51,9 +52,19 @@ msgid "Address"
 msgstr "Dirección"
 
 #. module: base_report_to_printer
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: base_report_to_printer
 #: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
 msgid "Are you sure to want to cancel all jobs of this printer?"
 msgstr "¿Estás seguro que quieres cancelar todos los trabajos de la impresora?"
+
+#. module: base_report_to_printer
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
+msgid "Are you sure to want to print a test page?"
+msgstr ""
 
 #. module: base_report_to_printer
 #: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_printer__status__available
@@ -140,6 +151,13 @@ msgstr "Completado con algunos avisos"
 #: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_job__job_state_reason__unsupported-compression
 msgid "Compressed using an unknown algorithm"
 msgstr "Comprimido usando un algoritmo desconocido"
+
+#. module: base_report_to_printer
+#. openerp-web
+#: code:addons/base_report_to_printer/static/src/js/qweb_action_manager.esm.js:0
+#, python-format
+msgid "Could not sent to printer!"
+msgstr ""
 
 #. module: base_report_to_printer
 #: model:ir.model.fields,field_description:base_report_to_printer.field_printing_action__create_uid
@@ -241,16 +259,19 @@ msgid "Display Name"
 msgstr "Nombre mostrado"
 
 #. module: base_report_to_printer
-#. openerp-web
-#: code:addons/base_report_to_printer/static/src/js/qweb_action_manager.js:0
-#, python-format
-msgid "Document sent to the printer %s"
-msgstr "Documento enviado a la impresora %s"
-
-#. module: base_report_to_printer
 #: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
 msgid "Enable"
 msgstr "Habilitar"
+
+#. module: base_report_to_printer
+#: model:ir.model.fields,field_description:base_report_to_printer.field_printing_server__encryption_policy
+msgid "Encryption Policy"
+msgstr ""
+
+#. module: base_report_to_printer
+#: model:ir.model.fields,help:base_report_to_printer.field_printing_server__encryption_policy
+msgid "Encryption Policy to connect to the server. Empty by default."
+msgstr ""
 
 #. module: base_report_to_printer
 #: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_printer__status__error
@@ -268,21 +289,12 @@ msgid "Error in the document"
 msgstr "Error en el documento"
 
 #. module: base_report_to_printer
-#. openerp-web
-#: code:addons/base_report_to_printer/static/src/js/qweb_action_manager.js:0
-#, python-format
-msgid "Error when sending the document to the printer "
-msgstr "Error enviando el documento a la impresora "
-
-#. module: base_report_to_printer
 #: code:addons/base_report_to_printer/models/printing_server.py:0
 #, python-format
 msgid ""
-"Failed to connect to the CUPS server on %s:%s. Check that the CUPS server is "
-"running and that you can reach it from the Odoo server."
+"Failed to connect to the CUPS server on %(address)s:%(port)s. Check that the "
+"CUPS server is running and that you can reach it from the Odoo server."
 msgstr ""
-"Ha fallado la conexión al servidor CUPS %s:%s. Comprueba que el servidor "
-"CUPS está funcionando y que el servidor de Odoo puede comunicarse con él."
 
 #. module: base_report_to_printer
 #: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_job__job_state_reason__job-incoming
@@ -293,6 +305,26 @@ msgstr "Se están recibiendo ficheros"
 #: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_job__job_state_reason__submission-interrupted
 msgid "Files were not received in full"
 msgstr "No se recibieron ficheros completos"
+
+#. module: base_report_to_printer
+#: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_server__encryption_policy__3
+msgid "HTTP_ENCRYPT_ALWAYS"
+msgstr ""
+
+#. module: base_report_to_printer
+#: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_server__encryption_policy__0
+msgid "HTTP_ENCRYPT_IF_REQUESTED"
+msgstr ""
+
+#. module: base_report_to_printer
+#: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_server__encryption_policy__1
+msgid "HTTP_ENCRYPT_NEVER"
+msgstr ""
+
+#. module: base_report_to_printer
+#: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_server__encryption_policy__2
+msgid "HTTP_ENCRYPT_REQUIRED"
+msgstr ""
 
 #. module: base_report_to_printer
 #: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_job__job_state_reason__service-off-line
@@ -446,6 +478,16 @@ msgid "Paper Sources"
 msgstr "Fuentes de papel"
 
 #. module: base_report_to_printer
+#: model:ir.model.fields,field_description:base_report_to_printer.field_printing_server__password
+msgid "Password"
+msgstr ""
+
+#. module: base_report_to_printer
+#: model:ir.model.fields,help:base_report_to_printer.field_printing_server__password
+msgid "Password to connect to the server. Empty by default."
+msgstr ""
+
+#. module: base_report_to_printer
 #: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_job__job_state__pending
 msgid "Pending"
 msgstr "Pendiente"
@@ -479,6 +521,11 @@ msgstr "Imprimir"
 #: model:ir.model,name:base_report_to_printer.model_printing_action
 msgid "Print Job Action"
 msgstr "Acción de imprimir un trabajo"
+
+#. module: base_report_to_printer
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
+msgid "Print Test Page"
+msgstr ""
 
 #. module: base_report_to_printer
 #: model:ir.model,name:base_report_to_printer.model_printing_printer
@@ -530,7 +577,6 @@ msgstr "Lista de impresoras"
 #: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_printer__status__printing
 #: model:ir.ui.menu,name:base_report_to_printer.printing_menu
 #: model_terms:ir.ui.view,arch_db:base_report_to_printer.view_users_form
-#: model_terms:ir.ui.view,arch_db:base_report_to_printer.view_users_form_simple_modif
 msgid "Printing"
 msgstr "Imprimiendo"
 
@@ -595,10 +641,7 @@ msgid "Reason for the current job state."
 msgstr "Motivo del estado actual del trabajo."
 
 #. module: base_report_to_printer
-#. openerp-web
-#: code:addons/base_report_to_printer/static/src/js/qweb_action_manager.js:0
 #: model:ir.model.fields,field_description:base_report_to_printer.field_printing_report_xml_action__report_id
-#, python-format
 msgid "Report"
 msgstr "Informe"
 
@@ -688,6 +731,13 @@ msgid "Status Message"
 msgstr "Mensaje de estado"
 
 #. module: base_report_to_printer
+#. openerp-web
+#: code:addons/base_report_to_printer/static/src/js/qweb_action_manager.esm.js:0
+#, python-format
+msgid "Successfully sent to printer!"
+msgstr ""
+
+#. module: base_report_to_printer
 #: model:ir.model.fields,field_description:base_report_to_printer.field_printing_printer__system_name
 #: model:ir.model.fields,field_description:base_report_to_printer.field_printing_tray__system_name
 msgid "System Name"
@@ -711,9 +761,8 @@ msgstr "Este campo permite configurar acción e impresora a nivel de usuario"
 #. module: base_report_to_printer
 #: model_terms:ir.ui.view,arch_db:base_report_to_printer.printer_update_wizard
 msgid ""
-"This process will create all missing printers from the current CUPS server."
+"This process will create all missing printers from the current CUPS server.\""
 msgstr ""
-"Este proceso creará las impresoras no configurada del servidor CUPS actual."
 
 #. module: base_report_to_printer
 #: model:ir.model.fields,field_description:base_report_to_printer.field_printing_job__time_at_completed
@@ -797,18 +846,45 @@ msgstr "Actualizar impresoras desde CUPS"
 
 #. module: base_report_to_printer
 #: model:ir.model.fields,field_description:base_report_to_printer.field_printing_report_xml_action__user_id
+#: model:ir.model.fields,field_description:base_report_to_printer.field_printing_server__user
 msgid "User"
 msgstr "Usuario"
+
+#. module: base_report_to_printer
+#: model:ir.model.fields,help:base_report_to_printer.field_printing_server__user
+msgid "User name to connect to the server. Empty by default."
+msgstr ""
 
 #. module: base_report_to_printer
 #: model:ir.model,name:base_report_to_printer.model_res_users
 msgid "Users"
 msgstr "Usuarios"
 
-#. module: base_report_to_printer
-#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printer_update_wizard
-msgid "or"
-msgstr "o"
+#, python-format
+#~ msgid "Document sent to the printer %s"
+#~ msgstr "Documento enviado a la impresora %s"
+
+#, python-format
+#~ msgid "Error when sending the document to the printer "
+#~ msgstr "Error enviando el documento a la impresora "
+
+#, python-format
+#~ msgid ""
+#~ "Failed to connect to the CUPS server on %s:%s. Check that the CUPS server "
+#~ "is running and that you can reach it from the Odoo server."
+#~ msgstr ""
+#~ "Ha fallado la conexión al servidor CUPS %s:%s. Comprueba que el servidor "
+#~ "CUPS está funcionando y que el servidor de Odoo puede comunicarse con él."
+
+#~ msgid ""
+#~ "This process will create all missing printers from the current CUPS "
+#~ "server."
+#~ msgstr ""
+#~ "Este proceso creará las impresoras no configurada del servidor CUPS "
+#~ "actual."
+
+#~ msgid "or"
+#~ msgstr "o"
 
 #~ msgid "ir.actions.report"
 #~ msgstr "ir.actions.report"

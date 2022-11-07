@@ -41,6 +41,7 @@ msgstr "Akcije"
 
 #. module: base_report_to_printer
 #: model:ir.model.fields,field_description:base_report_to_printer.field_printing_job__active
+#: model:ir.model.fields,field_description:base_report_to_printer.field_printing_printer__active
 #: model:ir.model.fields,field_description:base_report_to_printer.field_printing_server__active
 msgid "Active"
 msgstr "Aktivno"
@@ -51,8 +52,18 @@ msgid "Address"
 msgstr "Adresa"
 
 #. module: base_report_to_printer
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: base_report_to_printer
 #: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
 msgid "Are you sure to want to cancel all jobs of this printer?"
+msgstr ""
+
+#. module: base_report_to_printer
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
+msgid "Are you sure to want to print a test page?"
 msgstr ""
 
 #. module: base_report_to_printer
@@ -140,6 +151,13 @@ msgstr "Završeno sa nekim upozorenjima"
 #: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_job__job_state_reason__unsupported-compression
 msgid "Compressed using an unknown algorithm"
 msgstr "Kompresirano korištenjem nepoznatog algoritma"
+
+#. module: base_report_to_printer
+#. openerp-web
+#: code:addons/base_report_to_printer/static/src/js/qweb_action_manager.esm.js:0
+#, python-format
+msgid "Could not sent to printer!"
+msgstr ""
 
 #. module: base_report_to_printer
 #: model:ir.model.fields,field_description:base_report_to_printer.field_printing_action__create_uid
@@ -241,16 +259,19 @@ msgid "Display Name"
 msgstr "Naziv "
 
 #. module: base_report_to_printer
-#. openerp-web
-#: code:addons/base_report_to_printer/static/src/js/qweb_action_manager.js:0
-#, python-format
-msgid "Document sent to the printer %s"
-msgstr ""
-
-#. module: base_report_to_printer
 #: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
 msgid "Enable"
 msgstr "Omogući"
+
+#. module: base_report_to_printer
+#: model:ir.model.fields,field_description:base_report_to_printer.field_printing_server__encryption_policy
+msgid "Encryption Policy"
+msgstr ""
+
+#. module: base_report_to_printer
+#: model:ir.model.fields,help:base_report_to_printer.field_printing_server__encryption_policy
+msgid "Encryption Policy to connect to the server. Empty by default."
+msgstr ""
 
 #. module: base_report_to_printer
 #: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_printer__status__error
@@ -268,21 +289,12 @@ msgid "Error in the document"
 msgstr "Greška u dokumentu"
 
 #. module: base_report_to_printer
-#. openerp-web
-#: code:addons/base_report_to_printer/static/src/js/qweb_action_manager.js:0
-#, python-format
-msgid "Error when sending the document to the printer "
-msgstr "Greška pri slanju dokumenta na pisač"
-
-#. module: base_report_to_printer
 #: code:addons/base_report_to_printer/models/printing_server.py:0
 #, python-format
 msgid ""
-"Failed to connect to the CUPS server on %s:%s. Check that the CUPS server is "
-"running and that you can reach it from the Odoo server."
+"Failed to connect to the CUPS server on %(address)s:%(port)s. Check that the "
+"CUPS server is running and that you can reach it from the Odoo server."
 msgstr ""
-"Neuspjelo povezivanje na CUPS poslužitelj na %s:%s. Provjerite da li je CUPS "
-"poslužitelj pokrenut i da li mu možete pristupiti sa Odoo poslužitelja."
 
 #. module: base_report_to_printer
 #: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_job__job_state_reason__job-incoming
@@ -293,6 +305,26 @@ msgstr "Datoteke se trenutno preuzimaju"
 #: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_job__job_state_reason__submission-interrupted
 msgid "Files were not received in full"
 msgstr "Datoteke nisu u potpunosti preuzete"
+
+#. module: base_report_to_printer
+#: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_server__encryption_policy__3
+msgid "HTTP_ENCRYPT_ALWAYS"
+msgstr ""
+
+#. module: base_report_to_printer
+#: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_server__encryption_policy__0
+msgid "HTTP_ENCRYPT_IF_REQUESTED"
+msgstr ""
+
+#. module: base_report_to_printer
+#: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_server__encryption_policy__1
+msgid "HTTP_ENCRYPT_NEVER"
+msgstr ""
+
+#. module: base_report_to_printer
+#: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_server__encryption_policy__2
+msgid "HTTP_ENCRYPT_REQUIRED"
+msgstr ""
 
 #. module: base_report_to_printer
 #: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_job__job_state_reason__service-off-line
@@ -446,6 +478,16 @@ msgid "Paper Sources"
 msgstr ""
 
 #. module: base_report_to_printer
+#: model:ir.model.fields,field_description:base_report_to_printer.field_printing_server__password
+msgid "Password"
+msgstr ""
+
+#. module: base_report_to_printer
+#: model:ir.model.fields,help:base_report_to_printer.field_printing_server__password
+msgid "Password to connect to the server. Empty by default."
+msgstr ""
+
+#. module: base_report_to_printer
 #: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_job__job_state__pending
 msgid "Pending"
 msgstr ""
@@ -479,6 +521,11 @@ msgstr "Ispis"
 #: model:ir.model,name:base_report_to_printer.model_printing_action
 msgid "Print Job Action"
 msgstr "Akcija ispisa zadatka"
+
+#. module: base_report_to_printer
+#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printing_printer_view_form
+msgid "Print Test Page"
+msgstr ""
 
 #. module: base_report_to_printer
 #: model:ir.model,name:base_report_to_printer.model_printing_printer
@@ -530,7 +577,6 @@ msgstr "Popis pisača"
 #: model:ir.model.fields.selection,name:base_report_to_printer.selection__printing_printer__status__printing
 #: model:ir.ui.menu,name:base_report_to_printer.printing_menu
 #: model_terms:ir.ui.view,arch_db:base_report_to_printer.view_users_form
-#: model_terms:ir.ui.view,arch_db:base_report_to_printer.view_users_form_simple_modif
 msgid "Printing"
 msgstr "Ispis"
 
@@ -595,10 +641,7 @@ msgid "Reason for the current job state."
 msgstr "Razlog trenutnog statusa zadatka."
 
 #. module: base_report_to_printer
-#. openerp-web
-#: code:addons/base_report_to_printer/static/src/js/qweb_action_manager.js:0
 #: model:ir.model.fields,field_description:base_report_to_printer.field_printing_report_xml_action__report_id
-#, python-format
 msgid "Report"
 msgstr "Izvještaj"
 
@@ -688,6 +731,13 @@ msgid "Status Message"
 msgstr ""
 
 #. module: base_report_to_printer
+#. openerp-web
+#: code:addons/base_report_to_printer/static/src/js/qweb_action_manager.esm.js:0
+#, python-format
+msgid "Successfully sent to printer!"
+msgstr ""
+
+#. module: base_report_to_printer
 #: model:ir.model.fields,field_description:base_report_to_printer.field_printing_printer__system_name
 #: model:ir.model.fields,field_description:base_report_to_printer.field_printing_tray__system_name
 msgid "System Name"
@@ -711,7 +761,7 @@ msgstr ""
 #. module: base_report_to_printer
 #: model_terms:ir.ui.view,arch_db:base_report_to_printer.printer_update_wizard
 msgid ""
-"This process will create all missing printers from the current CUPS server."
+"This process will create all missing printers from the current CUPS server.\""
 msgstr ""
 
 #. module: base_report_to_printer
@@ -796,7 +846,13 @@ msgstr ""
 
 #. module: base_report_to_printer
 #: model:ir.model.fields,field_description:base_report_to_printer.field_printing_report_xml_action__user_id
+#: model:ir.model.fields,field_description:base_report_to_printer.field_printing_server__user
 msgid "User"
+msgstr ""
+
+#. module: base_report_to_printer
+#: model:ir.model.fields,help:base_report_to_printer.field_printing_server__user
+msgid "User name to connect to the server. Empty by default."
 msgstr ""
 
 #. module: base_report_to_printer
@@ -804,7 +860,15 @@ msgstr ""
 msgid "Users"
 msgstr "Korisnici"
 
-#. module: base_report_to_printer
-#: model_terms:ir.ui.view,arch_db:base_report_to_printer.printer_update_wizard
-msgid "or"
-msgstr ""
+#, python-format
+#~ msgid "Error when sending the document to the printer "
+#~ msgstr "Greška pri slanju dokumenta na pisač"
+
+#, python-format
+#~ msgid ""
+#~ "Failed to connect to the CUPS server on %s:%s. Check that the CUPS server "
+#~ "is running and that you can reach it from the Odoo server."
+#~ msgstr ""
+#~ "Neuspjelo povezivanje na CUPS poslužitelj na %s:%s. Provjerite da li je "
+#~ "CUPS poslužitelj pokrenut i da li mu možete pristupiti sa Odoo "
+#~ "poslužitelja."

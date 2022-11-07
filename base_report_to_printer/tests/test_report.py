@@ -27,13 +27,17 @@ class TestReport(common.HttpCase):
             </t>""",
             }
         )
-        self.report_imd = self.env["ir.model.data"].create(
-            {
-                "name": "test",
-                "module": "base_report_to_printer",
-                "model": "ir.ui.view",
-                "res_id": self.report_view.id,
-            }
+        self.report_imd = (
+            self.env["ir.model.data"]
+            .sudo()
+            .create(
+                {
+                    "name": "test",
+                    "module": "base_report_to_printer",
+                    "model": "ir.ui.view",
+                    "res_id": self.report_view.id,
+                }
+            )
         )
         self.report = self.Model.create(
             {
@@ -66,18 +70,18 @@ class TestReport(common.HttpCase):
         )
 
     def test_can_print_report_context_skip(self):
-        """ It should return False based on context """
+        """It should return False based on context"""
         rec_id = self.new_record().with_context(must_skip_send_to_printer=True)
         res = rec_id._can_print_report({"action": "server"}, True, True)
         self.assertFalse(res)
 
     def test_can_print_report_true(self):
-        """ It should return True when server print allowed """
+        """It should return True when server print allowed"""
         res = self.new_record()._can_print_report({"action": "server"}, True, True)
         self.assertTrue(res)
 
     def test_can_print_report_false(self):
-        """ It should return False when server print not allowed """
+        """It should return False when server print not allowed"""
         res = self.new_record()._can_print_report({"action": "server"}, True, False)
         self.assertFalse(res)
 
@@ -110,7 +114,7 @@ class TestReport(common.HttpCase):
             )
 
     def test_print_document_not_printable(self):
-        """ It should print the report, regardless of the defined behaviour """
+        """It should print the report, regardless of the defined behaviour"""
         self.report.printing_printer_id = self.new_printer()
         with mock.patch(
             "odoo.addons.base_report_to_printer.models."
@@ -121,7 +125,7 @@ class TestReport(common.HttpCase):
             print_document.assert_called_once()
 
     def test_print_document_printable(self):
-        """ It should print the report, regardless of the defined behaviour """
+        """It should print the report, regardless of the defined behaviour"""
         self.report.property_printing_action_id.action_type = "server"
         self.report.printing_printer_id = self.new_printer()
         with mock.patch(
@@ -133,6 +137,6 @@ class TestReport(common.HttpCase):
             print_document.assert_called_once()
 
     def test_print_document_no_printer(self):
-        """ It should raise an error """
+        """It should raise an error"""
         with self.assertRaises(exceptions.UserError):
             self.report.print_document(self.partners.ids)

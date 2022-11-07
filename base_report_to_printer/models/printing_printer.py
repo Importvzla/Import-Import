@@ -173,8 +173,9 @@ class PrintingPrinter(models.Model):
         return options
 
     def print_file(self, file_name, report=None, **print_opts):
-        """ Print a file """
+        """Print a file"""
         self.ensure_one()
+        title = print_opts.pop("title", file_name)
         connection = self.server_id._open_connection(raise_on_error=True)
         options = self.print_options(report=report, **print_opts)
 
@@ -182,10 +183,14 @@ class PrintingPrinter(models.Model):
             "Sending job to CUPS printer %s on %s with options %s"
             % (self.system_name, self.server_id.address, options)
         )
-        connection.printFile(self.system_name, file_name, file_name, options=options)
+        connection.printFile(self.system_name, file_name, title, options=options)
         _logger.info(
             "Printing job: '{}' on {}".format(file_name, self.server_id.address)
         )
+        try:
+            os.remove(file_name)
+        except OSError as exc:
+            _logger.warning("Unable to remove temporary file %s: %s", file_name, exc)
         return True
 
     def set_default(self):
@@ -237,3 +242,18 @@ class PrintingPrinter(models.Model):
         self.mapped("server_id").update_printers()
 
         return True
+
+    def print_test_page(self):
+        for printer in self:
+            connection = printer.server_id._open_connection()
+            if printer.model == "Local Raw Printer":
+                fd, file_name = mkstemp()
+                try:
+                    os.write(fd, b"TEST")
+                finally:
+                    os.close(fd)
+                connection.printTestPage(printer.system_name, file=file_name)
+            else:
+                connection.printTestPage(printer.system_name)
+
+        self.mapped("server_id").update_jobs(which="completed")

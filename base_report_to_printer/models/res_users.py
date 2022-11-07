@@ -24,11 +24,16 @@ class ResUsers(models.Model):
         comodel_name="printing.printer", string="Default Printer"
     )
 
-    @api.model
-    def _register_hook(self):
-        super()._register_hook()
-        self.SELF_WRITEABLE_FIELDS.extend(["printing_action", "printing_printer_id"])
-        self.SELF_READABLE_FIELDS.extend(["printing_action", "printing_printer_id"])
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS + ["printing_action", "printing_printer_id"]
+
+    @property
+    def SELF_WRITEABLE_FIELDS(self):
+        return super().SELF_WRITEABLE_FIELDS + [
+            "printing_action",
+            "printing_printer_id",
+        ]
 
     printer_tray_id = fields.Many2one(
         comodel_name="printing.tray",
@@ -38,5 +43,5 @@ class ResUsers(models.Model):
 
     @api.onchange("printing_printer_id")
     def onchange_printing_printer_id(self):
-        """ Reset the tray when the printer is changed """
+        """Reset the tray when the printer is changed"""
         self.printer_tray_id = False
