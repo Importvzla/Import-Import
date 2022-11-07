@@ -6,118 +6,118 @@ from odoo.exceptions import UserError, Warning, ValidationError
 
 
 
-# class stock_move(models.Model):
-# 	_inherit = 'stock.move'
-#
-# 	def _create_in_svl(self, forced_quantity=None):
-# 		"""Create a `stock.valuation.layer` from `self`.
-#
-# 		:param forced_quantity: under some circunstances, the quantity to value is different than
-# 			the initial demand of the move (Default value = None)
-# 		"""
-#
-# 		rec  = super(stock_move, self)._create_in_svl(forced_quantity=None)
-# 		for rc in rec:
-# 			for line in self:
-# 				if line.purchase_line_id :
-# 					if line.purchase_line_id.order_id.purchase_manual_currency_rate_active:
-# 						price_unit = line.purchase_line_id.order_id.currency_id.round((line.purchase_line_id.price_unit)/line.purchase_line_id.order_id.purchase_manual_currency_rate)
-#
-# 						rc.write({'unit_cost' : price_unit,'value' :price_unit * rc.quantity,'remaining_value' : price_unit * rc.quantity})
-# 		return rec
-#
-#
-# 	def _prepare_account_move_vals(self, credit_account_id, debit_account_id, journal_id, qty, description, svl_id, cost):
-# 		res = super(stock_move, self)._prepare_account_move_vals( credit_account_id, debit_account_id, journal_id, qty, description, svl_id, cost)
-#
-# 		if self.purchase_line_id.order_id.purchase_manual_currency_rate_active:
-# 			res.update({
-# 						"manual_currency_rate_active" : self.purchase_line_id.order_id.purchase_manual_currency_rate_active,
-# 						"manual_currency_rate" : self.purchase_line_id.order_id.purchase_manual_currency_rate,
-# 						"currency_id" : self.purchase_line_id.order_id.currency_id.id,
-# 						});
-#
-# 		if self.sale_line_id.order_id.sale_manual_currency_rate_active:
-# 			res.update({
-# 						"manual_currency_rate_active" : self.sale_line_id.order_id.sale_manual_currency_rate_active,
-# 						"manual_currency_rate" : self.sale_line_id.order_id.sale_manual_currency_rate,
-# 						"currency_id" : self.sale_line_id.order_id.currency_id.id,
-# 						});
-#
-# 		return res
-#
-#
-# 	def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id, description):
-# 		"""
-# 		Generate the account.move.line values to post to track the stock valuation difference due to the
-# 		processing of the given quant.
-# 		"""
-# 		self.ensure_one()
-#
-# 		# the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
-# 		# the company currency... so we need to use round() before creating the accounting entries.
-# 		debit_value = self.company_id.currency_id.round(cost)
-# 		credit_value = debit_value
-#
-# 		valuation_partner_id = self._get_partner_id_for_valuation_lines()
-#
-# 		if self.purchase_line_id.order_id.purchase_manual_currency_rate_active:
-# 			debit_value = self.purchase_line_id.order_id.currency_id.round((self.purchase_line_id.price_unit*qty)/self.purchase_line_id.order_id.purchase_manual_currency_rate or 1)
-# 			credit_value = debit_value
-# 			res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(valuation_partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description).values()]
-#
-# 		else:
-# 			res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(valuation_partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description).values()]
-#
-# 		if self.sale_line_id.order_id.sale_manual_currency_rate_active:
-# 			credit_value = 	self.sale_line_id.order_id.currency_id.round((self.sale_line_id.price_unit*qty)/self.sale_line_id.order_id.sale_manual_currency_rate or 1)
-# 			debit_value = credit_value
-# 			res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(valuation_partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description).values()]
-# 		else:
-# 			res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(valuation_partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description).values()]
-#
-# 		return res
-#
-#
-# 	def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description):
-# 		""" Overridden from stock_account to support amount_currency on valuation lines generated from po
-# 		"""
-# 		self.ensure_one()
-#
-# 		rslt = super(stock_move, self)._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description)
-# 		if self.purchase_line_id and self.purchase_line_id.order_id.purchase_manual_currency_rate_active and self.purchase_line_id.order_id.purchase_manual_currency_rate > 0:
-# 			purchase_currency = self.purchase_line_id.currency_id
-# 			if purchase_currency != self.company_id.currency_id:
-# 				# Do not use price_unit since we want the price tax excluded. And by the way, qty
-# 				# is in the UOM of the product, not the UOM of the PO line.
-# 				purchase_price_unit = (
-# 					self.purchase_line_id.price_subtotal / self.purchase_line_id.product_uom_qty
-# 					if self.purchase_line_id.product_uom_qty
-# 					else self.purchase_line_id.price_unit
-# 				)
-# 				currency_move_valuation = purchase_currency.round(purchase_price_unit * abs(qty))
-# 				rslt['credit_line_vals']['amount_currency'] = rslt['credit_line_vals']['credit'] and -currency_move_valuation or currency_move_valuation
-# 				rslt['credit_line_vals']['currency_id'] = purchase_currency.id
-# 				rslt['debit_line_vals']['amount_currency'] = rslt['debit_line_vals']['credit'] and -currency_move_valuation or currency_move_valuation
-# 				rslt['debit_line_vals']['currency_id'] = purchase_currency.id
-#
-# 		if self.sale_line_id and self.sale_line_id.order_id.sale_manual_currency_rate_active and self.sale_line_id.order_id.sale_manual_currency_rate > 0:
-# 			sale_currency = self.sale_line_id.currency_id
-# 			if sale_currency != self.company_id.currency_id:
-# 				# Do not use price_unit since we want the price tax excluded. And by the way, qty
-# 				# is in the UOM of the product, not the UOM of the PO line.
-# 				sale_price_unit = (
-# 					self.sale_line_id.price_subtotal / self.sale_line_id.product_uom_qty
-# 					if self.sale_line_id.product_uom_qty
-# 					else self.sale_line_id.price_unit
-# 				)
-# 				currency_move_valuation = sale_currency.round(sale_price_unit * abs(qty))
-# 				rslt['credit_line_vals']['amount_currency'] = rslt['credit_line_vals']['credit'] and -currency_move_valuation or currency_move_valuation
-# 				rslt['credit_line_vals']['currency_id'] = sale_currency.id
-# 				rslt['debit_line_vals']['amount_currency'] = rslt['debit_line_vals']['credit'] and -currency_move_valuation or currency_move_valuation
-# 				rslt['debit_line_vals']['currency_id'] = sale_currency.id
-#
-# 		return rslt
+class stock_move(models.Model):
+	_inherit = 'stock.move'
+
+	def _create_in_svl(self, forced_quantity=None):
+		"""Create a `stock.valuation.layer` from `self`.
+
+		:param forced_quantity: under some circunstances, the quantity to value is different than
+			the initial demand of the move (Default value = None)
+		"""
+
+		rec  = super(stock_move, self)._create_in_svl(forced_quantity=None)
+		for rc in rec:
+			for line in self:
+				if line.purchase_line_id :
+					if line.purchase_line_id.order_id.purchase_manual_currency_rate_active:
+						price_unit = line.purchase_line_id.order_id.currency_id.round((line.purchase_line_id.price_unit)/line.purchase_line_id.order_id.purchase_manual_currency_rate)
+
+						rc.write({'unit_cost' : price_unit,'value' :price_unit * rc.quantity,'remaining_value' : price_unit * rc.quantity})
+		return rec
+
+
+	def _prepare_account_move_vals(self, credit_account_id, debit_account_id, journal_id, qty, description, svl_id, cost):
+		res = super(stock_move, self)._prepare_account_move_vals( credit_account_id, debit_account_id, journal_id, qty, description, svl_id, cost)
+	
+		if self.purchase_line_id.order_id.purchase_manual_currency_rate_active:
+			res.update({
+						"manual_currency_rate_active" : self.purchase_line_id.order_id.purchase_manual_currency_rate_active,
+						"manual_currency_rate" : self.purchase_line_id.order_id.purchase_manual_currency_rate,
+						"currency_id" : self.purchase_line_id.order_id.currency_id.id,
+						});
+
+		if self.sale_line_id.order_id.sale_manual_currency_rate_active:
+			res.update({
+						"manual_currency_rate_active" : self.sale_line_id.order_id.sale_manual_currency_rate_active,
+						"manual_currency_rate" : self.sale_line_id.order_id.sale_manual_currency_rate,
+						"currency_id" : self.sale_line_id.order_id.currency_id.id,
+						});
+
+		return res
+
+
+	def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id, description):
+		"""
+		Generate the account.move.line values to post to track the stock valuation difference due to the
+		processing of the given quant.
+		"""
+		self.ensure_one()
+
+		# the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
+		# the company currency... so we need to use round() before creating the accounting entries.
+		debit_value = self.company_id.currency_id.round(cost)
+		credit_value = debit_value
+
+		valuation_partner_id = self._get_partner_id_for_valuation_lines()
+
+		if self.purchase_line_id.order_id.purchase_manual_currency_rate_active:
+			debit_value = self.purchase_line_id.order_id.currency_id.round((self.purchase_line_id.price_unit*qty)/self.purchase_line_id.order_id.purchase_manual_currency_rate or 1)
+			credit_value = debit_value
+			res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(valuation_partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description).values()]
+
+		else:
+			res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(valuation_partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description).values()]
+
+		if self.sale_line_id.order_id.sale_manual_currency_rate_active:
+			credit_value = 	self.sale_line_id.order_id.currency_id.round((self.sale_line_id.price_unit*qty)/self.sale_line_id.order_id.sale_manual_currency_rate or 1)
+			debit_value = credit_value
+			res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(valuation_partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description).values()]
+		else:
+			res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(valuation_partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description).values()]
+
+		return res
+
+
+	def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description):
+		""" Overridden from stock_account to support amount_currency on valuation lines generated from po
+		"""
+		self.ensure_one()
+
+		rslt = super(stock_move, self)._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description)
+		if self.purchase_line_id and self.purchase_line_id.order_id.purchase_manual_currency_rate_active and self.purchase_line_id.order_id.purchase_manual_currency_rate > 0:
+			purchase_currency = self.purchase_line_id.currency_id
+			if purchase_currency != self.company_id.currency_id:
+				# Do not use price_unit since we want the price tax excluded. And by the way, qty
+				# is in the UOM of the product, not the UOM of the PO line.
+				purchase_price_unit = (
+					self.purchase_line_id.price_subtotal / self.purchase_line_id.product_uom_qty
+					if self.purchase_line_id.product_uom_qty
+					else self.purchase_line_id.price_unit
+				)
+				currency_move_valuation = purchase_currency.round(purchase_price_unit * abs(qty))
+				rslt['credit_line_vals']['amount_currency'] = rslt['credit_line_vals']['credit'] and -currency_move_valuation or currency_move_valuation
+				rslt['credit_line_vals']['currency_id'] = purchase_currency.id
+				rslt['debit_line_vals']['amount_currency'] = rslt['debit_line_vals']['credit'] and -currency_move_valuation or currency_move_valuation
+				rslt['debit_line_vals']['currency_id'] = purchase_currency.id
+		
+		if self.sale_line_id and self.sale_line_id.order_id.sale_manual_currency_rate_active and self.sale_line_id.order_id.sale_manual_currency_rate > 0:
+			sale_currency = self.sale_line_id.currency_id
+			if sale_currency != self.company_id.currency_id:
+				# Do not use price_unit since we want the price tax excluded. And by the way, qty
+				# is in the UOM of the product, not the UOM of the PO line.
+				sale_price_unit = (
+					self.sale_line_id.price_subtotal / self.sale_line_id.product_uom_qty
+					if self.sale_line_id.product_uom_qty
+					else self.sale_line_id.price_unit
+				)
+				currency_move_valuation = sale_currency.round(sale_price_unit * abs(qty))
+				rslt['credit_line_vals']['amount_currency'] = rslt['credit_line_vals']['credit'] and -currency_move_valuation or currency_move_valuation
+				rslt['credit_line_vals']['currency_id'] = sale_currency.id
+				rslt['debit_line_vals']['amount_currency'] = rslt['debit_line_vals']['credit'] and -currency_move_valuation or currency_move_valuation
+				rslt['debit_line_vals']['currency_id'] = sale_currency.id
+		
+		return rslt
 
 
 
