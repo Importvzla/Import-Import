@@ -23,6 +23,7 @@ For Module Support : devintelle@gmail.com  or Skype : devintelle
     <act_window name="Split Transfer Order"
         res_model="split.transfer.confirm"
         binding_model="stock.move"
+        view_mode="form"
         target="new"	
         id="view_picking_split_transfer_confirm"/>
 </odoo>

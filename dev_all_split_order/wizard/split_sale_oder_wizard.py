@@ -19,6 +19,7 @@ class split_order_confirm(models.TransientModel):
         line_ids = self._context.get('active_ids')
         if line_ids:
             sale = line_pool.browse(line_ids[0]).order_id
+            print("--------sale---------",sale)
             if sale:
                 vals = {
                     'partner_id': sale.partner_id.id or '',
@@ -29,6 +30,7 @@ class split_order_confirm(models.TransientModel):
                     'origin': sale.name,
                 }
                 new_sale_id = self.env['sale.order'].create(vals)
+                print("-----new_sale_id-------",new_sale_id)
             for line in line_pool.browse(line_ids):
                 line.write({'order_id': new_sale_id.id})
             return {
