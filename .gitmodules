@@ -1,7 +1,7 @@
 [submodule "tax_report"]
 	path = tax_report
 	url = git@gitlab.com:addons_arkisoft/tax_report.git
-	branch = Dev15_import
+	branch = 15.0
 [submodule "exchange_rate_quotes"]
 	path = exchange_rate_quotes
 	url = git@gitlab.com:addons_arkisoft/exchange_rate_quotes.git
