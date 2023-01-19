@@ -50,18 +50,29 @@
                             </div>
                         </div>
 
-                        <t t-foreach="o.amount_by_group" t-as="amount_by_group">
-                            <div class="row">
-                                <div class="col text-right" style="width: 82%;">
-    <!--                                    <span class="text-nowrap" style="width: 60%;">Impuesto al Valor Agregado (IVA) 16% sobre BASE IMPONIBLE </span>-->
-                                    <span>Impuesto al Valor Agregado (IVA) 16% sobre BASE IMPONIBLE </span>
-                                    <span t-field="o.amount_untaxed"/>
-                                </div>
-                                <div class="col text-right" style="width: 18%;">
-                                    <span t-esc="amount_by_group[3]"/>
-                                </div>
+<!--                        <t t-foreach="o.amount_by_group" t-as="amount_by_group">-->
+<!--                            <div class="row">-->
+<!--                                <div class="col text-right" style="width: 82%;">-->
+<!--    &lt;!&ndash;                                    <span class="text-nowrap" style="width: 60%;">Impuesto al Valor Agregado (IVA) 16% sobre BASE IMPONIBLE </span>&ndash;&gt;-->
+<!--                                    <span>Impuesto al Valor Agregado (IVA) 16% sobre BASE IMPONIBLE </span>-->
+<!--                                    <span t-field="o.amount_untaxed"/>-->
+<!--                                </div>-->
+<!--                                <div class="col text-right" style="width: 18%;">-->
+<!--                                    <span t-esc="amount_by_group[3]"/>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </t>-->
+                        <div class="row">
+                            <div class="col text-right" style="width: 82%;">
+<!--                                    <span class="text-nowrap" style="width: 60%;">Impuesto al Valor Agregado (IVA) 16% sobre BASE IMPONIBLE </span>-->
+                                <span>Impuesto al Valor Agregado (IVA) 16% sobre BASE IMPONIBLE </span>
+                                <span t-field="o.amount_untaxed"/>
                             </div>
-                        </t>
+                            <div class="col text-right" style="width: 18%;">
+                                <span t-field="o.amount_tax"/>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col text-right" style="width: 82%;">
                                 <strong>Total</strong>
