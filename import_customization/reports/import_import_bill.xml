@@ -390,7 +390,9 @@
                                     <span t-field="o.x_notaentrega"/>
                                     <br/>
                                     <strong>Orden de Compra:</strong>
-                                    <span t-field="o.invoice_origin"/>
+                                    <t t-if="o.sale_order_id">
+                                        <span t-field="o.sale_order_id.x_ocompra"/>
+                                    </t>
                                     <br/>
                                     <!--<strong>Cond Pago:</strong>
                                     <span t-field="o.invoice_payment_term_id.name"/>
