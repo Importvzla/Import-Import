@@ -360,8 +360,22 @@
                                     <br/>
                                 </div>
                                 <div class="col-4">
-                                    <strong>Factura:</strong>
-                                    <span t-field="o.ref"/>
+                                    <t t-if="o.x_tipodoc == 'Recibo'">
+                                        <strong>Recibo: </strong>
+                                        <span t-field="o.ref"/>
+                                    </t>
+                                    <t t-elif="o.x_tipodoc == 'Nota de Crédito'">
+                                        <strong>Nota de Credito: </strong>
+                                        <span t-field="o.ref"/>
+                                    </t>
+                                    <t t-elif="o.x_tipodoc == 'Nota de Débito'">
+                                        <strong>Nota de Debito: </strong>
+                                        <span t-field="o.ref"/>
+                                    </t>
+                                    <t t-else="">
+                                        <strong>Factura: </strong>
+                                        <span t-field="o.ref"/>
+                                    </t>
                                     <br/>
                                     <strong>Moneda:</strong>
                                     <span t-field="o.currency_id.name"/>
