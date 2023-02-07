@@ -11,6 +11,16 @@ class ImportImportBill(models.AbstractModel):
     def _get_report_values(self, docids, data=None):
         print('funcion para obtener datos del cliente para el reporte')
         docs = self.env['account.move'].browse(docids[0])
+        stock_picking_ids = self.env['stock.picking'].search([
+            ('origin', '=', docs.invoice_origin), ('picking_type_code', '=', 'outgoing')
+        ])
+        delivery_note = ''
+        if stock_picking_ids:
+            list_name = []
+            for spi in stock_picking_ids:
+                list_name.append(spi.name)
+
+            delivery_note = ", ".join(list_name)
         # move_line = self.env['stock.move.line'].search([
         #         ('result_package_id', '=', docs.id),
         #     ])
@@ -38,5 +48,6 @@ class ImportImportBill(models.AbstractModel):
             'doc_model': 'account.move',
             'data': data,
             'docs': docs,
+            'delivery_note': delivery_note,
         }
         return docargs
