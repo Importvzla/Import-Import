@@ -32,6 +32,14 @@
                     </div>
                 </div>
             </div>
+<!--            <br/>-->
+<!--            <div>-->
+<!--                <span>BI IGTF 3% </span>-->
+<!--                <span t-field="o.amount_untaxed_rate"/>-->
+<!--                <span> IGTF 3% </span>-->
+<!--                <t t-set="igtg" t-value="(o.amount_untaxed_rate * 3) / 100"/>-->
+<!--                <span t-esc="'{0:,.2f}'.format(igtg).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>-->
+<!--            </div>-->
         </template>
 
         <template id="default_total_tagline">
@@ -203,8 +211,15 @@
                         </div>
                     </div>
                 </t>
-
             </div>
+<!--            <br/>-->
+<!--            <div>-->
+<!--                <span>BI IGTF 3% </span>-->
+<!--                <span t-field="o.amount_untaxed"/>-->
+<!--                <span> IGTF 3% </span>-->
+<!--                <t t-set="igtg" t-value="(o.amount_untaxed * 3) / 100"/>-->
+<!--                <span t-esc="'{0:,.2f}'.format(igtg).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>-->
+<!--            </div>-->
         </template>
 
         <template id="usd_type_2_total_tagline">
@@ -321,6 +336,14 @@
                     </div>
                 </div>
             </div>
+<!--            <br/>-->
+<!--            <div>-->
+<!--                <span>BI IGTF 3% </span>-->
+<!--                <span t-esc="'{0:,.2f}'.format(o.amount_untaxed).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>-->
+<!--                <span> IGTF 3% </span>-->
+<!--                <t t-set="igtg" t-value="(o.amount_untaxed * 3) / 100"/>-->
+<!--                <span t-esc="'{0:,.2f}'.format(igtg).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>-->
+<!--            </div>-->
         </template>
 
         <template id="custom_invoice">
@@ -487,6 +510,17 @@
                             <t t-if="o.currency_id.name == 'USD' and o.partner_id.type_invoice_usd == 'type_1'">
                                 <t t-call="import_customization.usd_type_1_tagline"/>
                             </t>
+                            <br/>
+                            <div>
+                                <span>BI IGTF 3%</span>
+                                <span>&#160;</span>
+                                <span t-field="o.amount_untaxed"/>
+                                <span>&#160;&#160;&#160;&#160;&#160;</span>
+                                <span>IGTF 3% </span>
+                                <span>&#160;</span>
+                                <t t-set="igtg" t-value="(o.amount_untaxed * 3) / 100"/>
+                                <span t-esc="'{0:,.2f}'.format(igtg).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
+                            </div>
                         </div>
 
                         <div class="footer">
