@@ -500,6 +500,57 @@
                                 </tbody>
                             </table>
 
+                            <t t-if="o.reversed_entry_id">
+                                <div class="row" style="line-height: 80%">
+                                    <div class="col-3"/>
+                                    <div class="col-7">
+                                        <table class="table table-sm table-borderless table-condensed">
+                                            <tr>
+                                                <td>
+                                                    <span>Doc. Orig</span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-field="o.reversed_entry_id.x_tipodoc"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <span>Num. Orig</span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-field="o.reversed_entry_id.ref"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <span>Fecha de Emision</span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-field="o.reversed_entry_id.invoice_date"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <span>Monto del Documento de Origen</span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-field="o.reversed_entry_id.amount_total"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <span>FECHA VALOR B.C.V</span>
+                                                    <span t-field="o.reversed_entry_id.invoice_date"/>
+                                                    <span>TASA B.C.V Bs/USD</span>
+                                                    <span t-field="o.reversed_entry_id.x_tasa"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="col-2"/>
+                                </div>
+                            </t>
+
                             <t t-if="o.currency_id.name == 'USD' and o.partner_id.type_invoice_usd == 'type_2'">
                                 <t t-call="import_customization.usd_type_2_total_tagline"/>
                             </t>
