@@ -2,52 +2,11 @@
 
 <odoo>
     <data>
-        <template id="usd_type_1_tagline">
-            <div name="payment_currency">
-                <br/>
-                <span> TASA DE CAMBIO DE REFERENCIA SMC DEL BCV AL </span>
-                <b><span t-field="o.invoice_date"/></b>
-                <div class="row justify-content-md-left">
-                    <div class="col-4">
-                        <b>Subtotal Bs </b>
-                    </div>
-                    <div class="col-6">
-                        <p><span t-field="o.amount_untaxed" /> x <span t-field="o.x_tasa" /> = <span t-esc="'{0:,.2f}'.format(o.amount_untaxed_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')" /></p>
-                    </div>
-                </div>
-                <div class="row justify-content-md-left">
-                    <div class="col-4">
-                        <b>IVA 16% Bs </b>
-                    </div>
-                    <div class="col-6">
-                        <p><span t-field="o.amount_tax" /> x  <span t-field="o.x_tasa" /> = <span t-esc="'{0:,.2f}'.format(o.amount_tax_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/></p>
-                    </div>
-                </div>
-                <div class="row justify-content-md-left">
-                    <div class="col-4">
-                        <b>Total Bs </b>
-                    </div>
-                    <div class="col-6">
-                        <p><span t-field="o.amount_total" /> x  <span t-field="o.x_tasa" /> = <span t-esc="'{0:,.2f}'.format(o.amount_total_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/></p>
-                    </div>
-                </div>
-            </div>
-<!--            <br/>-->
-<!--            <div>-->
-<!--                <span>BI IGTF 3% </span>-->
-<!--                <span t-field="o.amount_untaxed_rate"/>-->
-<!--                <span> IGTF 3% </span>-->
-<!--                <t t-set="igtg" t-value="(o.amount_untaxed_rate * 3) / 100"/>-->
-<!--                <span t-esc="'{0:,.2f}'.format(igtg).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>-->
-<!--            </div>-->
-        </template>
-
         <template id="default_total_tagline">
             <div id="total_tagline">
                 <div id="total" class="row border-top border-dark">
                     <div class="col-2">
                     </div>
-
                     <div class="col-10">
                         <div class="row">
                             <div class="col text-right" style="width: 82%;">
@@ -57,19 +16,6 @@
                                 <span t-field="o.amount_untaxed"/>
                             </div>
                         </div>
-
-<!--                        <t t-foreach="o.amount_by_group" t-as="amount_by_group">-->
-<!--                            <div class="row">-->
-<!--                                <div class="col text-right" style="width: 82%;">-->
-<!--    &lt;!&ndash;                                    <span class="text-nowrap" style="width: 60%;">Impuesto al Valor Agregado (IVA) 16% sobre BASE IMPONIBLE </span>&ndash;&gt;-->
-<!--                                    <span>Impuesto al Valor Agregado (IVA) 16% sobre BASE IMPONIBLE </span>-->
-<!--                                    <span t-field="o.amount_untaxed"/>-->
-<!--                                </div>-->
-<!--                                <div class="col text-right" style="width: 18%;">-->
-<!--                                    <span t-esc="amount_by_group[3]"/>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </t>-->
                         <div class="row">
                             <div class="col text-right" style="width: 82%;">
 <!--                                    <span class="text-nowrap" style="width: 60%;">Impuesto al Valor Agregado (IVA) 16% sobre BASE IMPONIBLE </span>-->
@@ -80,7 +26,6 @@
                                 <span t-field="o.amount_tax"/>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col text-right" style="width: 82%;">
                                 <strong>Total</strong>
@@ -89,89 +34,7 @@
                                 <span t-field="o.amount_total"/>
                             </div>
                         </div>
-
-
-                        <!--<table class="table table-borderless table-sm table-condensed">
-&lt;!&ndash;                            <tr class="border-black o_subtotal" style="">&ndash;&gt;
-                            <tr style="">
-                                <td class="text-right" colspan="2"><strong>Subtotal</strong></td>
-                                <td class="text-right">
-                                    <span t-field="o.amount_untaxed"/>
-                                </td>
-                            </tr>
-                            <t t-foreach="o.amount_by_group" t-as="amount_by_group">
-                                <tr style="">
-                                    <t t-if="len(o.line_ids.filtered(lambda line: line.tax_line_id)) in [0, 1] and o.amount_untaxed == amount_by_group[2]">
-&lt;!&ndash;                                                        <td><span class="text-nowrap" t-esc="amount_by_group[0]"/></td>&ndash;&gt;
-                                        <td><span class="text-nowrap" style="width: 60%;">Impuesto al Valor Agregado (IVA) 16% sobre BASE IMPONIBLE</span></td>
-                                        <td><span class="text-nowrap" style="width: 20%;"/><span t-field="o.amount_untaxed"/></td>
-                                        <td class="text-right o_price_total" style="width: 20%;" >
-                                            <span class="text-nowrap" t-esc="amount_by_group[3]" />
-                                        </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td>
-                                            <span t-esc="amount_by_group[0]"/>
-                                            <span class="text-nowrap"> on
-                                                <t t-esc="amount_by_group[4]"/>
-                                            </span>
-                                        </td>
-                                        <td class="text-right o_price_total">
-                                            <span class="text-nowrap" t-esc="amount_by_group[3]"/>
-                                        </td>
-                                    </t>
-                                </tr>
-                            </t>
-                            <tr style="">
-                                <td class="text-right" colspan="2"><strong>Total</strong></td>
-                                <td class="text-right">
-                                    <span class="text-nowrap" t-field="o.amount_total"/>
-                                </td>
-                            </tr>
-                        </table>-->
                     </div>
-
-
-                    <!--<div class="col-9">
-                        <table class="table table-borderless table-sm table-condensed">
-&lt;!&ndash;                            <tr class="border-black o_subtotal" style="">&ndash;&gt;
-                            <tr style="">
-                                <td class="text-right" colspan="2"><strong>Subtotal</strong></td>
-                                <td class="text-right">
-                                    <span t-field="o.amount_untaxed"/>
-                                </td>
-                            </tr>
-                            <t t-foreach="o.amount_by_group" t-as="amount_by_group">
-                                <tr style="">
-                                    <t t-if="len(o.line_ids.filtered(lambda line: line.tax_line_id)) in [0, 1] and o.amount_untaxed == amount_by_group[2]">
-&lt;!&ndash;                                                        <td><span class="text-nowrap" t-esc="amount_by_group[0]"/></td>&ndash;&gt;
-                                        <td><span class="text-nowrap" style="width: 60%;">Impuesto al Valor Agregado (IVA) 16% sobre BASE IMPONIBLE</span></td>
-                                        <td><span class="text-nowrap" style="width: 20%;"/><span t-field="o.amount_untaxed"/></td>
-                                        <td class="text-right o_price_total" style="width: 20%;" >
-                                            <span class="text-nowrap" t-esc="amount_by_group[3]" />
-                                        </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td>
-                                            <span t-esc="amount_by_group[0]"/>
-                                            <span class="text-nowrap"> on
-                                                <t t-esc="amount_by_group[4]"/>
-                                            </span>
-                                        </td>
-                                        <td class="text-right o_price_total">
-                                            <span class="text-nowrap" t-esc="amount_by_group[3]"/>
-                                        </td>
-                                    </t>
-                                </tr>
-                            </t>
-                            <tr style="">
-                                <td class="text-right" colspan="2"><strong>Total</strong></td>
-                                <td class="text-right">
-                                    <span class="text-nowrap" t-field="o.amount_total"/>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>-->
                 </div>
                 <br/>
 
@@ -212,14 +75,132 @@
                     </div>
                 </t>
             </div>
-<!--            <br/>-->
-<!--            <div>-->
-<!--                <span>BI IGTF 3% </span>-->
-<!--                <span t-field="o.amount_untaxed"/>-->
-<!--                <span> IGTF 3% </span>-->
-<!--                <t t-set="igtg" t-value="(o.amount_untaxed * 3) / 100"/>-->
-<!--                <span t-esc="'{0:,.2f}'.format(igtg).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>-->
-<!--            </div>-->
+        </template>
+
+        <template id="ves_type_2_tagline">
+            <div id="total_tagline">
+
+                <t t-set="amount_untaxed_rate" t-value="o.amount_untaxed / o.x_tasa"/>
+                <t t-set="amount_tax_rate" t-value="o.amount_tax / o.x_tasa"/>
+                <t t-set="amount_total_rate" t-value="o.amount_total / o.x_tasa"/>
+                <div class="row">
+                    <div class="col" style="width: 57%;">
+                        <span>FECHA VALOR B.C.V. </span>
+                        <span t-field="o.invoice_date"/> <span>TASA B.C.V: BS/USD </span>
+                        <span t-field="o.x_tasa" />
+                        <div class="row">
+                            <div class="col-8 text-left">
+                                <span>T.N. BASE IMPONIBLE: $ USD</span>
+                            </div>
+                            <div class="col-4 text-right">
+                                <span t-esc="'{0:,.2f}'.format(amount_untaxed_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8 text-left">
+                                <span>TOTAL I.V.A: $ USD</span>
+                            </div>
+                            <div class="col-4 text-right">
+                                <span t-esc="'{0:,.2f}'.format(amount_tax_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8 text-left">
+                                <span>TOTAL A PAGAR: $ USD</span>
+                            </div>
+                            <div class="col-4 text-right">
+                                <span t-esc="'{0:,.2f}'.format(amount_total_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div>
+                    <p>
+                        Esta factura puede ser pagada en dólares de los Estados Unidos de América (USD) o el equivalente
+                        en bolívares (Bs) al tipo de cambio de referencia publicado por el BCV al momento del pago.
+                    </p>
+                </div>
+                <div id="total" class="row border-top border-dark">
+                    <div class="col-2"/>
+                    <div class="col-10">
+                        <div class="row">
+                            <div class="col text-right" style="width: 82%;">
+                                <strong>Base Imponible Gravable (16%)</strong>
+                            </div>
+                            <div class="col text-right" style="width: 18%;">
+                                <span t-esc="tax_base" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-right" style="width: 82%;">
+                                <strong>Exento</strong>
+                            </div>
+                            <div class="col text-right" style="width: 18%;">
+                                <span t-esc="exempt_sum" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-right" style="width: 82%;">
+                                <strong>Subtotal</strong>
+                            </div>
+                            <div class="col text-right" style="width: 18%;">
+                                <t t-set="subtotal" t-value="tax_base + exempt_sum"/>
+                                <span t-esc="subtotal" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-right" style="width: 82%;">
+                                <strong>IVA 16%</strong>
+                            </div>
+                            <div class="col text-right" style="width: 18%;">
+                                <span t-esc="tax_iva" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col text-right" style="width: 82%;">
+                                <strong>Total</strong>
+                            </div>
+                            <div class="col text-right" style="width: 18%;">
+                                <span t-esc="amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="usd_type_1_tagline">
+            <div name="payment_currency">
+                <br/>
+                <span> TASA DE CAMBIO DE REFERENCIA SMC DEL BCV AL </span>
+                <b><span t-field="o.invoice_date"/></b>
+                <div class="row justify-content-md-left">
+                    <div class="col-4">
+                        <b>Subtotal Bs </b>
+                    </div>
+                    <div class="col-6">
+                        <p><span t-field="o.amount_untaxed" /> x <span t-field="o.x_tasa" /> = <span t-esc="'{0:,.2f}'.format(o.amount_untaxed_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')" /></p>
+                    </div>
+                </div>
+                <div class="row justify-content-md-left">
+                    <div class="col-4">
+                        <b>IVA 16% Bs </b>
+                    </div>
+                    <div class="col-6">
+                        <p><span t-field="o.amount_tax" /> x  <span t-field="o.x_tasa" /> = <span t-esc="'{0:,.2f}'.format(o.amount_tax_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/></p>
+                    </div>
+                </div>
+                <div class="row justify-content-md-left">
+                    <div class="col-4">
+                        <b>Total Bs </b>
+                    </div>
+                    <div class="col-6">
+                        <p><span t-field="o.amount_total" /> x  <span t-field="o.x_tasa" /> = <span t-esc="'{0:,.2f}'.format(o.amount_total_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/></p>
+                    </div>
+                </div>
+            </div>
         </template>
 
         <template id="usd_type_2_total_tagline">
@@ -230,13 +211,45 @@
                         <t t-set="amount_tax_rate" t-value="o.amount_tax * o.x_tasa"/>
                         <t t-set="amount_total_rate" t-value="o.amount_total * o.x_tasa"/>
 
-                        <div class="border-top border-dark">
+                        <div id="total" class="row border-top border-dark">
+                            <div class="col-2">
+                            </div>
+                            <div class="col-10">
+                                <div class="row">
+                                    <div class="col text-right" style="width: 82%;">
+                                        <strong>Subtotal</strong>
+                                    </div>
+                                    <div class="col text-right" style="width: 18%;">
+                                        <span t-esc="tax_base" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col text-right" style="width: 82%;">
+                                        <strong>Impuesto al Valor Agregado (IVA) 16% sobre BASE IMPONIBLE </strong>
+                                        <strong t-esc="tax_base" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </div>
+                                    <div class="col text-right" style="width: 18%;">
+                                        <span t-esc="tax_iva" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col text-right" style="width: 82%;">
+                                        <strong>Total</strong>
+                                    </div>
+                                    <div class="col text-right" style="width: 18%;">
+                                        <span t-esc="amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div>
                             <div class="row">
                                 <div class="col text-left" style="width: 44%;">
                                     <span>EL MONTO GRAVABLE DE ESTA FACTURA ES DE</span>
                                 </div>
                                 <div class="col text-right" style="width: 15%;">
-                                    <span t-field="o.amount_untaxed"/>
+                                    <span t-esc="tax_base" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                 </div>
                                 <div style="width: 3%;"/>
                                 <div class="col text-left" style="width: 20%;">
@@ -252,7 +265,7 @@
                                     <span>EL MONTO DEL IVA 16% ES DE</span>
                                 </div>
                                 <div class="col text-right" style="width: 15%;">
-                                    <span t-field="o.amount_tax"/>
+                                    <span t-esc="tax_iva" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                 </div>
                                 <div style="width: 3%;"/>
                                 <div class="col text-left" style="width: 20%;">
@@ -268,7 +281,7 @@
                                     <span>EL TOTAL A PAGAR ES DE</span>
                                 </div>
                                 <div class="col text-right" style="width: 15%;">
-                                    <span t-field="o.amount_total"/>
+                                    <span t-esc="amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                 </div>
                                 <div style="width: 3%;"/>
                                 <div class="col text-left" style="width: 20%;">
@@ -283,55 +296,11 @@
                         <br/>
                         <div>
                             <span>
-                                ESTOS MONTOS PUEDEN VARIAR SEGUN LA LEY 128 DE BCV CALCULADOS A LA TASA DE CAMBIO DE <span t-field="o.x_tasa"/> DE FECHA <span t-field="o.invoice_date"/> REFERENCIA QUE SE PARA CUMPLIR CON EL MENCIONADO ARTICULO DICHOS MONTOS SON PAGADEROS EN USD O BOLIVARES DE ACUERDO AL REGIMEN VIGENTE.
+                                ESTOS MONTOS PUEDEN VARIAR SEGUN LA LEY DEL BCV ART. 128 CALCULADOS A LA TASA DE CAMBIO DE <span t-field="o.x_tasa"/> Bs, DE FECHA <span t-field="o.invoice_date"/> REFERENCIA QUE SE PARA CUMPLIR CON EL MENCIONADO ARTICULO DICHOS MONTOS SON PAGADEROS EN USD O BOLIVARES DE ACUERDO AL REGIMEN VIGENTE DE LA TASA DE 1 USD POR <span t-field="o.x_tasa"/>
                             </span>
-                            <br/>
-                            <br/>
-                            <span>
-                                SUB TOTAL CALCULADO A LA TASA DE 1 USD POR <span t-field="o.x_tasa"/>
-                            </span>
-                        </div>
-
-                        <div style="width: 30%;">
-                            <div class="row">
-                                <div class="col-8 text-left">
-                                    <span>Sub-total Bs.</span>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span t-esc="'{0:,.2f}'.format(amount_untaxed_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-8 text-left">
-                                    <span>IVA 16% Bs.</span>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span t-esc="'{0:,.2f}'.format(amount_tax_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-8 text-left">
-                                    <span>TOTAL Bs.</span>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span t-esc="'{0:,.2f}'.format(amount_total_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <table class="table table-borderless table-sm table-condensed">
-                                <tr class="border-black o_subtotal" style="">
-                                    <td style="width: 70%;"></td>
-                                    <td class="text-left" style="width: 15%;">
-                                        <span>TOTAL</span>
-                                    </td>
-                                    <td class="text-right" style="width: 15%;">
-                                        <span t-field="o.amount_untaxed"/>
-                                    </td>
-                                </tr>
-                            </table>
-
+<!--                            <span>-->
+<!--                                SUB TOTAL CALCULADO A LA TASA DE 1 USD POR <span t-field="o.x_tasa"/>-->
+<!--                            </span>-->
                         </div>
                     </div>
                 </div>
@@ -436,7 +405,7 @@
                                         </th>
 <!--                                        <th name="th_taxes" t-attf-class="text-left {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Taxes</span></th>-->
                                         <th name="th_subtotal" class="text-right">
-                                            <span groups="account.group_show_line_subtotals_tax_excluded">Monto</span>
+                                            <span groups="account.group_show_line_subtotals_tax_excluded">Total</span>
                                             <span groups="account.group_show_line_subtotals_tax_included">Precio Total</span>
                                         </th>
                                     </tr>
@@ -554,14 +523,23 @@
                             <t t-if="o.currency_id.name == 'USD' and o.partner_id.type_invoice_usd == 'type_2'">
                                 <t t-call="import_customization.usd_type_2_total_tagline"/>
                             </t>
+                            <t t-elif="o.currency_id.name == 'VES' and o.partner_id.type_invoice_ves == 'type_2'">
+                                <t t-call="import_customization.ves_type_2_tagline"/>
+                            </t>
+                            <t t-elif="o.currency_id.name == 'USD' and o.partner_id.type_invoice_usd == 'type_1'">
+                                <t t-call="import_customization.usd_type_1_tagline"/>
+                            </t>
                             <t t-else="">
                                 <t t-call="import_customization.default_total_tagline"/>
                             </t>
 
-                            <t t-if="o.currency_id.name == 'USD' and o.partner_id.type_invoice_usd == 'type_1'">
-                                <t t-call="import_customization.usd_type_1_tagline"/>
+
+
+
+                            <t t-if="o.currency_id.name == 'VES' and o.partner_id.type_invoice_ves == 'type_2'"/>
+                            <t t-else="">
+                                <br/>
                             </t>
-                            <br/>
                             <div>
                                 <span>BI IGTF 3%</span>
                                 <span>&#160;</span>
