@@ -138,9 +138,14 @@ class ImportImportBill(models.AbstractModel):
         # else:
         #     retention_percentage = ''
 
-        untaxed_rate_amount = docs.amount_untaxed * docs.x_tasa
-        iva_rate_amount = tax_iva * docs.x_tasa
-        total_rate_amount = amount_total * docs.x_tasa
+        if docs.currency_id.name != 'VES':
+            untaxed_rate_amount = docs.amount_untaxed * docs.x_tasa
+            iva_rate_amount = tax_iva * docs.x_tasa
+            total_rate_amount = amount_total * docs.x_tasa
+        else:
+            untaxed_rate_amount = docs.amount_untaxed / docs.x_tasa
+            iva_rate_amount = tax_iva / docs.x_tasa
+            total_rate_amount = amount_total / docs.x_tasa
 
 
 
