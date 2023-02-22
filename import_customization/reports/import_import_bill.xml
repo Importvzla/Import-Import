@@ -294,7 +294,7 @@
                         <br/>
                         <div class="row border-top border-bottom border-dark">
                             <span>
-                                ESTOS MONTOS PUEDEN VARIAR SEGUN LA LEY DEL BCV ART. 128 CALCULADOS A LA TASA DE CAMBIO DE <span t-field="o.x_tasa"/> Bs, DE FECHA <span t-field="o.invoice_date"/> REFERENCIA QUE SE PARA CUMPLIR CON EL MENCIONADO ARTICULO DICHOS MONTOS SON PAGADEROS EN USD O BOLIVARES DE ACUERDO AL REGIMEN VIGENTE DE LA TASA DE 1 USD POR <span t-field="o.x_tasa"/>
+                                ESTOS MONTOS PUEDEN VARIAR SEGUN LA LEY DEL BCV ART. 128 CALCULADOS A LA TASA DE CAMBIO DE <span t-esc="round(o.x_tasa, 4)"/> Bs, DE FECHA <span t-field="o.invoice_date"/> REFERENCIA QUE SE PARA CUMPLIR CON EL MENCIONADO ARTICULO DICHOS MONTOS SON PAGADEROS EN <span t-field="o.currency_id.name"/> O BOLIVARES DE ACUERDO AL REGIMEN VIGENTE DE LA TASA DE 1 <span t-field="o.currency_id.name"/> POR <span t-esc="round(o.x_tasa, 4)"/>
                             </span>
 <!--                            <span>-->
 <!--                                SUB TOTAL CALCULADO A LA TASA DE 1 USD POR <span t-field="o.x_tasa"/>-->
