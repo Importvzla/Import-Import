@@ -40,38 +40,6 @@
                     <t t-set="amount_untaxed_rate" t-value="o.amount_untaxed / o.x_tasa"/>
                     <t t-set="amount_tax_rate" t-value="o.amount_tax / o.x_tasa"/>
                     <t t-set="amount_total_rate" t-value="o.amount_total / o.x_tasa"/>
-                    <br/>
-                    <div class="row">
-                        <div class="col" style="width: 57%;">
-                            <span>FECHA VALOR B.C.V. </span>
-                            <span t-field="o.invoice_date"/> <span>TASA B.C.V: BS/USD </span>
-                            <span t-field="o.x_tasa" />
-                            <div class="row">
-                                <div class="col-8 text-left">
-                                    <span>T.N. BASE IMPONIBLE: $ USD</span>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span t-esc="'{0:,.2f}'.format(amount_untaxed_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-8 text-left">
-                                    <span>TOTAL I.V.A: $ USD</span>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span t-esc="'{0:,.2f}'.format(amount_tax_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-8 text-left">
-                                    <span>TOTAL A PAGAR: $ USD</span>
-                                </div>
-                                <div class="col-4 text-right">
-                                    <span t-esc="'{0:,.2f}'.format(amount_total_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </t>
             </div>
         </template>
