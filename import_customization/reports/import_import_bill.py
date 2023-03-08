@@ -45,16 +45,26 @@ class ImportImportBill(models.AbstractModel):
         overall_weight = 0.0
         purchase_order = ''
 
-        stock_picking_ids = self.env['stock.picking'].search([
-            ('origin', '=', docs.invoice_origin), ('picking_type_code', '=', 'outgoing')
-        ])
+        list_name = []
         delivery_note = ''
-        if stock_picking_ids:
-            list_name = []
-            for spi in stock_picking_ids:
-                list_name.append(spi.name)
 
-            delivery_note = ", ".join(list_name)
+        stock_move_lines = self.env['stock.move.line'].search([
+            ('origin', '=', docs.invoice_origin), ('picking_code', '=', 'outgoing')
+        ])
+        # a = docs.action_show_picking()
+        #
+        # stock_picking_ids = self.env['stock.picking'].search([
+        #     ('origin', '=', docs.invoice_origin), ('picking_type_code', '=', 'outgoing')
+        # ])
+        # if stock_picking_ids:
+        #     list_name = []
+        #     for spi in stock_picking_ids:
+        #         for ml in spi.move_line_ids:
+        #             print(ml)
+        #
+        #         list_name.append(spi.name)
+
+            # delivery_note = ", ".join(list_name)
 
 
         lines = []
@@ -62,6 +72,12 @@ class ImportImportBill(models.AbstractModel):
 
         for ili in docs.invoice_line_ids:
             if not ili.display_type:
+                if stock_move_lines:
+                    for sml in stock_move_lines:
+                        if sml.product_id == ili.product_id:
+                            if sml.reference not in list_name:
+                                list_name.append(sml.reference)
+
                 overall_weight += ili.quantity
                 unit_price_without_tax = 0.0
                 for ti in ili.tax_ids:
@@ -147,8 +163,6 @@ class ImportImportBill(models.AbstractModel):
             iva_rate_amount = tax_iva / docs.x_tasa
             total_rate_amount = amount_total / docs.x_tasa
 
-
-
         docargs = {
             'doc_ids': docids,
             'doc_model': 'account.move',
@@ -168,6 +182,6 @@ class ImportImportBill(models.AbstractModel):
             'total_rate_amount': locale.format_string('%10.2f', total_rate_amount, grouping=True),
             'lines': lines,
             'purchase_order': purchase_order,
-            'delivery_note': delivery_note,
+            'delivery_note':  ", ".join(list_name),
         }
         return docargs
