@@ -7,6 +7,8 @@ class CustomAccountMove(models.Model):
     _inherit = 'account.move'
     _description = 'modificar modelo de account_move'
 
+    x_nota_entrega = fields.Many2many('stock.picking', 'stock_picking_account_move_rel', string='No Nota de Entrega',
+                                     domain = "[('origin', '=', invoice_origin), ('picking_type_code', '=', 'outgoing')]")
     sale_order_id = fields.Many2one('sale.order', compute='_search_sale_order', store=True)
     rate = fields.Float(related='currency_id.rate', store=True)
     amount_untaxed_rate = fields.Float(compute='_compute_amount_untaxed', store=True)
@@ -68,16 +70,3 @@ class CustomAccountMove(models.Model):
                 record.sale_order_id = so.id
             else:
                 record.sale_order_id = False
-
-    # @api.depends('sale_order_id')
-    # def _search_picking_out(self):
-    #     for record in self:
-    #         if record.sale_order_id:
-    #             picking_ids = record.env['stock_picking'].search(
-    #                 ['origin', '=', record.invoice_origin])
-    #             out = record.sale_order_id.picking_ids.filtered(lambda r: r.picking_type_sequence_code == "OUT")
-    #             print(out)
-    #             record.picking_out = "asd"
-    #         else:
-    #             record.picking_out = False
-

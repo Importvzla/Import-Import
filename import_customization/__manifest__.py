@@ -27,7 +27,7 @@
         # 'security/ir.model.access.csv',
         'data/invoice_paper_format.xml',
         'data/res_country.xml',
-        'views/views.xml',
+        'views/account_move.xml',
         'views/import_import_report.xml',
         'views/res_partner_views.xml',
         # 'views/sale_order_line.xml',

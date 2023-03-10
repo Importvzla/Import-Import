@@ -438,7 +438,7 @@
                                     <span t-field="o.invoice_date_due"/>
                                     <br/>
                                     <strong>Nota de Entrega:</strong>
-                                    <span t-esc="delivery_note"/>
+                                    <span t-field="o.x_nota_entrega"/>
                                     <br/>
                                     <strong>Orden de Compra:</strong>
                                     <t t-if="o.sale_order_id">
