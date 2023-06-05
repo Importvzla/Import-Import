@@ -6,3 +6,6 @@
 	path = exchange_rate_quotes
 	url = git@gitlab.com:addons_arkisoft/exchange_rate_quotes.git
 	branch = 15.0
+[submodule "custom_account_report"]
+	path = custom_account_report
+	url = git@gitlab.com:addons_arkisoft/custom_account_report.git
