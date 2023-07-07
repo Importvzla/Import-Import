@@ -108,7 +108,7 @@ class ImportImportBill(models.AbstractModel):
                         else:
                             iva_withheld = line_riva_id.credit
 
-                if ili.tax_ids[0].name == 'Exento':
+                if ili.tax_ids and ili.tax_ids[0].name == 'Exento':
                     code = '(E)'
                 else:
                     code = '(G)'
@@ -145,7 +145,7 @@ class ImportImportBill(models.AbstractModel):
             # tax_base = tax_base * docs.x_tasa
             exempt_sum = exempt_sum * docs.x_tasa
             # tax_iva = tax_iva / docs.x_tasa
-            iva_withheld = iva_withheld / docs.x_tasa
+            iva_withheld = iva_withheld / docs.x_tasa if iva_withheld != 0 else 0
 
         amount_total = tax_iva + tax_base + exempt_sum
 
