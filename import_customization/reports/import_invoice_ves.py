@@ -141,11 +141,11 @@ class ImportInvoice(models.AbstractModel):
                 if sale_order_id:
                     purchase_order = sale_order_id.x_ocompra
 
-        if docs.currency_id.name != 'VES':
-            # tax_base = tax_base * docs.x_tasa
-            exempt_sum = exempt_sum * docs.x_tasa
-            # tax_iva = tax_iva / docs.x_tasa
-            iva_withheld = iva_withheld / docs.x_tasa if iva_withheld != 0 else 0
+        # if docs.currency_id.name != 'VES':
+        #     # tax_base = tax_base * docs.x_tasa
+        #     exempt_sum = exempt_sum * docs.x_tasa
+        #     # tax_iva = tax_iva / docs.x_tasa
+        #     iva_withheld = iva_withheld / docs.x_tasa if iva_withheld != 0 else 0
 
         amount_total = tax_iva + tax_base + exempt_sum
 
@@ -154,14 +154,14 @@ class ImportInvoice(models.AbstractModel):
         # else:
         #     retention_percentage = ''
 
-        if docs.currency_id.name != 'VES':
-            untaxed_rate_amount = docs.amount_untaxed * docs.x_tasa
-            iva_rate_amount = tax_iva * docs.x_tasa
-            total_rate_amount = amount_total * docs.x_tasa
-        else:
-            untaxed_rate_amount = docs.amount_untaxed / docs.x_tasa
-            iva_rate_amount = tax_iva / docs.x_tasa
-            total_rate_amount = amount_total / docs.x_tasa
+        # if docs.currency_id.name != 'VES':
+        #     untaxed_rate_amount = docs.amount_untaxed * docs.x_tasa
+        #     iva_rate_amount = tax_iva * docs.x_tasa
+        #     total_rate_amount = amount_total * docs.x_tasa
+        # else:
+        #     untaxed_rate_amount = docs.amount_untaxed / docs.x_tasa
+        #     iva_rate_amount = tax_iva / docs.x_tasa
+        #     total_rate_amount = amount_total / docs.x_tasa
 
         docargs = {
             'doc_ids': docids,
@@ -177,9 +177,9 @@ class ImportInvoice(models.AbstractModel):
             'exempt_sum': exempt_sum,
             'amount_total': amount_total,
             'tax_base': tax_base,
-            'untaxed_rate_amount': locale.format_string('%10.2f', untaxed_rate_amount, grouping=True),
-            'iva_rate_amount': locale.format_string('%10.2f', iva_rate_amount, grouping=True),
-            'total_rate_amount': locale.format_string('%10.2f', total_rate_amount, grouping=True),
+            # 'untaxed_rate_amount': locale.format_string('%10.2f', untaxed_rate_amount, grouping=True),
+            # 'iva_rate_amount': locale.format_string('%10.2f', iva_rate_amount, grouping=True),
+            # 'total_rate_amount': locale.format_string('%10.2f', total_rate_amount, grouping=True),
             'lines': lines,
             'purchase_order': purchase_order,
             'delivery_note':  ", ".join(list_name),
