@@ -256,7 +256,7 @@
             <div>
                 <span>BI IGTF 3%</span>
                 <span>&#160;</span>
-                <span t-esc="total"/>
+                <span t-esc="total" t-options='{"widget": "monetary", "display_currency": currency_obj}'/>
                 <span>&#160;&#160;&#160;&#160;&#160;</span>
                 <span>IGTF 3% </span>
                 <span>&#160;</span>
