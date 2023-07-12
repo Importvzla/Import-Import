@@ -37,35 +37,16 @@ class ImportInvoice(models.AbstractModel):
         amount_untaxed = 0.0
         exempt_sum = 0.0
         tax_base = 0.0
-        percentage = ''
         tax_iva = 0.0
-        iva_withheld = 0.0
-        amount_total = 0.0
         discount_sum = 0.0
         overall_weight = 0.0
         purchase_order = ''
 
         list_name = []
-        delivery_note = ''
 
         stock_move_lines = self.env['stock.move.line'].search([
             ('origin', '=', docs.invoice_origin), ('picking_code', '=', 'outgoing')
         ])
-        # a = docs.action_show_picking()
-        #
-        # stock_picking_ids = self.env['stock.picking'].search([
-        #     ('origin', '=', docs.invoice_origin), ('picking_type_code', '=', 'outgoing')
-        # ])
-        # if stock_picking_ids:
-        #     list_name = []
-        #     for spi in stock_picking_ids:
-        #         for ml in spi.move_line_ids:
-        #             print(ml)
-        #
-        #         list_name.append(spi.name)
-
-            # delivery_note = ", ".join(list_name)
-
 
         lines = []
         lotes = docs._get_invoiced_lot_values()
@@ -91,11 +72,6 @@ class ImportInvoice(models.AbstractModel):
                         tax_base += ili.price_subtotal
                         line_iva_id = docs.line_ids.search([('name', '=', ti.name), ('move_id', '=', docs.id)])
                         tax_iva = abs(line_iva_id.amount_currency)
-                        # if docs.x_tipodoc == 'Nota de Crédito':
-                        #     tax_iva = line_iva_id.debit
-                        # else:
-                        #     tax_iva = line_iva_id.credit
-                        percentage = line_iva_id.name
                     else:
                         unit_price_without_tax = ili.price_unit
 
@@ -141,27 +117,7 @@ class ImportInvoice(models.AbstractModel):
                 if sale_order_id:
                     purchase_order = sale_order_id.x_ocompra
 
-        if docs.currency_id.name != 'VES':
-            # tax_base = tax_base * docs.x_tasa
-            exempt_sum = exempt_sum * docs.x_tasa
-            # tax_iva = tax_iva / docs.x_tasa
-            iva_withheld = iva_withheld / docs.x_tasa if iva_withheld != 0 else 0
-
         amount_total = tax_iva + tax_base + exempt_sum
-
-        # if percentage != '':
-        #     retention_percentage = percentage[4:]
-        # else:
-        #     retention_percentage = ''
-
-        if docs.currency_id.name != 'VES':
-            untaxed_rate_amount = docs.amount_untaxed * docs.x_tasa
-            iva_rate_amount = tax_iva * docs.x_tasa
-            total_rate_amount = amount_total * docs.x_tasa
-        else:
-            untaxed_rate_amount = docs.amount_untaxed / docs.x_tasa
-            iva_rate_amount = tax_iva / docs.x_tasa
-            total_rate_amount = amount_total / docs.x_tasa
 
         docargs = {
             'doc_ids': docids,
@@ -177,9 +133,6 @@ class ImportInvoice(models.AbstractModel):
             'exempt_sum': exempt_sum,
             'amount_total': amount_total,
             'tax_base': tax_base,
-            'untaxed_rate_amount': locale.format_string('%10.2f', untaxed_rate_amount, grouping=True),
-            'iva_rate_amount': locale.format_string('%10.2f', iva_rate_amount, grouping=True),
-            'total_rate_amount': locale.format_string('%10.2f', total_rate_amount, grouping=True),
             'lines': lines,
             'purchase_order': purchase_order,
             'delivery_note':  ", ".join(list_name),
