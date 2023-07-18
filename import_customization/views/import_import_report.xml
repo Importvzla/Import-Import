@@ -2,17 +2,42 @@
 
 <odoo>
   <data>
-    <record id="invoice_report" model="ir.actions.report">
-        <field name="name">Facturación</field>
-        <field name="model">account.move</field>
-        <field name="binding_model_id" ref="account.model_account_move"/>
-        <field name="binding_type">report</field>
-        <field name="report_type">qweb-pdf</field>
-        <field name="report_name">import_customization.custom_invoice</field>
-        <field name="report_file">import_customization.custom_invoice</field>
-        <field name="print_report_name">'Factura - %s' % (object.name)</field>
-        <field name="paperformat_id" ref="invoice_paperformat"/>
-    </record>
+      <record id="invoice_report" model="ir.actions.report">
+          <field name="name">Facturación</field>
+          <field name="model">account.move</field>
+          <field name="binding_model_id" ref="account.model_account_move"/>
+          <field name="binding_type">report</field>
+          <field name="report_type">qweb-pdf</field>
+          <field name="report_name">import_customization.custom_invoice</field>
+          <field name="report_file">import_customization.custom_invoice</field>
+          <field name="print_report_name">'Factura - %s' % (object.name)</field>
+          <field name="paperformat_id" ref="invoice_paperformat"/>
+      </record>
+
+      <record id="ves_invoice_report" model="ir.actions.report">
+          <field name="name">Facturación VES</field>
+          <field name="model">account.move</field>
+          <field name="binding_model_id" ref="account.model_account_move"/>
+          <field name="binding_type">report</field>
+          <field name="report_type">qweb-pdf</field>
+          <field name="report_name">import_customization.ves_invoice</field>
+          <field name="report_file">import_customization.ves_invoice</field>
+          <field name="print_report_name">'Factura_%s_VES' % (object.name)</field>
+          <field name="paperformat_id" ref="invoice_paperformat"/>
+      </record>
+
+      <record id="usd_invoice_report" model="ir.actions.report">
+          <field name="name">Facturación USD</field>
+          <field name="model">account.move</field>
+          <field name="binding_model_id" ref="account.model_account_move"/>
+          <field name="binding_type">report</field>
+          <field name="report_type">qweb-pdf</field>
+          <field name="report_name">import_customization.usd_invoice</field>
+          <field name="report_file">import_customization.usd_invoice</field>
+          <field name="print_report_name">'Factura_%s_USD' % (object.name)</field>
+          <field name="paperformat_id" ref="invoice_paperformat"/>
+      </record>
+
 
 <!--    <record id="budget_official_rate_report" model="ir.actions.report">-->
 <!--        <field name="name">Presupuesto Tasa Oficial</field>-->

@@ -32,6 +32,8 @@
         'views/res_partner_views.xml',
         # 'views/sale_order_line.xml',
         'reports/import_import_bill.xml',
+        'reports/import_invoice_ves.xml',
+        'reports/import_invoice_usd.xml',
         # 'reports/budget_official_rate.xml',
     ],
     # only loaded in demonstration mode
