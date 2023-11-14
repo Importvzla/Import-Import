@@ -9,3 +9,7 @@
 [submodule "custom_account_report"]
 	path = custom_account_report
 	url = git@gitlab.com:addons_arkisoft/custom_account_report.git
+[submodule "personalized_ledger"]
+	branch = 15.0
+	path = personalized_ledger
+	url = git@gitlab.com:addons_arkisoft/personalized_ledger.git
