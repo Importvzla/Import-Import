@@ -58,7 +58,8 @@
                     <span t-field="o.x_nota_entrega"/>
                     <br/>
                     <strong>Orden de Compra:</strong>
-                    <t t-if="o.company_id == 'ves'">
+<!--                    <t t-if="o.company_id == 'ves'">-->
+                    <t t-if="o.company_id.currency_id.name == 'VES'">
                         <t t-if="o.sale_order_id">
                             <span t-field="o.sale_order_id.x_ocompra"/>
                         </t>
@@ -260,7 +261,7 @@
                 <span>&#160;&#160;&#160;&#160;&#160;</span>
                 <span>IGTF 3% </span>
                 <span>&#160;</span>
-                <t t-set="igtg" t-value="(total * 3) / 100"/>
+                <t t-set="igtg" t-value="(subtotal * 3) / 100"/>
                 <span t-esc="'{0:,.2f}'.format(igtg).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
             </div>
         </template>

@@ -215,7 +215,7 @@
                 <span>&#160;&#160;&#160;&#160;&#160;</span>
                 <span>IGTF 3% </span>
                 <span>&#160;</span>
-                <t t-set="igtg" t-value="(total* 3) / 100"/>
+                <t t-set="igtg" t-value="(subtotal * 3) / 100"/>
                 <span t-esc="'{0:,.2f}'.format(igtg).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
             </div>
         </template>
