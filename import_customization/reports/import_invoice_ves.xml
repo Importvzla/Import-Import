@@ -122,7 +122,7 @@
                                 <td class="text-right">
                                     <span t-field="line.quantity"/>
                                 </td>
-                                <td name="account_invoice_line_name"><span t-field="line.name" t-options="{'widget': 'text'}"/></td>
+                                <td name="account_invoice_line_name"><span t-field="line.product_id.name" t-options="{'widget': 'text'}"/></td>
                                 <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                     <span class="text-nowrap" t-esc="'{0:,.2f}'.format(precio_unitario).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
                                 </td>
