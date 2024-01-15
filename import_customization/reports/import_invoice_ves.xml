@@ -200,7 +200,13 @@
                                     <span>Monto del Documento de Origen</span>
                                 </td>
                                 <td class="text-right">
-                                    <span t-field="o.reversed_entry_id.amount_total"/>
+                                    <t t-if="o.reversed_entry_id.currency_id.name == 'VES'">
+                                        <span t-field="o.reversed_entry_id.amount_total"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-set="reversed_entry_amount_rate" t-value="o.reversed_entry_id.amount_total * o.reversed_entry_id.x_tasa"/>
+                                        <span t-esc="reversed_entry_amount_rate" t-options='{"widget": "monetary", "display_currency": currency_obj}'/>
+                                    </t>
                                 </td>
                             </tr>
                             <tr>
@@ -228,8 +234,10 @@
                 <t t-set="base_imponible" t-value="tax_base"/>
                 <t t-set="exento" t-value="exempt_sum"/>
                 <t t-set="subtotal" t-value="tax_base + exempt_sum"/>
-                <t t-set="impuesto" t-value="tax_iva"/>
-                <t t-set="total" t-value="amount_total"/>
+<!--                <t t-set="impuesto" t-value="tax_iva"/>-->
+                <t t-set="impuesto" t-value="(subtotal * 0.16)"/>
+<!--                <t t-set="total" t-value="amount_total"/>-->
+                <t t-set="total" t-value="subtotal + impuesto"/>
             </t>
             <t t-else="">
                 <t t-set="amount_untaxed_rate" t-value="o.amount_untaxed"/>
@@ -239,8 +247,10 @@
                 <t t-set="base_imponible" t-value="tax_base * o.x_tasa"/>
                 <t t-set="exento" t-value="exempt_sum * o.x_tasa"/>
                 <t t-set="subtotal" t-value="(tax_base + exempt_sum) * o.x_tasa"/>
-                <t t-set="impuesto" t-value="tax_iva * o.x_tasa"/>
-                <t t-set="total" t-value="amount_total * o.x_tasa"/>
+<!--                <t t-set="impuesto" t-value="tax_iva * o.x_tasa"/>-->
+                <t t-set="impuesto" t-value="(subtotal * 0.16)"/>
+<!--                <t t-set="total" t-value="amount_total * o.x_tasa"/>-->
+                <t t-set="total" t-value="subtotal + impuesto"/>
             </t>
 
             <t t-if="o.partner_id.type_invoice_ves == 'type_2'">
