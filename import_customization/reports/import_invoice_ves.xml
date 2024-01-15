@@ -234,8 +234,10 @@
                 <t t-set="base_imponible" t-value="tax_base"/>
                 <t t-set="exento" t-value="exempt_sum"/>
                 <t t-set="subtotal" t-value="tax_base + exempt_sum"/>
-                <t t-set="impuesto" t-value="tax_iva"/>
-                <t t-set="total" t-value="amount_total"/>
+<!--                <t t-set="impuesto" t-value="tax_iva"/>-->
+                <t t-set="impuesto" t-value="(subtotal * 0.16)"/>
+<!--                <t t-set="total" t-value="amount_total"/>-->
+                <t t-set="total" t-value="subtotal + impuesto"/>
             </t>
             <t t-else="">
                 <t t-set="amount_untaxed_rate" t-value="o.amount_untaxed"/>
@@ -245,8 +247,10 @@
                 <t t-set="base_imponible" t-value="tax_base * o.x_tasa"/>
                 <t t-set="exento" t-value="exempt_sum * o.x_tasa"/>
                 <t t-set="subtotal" t-value="(tax_base + exempt_sum) * o.x_tasa"/>
-                <t t-set="impuesto" t-value="tax_iva * o.x_tasa"/>
-                <t t-set="total" t-value="amount_total * o.x_tasa"/>
+<!--                <t t-set="impuesto" t-value="tax_iva * o.x_tasa"/>-->
+                <t t-set="impuesto" t-value="(subtotal * 0.16)"/>
+<!--                <t t-set="total" t-value="amount_total * o.x_tasa"/>-->
+                <t t-set="total" t-value="subtotal + impuesto"/>
             </t>
 
             <t t-if="o.partner_id.type_invoice_ves == 'type_2'">
