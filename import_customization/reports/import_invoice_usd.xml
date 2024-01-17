@@ -174,8 +174,10 @@
 
                 <t t-set="base_imponible_rate" t-value="base_imponible * o.x_tasa"/>
                 <t t-set="subtotal_rate" t-value="subtotal * o.x_tasa"/>
-                <t t-set="impuesto_rate" t-value="impuesto * o.x_tasa"/>
-                <t t-set="total_rate" t-value="total * o.x_tasa"/>
+<!--                <t t-set="impuesto_rate" t-value="impuesto * o.x_tasa"/>-->
+<!--                <t t-set="total_rate" t-value="total * o.x_tasa"/>-->
+                <t t-set="impuesto_rate" t-value="subtotal_rate * 0.16"/>
+                <t t-set="total_rate" t-value="subtotal_rate + impuesto_rate"/>
             </t>
             <t t-else="">
                 <t t-set="base_imponible" t-value="tax_base / o.x_tasa"/>
