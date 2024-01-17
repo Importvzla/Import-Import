@@ -205,10 +205,10 @@
                 <div id="total" class="row">
                     <div class="col">
                         <t t-set="amount_untaxed_rate" t-value="o.amount_untaxed * o.x_tasa"/>
-<!--                        <t t-set="amount_tax_rate" t-value="o.amount_tax * o.x_tasa"/>-->
-<!--                        <t t-set="amount_total_rate" t-value="o.amount_total * o.x_tasa"/>-->
-                        <t t-set="amount_tax_rate" t-value="amount_untaxed_rate * 0.16"/>
-                        <t t-set="amount_total_rate" t-value="amount_untaxed_rate + amount_tax_rate"/>
+                        <t t-set="amount_tax_rate" t-value="o.amount_tax * o.x_tasa"/>
+                        <t t-set="amount_total_rate" t-value="o.amount_total * o.x_tasa"/>
+<!--                        <t t-set="amount_tax_rate" t-value="amount_untaxed_rate * 0.16"/>-->
+<!--                        <t t-set="amount_total_rate" t-value="amount_untaxed_rate + amount_tax_rate"/>-->
 
                         <div id="total" class="row border-top border-dark">
                             <div class="col-2">
