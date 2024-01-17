@@ -190,7 +190,7 @@
 <!--                <t t-set="total_rate" t-value="amount_total"/>-->
             </t>
 
-            <t t-if="tax_iva > 0.0">
+            <t t-if="impuesto > 0.0">
                 <t t-set="impuesto_rate" t-value="subtotal_rate * 0.16"/>
             </t>
             <t t-else="">
