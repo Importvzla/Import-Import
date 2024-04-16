@@ -242,13 +242,13 @@
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
                     <t t-call="web.basic_layout">
-                        <div class="head" style="font-size: 11pt; font-family: Arial, Helvetica, sans-serif;">
+                        <!-- <div class="head" style="font-size: 11pt; font-family: Arial, Helvetica, sans-serif;">
                             <div class="text-left" style="height:8mm;">
                                 <span t-field="o.company_id.name"/>
                             </div>
-                        </div>
+                        </div> -->
 
-                        <div class="page" style="font-size: 11pt; font-family: Arial, Helvetica, sans-serif;">
+                        <div class="page" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif;">
                             <div class="oe_structure"/>
                             <t t-if="o.company_id.currency_id.name == 'USD'">
                                 <t t-set="currency_obj" t-value="o.company_id.currency_id"/>
