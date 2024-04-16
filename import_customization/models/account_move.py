@@ -10,6 +10,7 @@ class CustomAccountMove(models.Model):
     x_nota_entrega = fields.Many2many('stock.picking', 'stock_picking_account_move_rel', string='No Nota de Entrega',
                                      domain = "[('origin', '=', invoice_origin), ('picking_type_code', '=', 'outgoing')]")
     sale_order_id = fields.Many2one('sale.order', compute='_search_sale_order', store=True)
+    sale_order_number = fields.Char(string='N° Orden de Compra', compute='_search_sale_order_number', store=True)
     rate = fields.Float(related='currency_id.rate', store=True)
     amount_untaxed_rate = fields.Float(compute='_compute_amount_untaxed', store=True)
     amount_tax_rate = fields.Float(compute='_compute_amount_tax_rate', store=True)
@@ -70,3 +71,12 @@ class CustomAccountMove(models.Model):
                 record.sale_order_id = so.id
             else:
                 record.sale_order_id = False
+
+    @api.depends('invoice_origin')
+    def _search_sale_order_number(self):
+        for record in self:
+            if record.invoice_origin:
+                sale_id = record.env['sale.order'].search([('name', '=', record.invoice_origin)])
+                if sale_id:
+                    record.sale_order_number = sale_id[0].x_ocompra
+                
