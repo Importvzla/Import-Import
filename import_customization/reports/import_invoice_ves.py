@@ -51,44 +51,43 @@ class ImportInvoice(models.AbstractModel):
         stock_move_lines = self.env['stock.move.line'].search([
             ('origin', '=', docs.invoice_origin), ('picking_code', '=', 'outgoing')
         ])
-        # a = docs.action_show_picking()
-        #
-        # stock_picking_ids = self.env['stock.picking'].search([
-        #     ('origin', '=', docs.invoice_origin), ('picking_type_code', '=', 'outgoing')
-        # ])
-        # if stock_picking_ids:
-        #     list_name = []
-        #     for spi in stock_picking_ids:
-        #         for ml in spi.move_line_ids:
-        #             print(ml)
-        #
-        #         list_name.append(spi.name)
-
-            # delivery_note = ", ".join(list_name)
-
 
         lines = []
         lotes = docs._get_invoiced_lot_values()
 
         for ili in docs.invoice_line_ids:
             if not ili.display_type:
+
+                # Calcular subtotales de lineas en ves y usd
+                if docs.currency_id.name != 'VES':
+                    price_unit = round(ili.price_unit * docs.x_tasa, 2)
+                    price_subtotal = price_unit * ili.quantity
+                    price_total = price_unit * ili.quantity
+                    
+                else:
+                    price_unit = ili.price_unit
+                    price_subtotal = ili.price_subtotal
+                    price_total = price_unit * ili.quantity
+                    
+
                 if stock_move_lines:
                     for sml in stock_move_lines:
                         if sml.product_id == ili.product_id:
                             if sml.reference not in list_name:
                                 list_name.append(sml.reference)
 
+                # Sumatoria de descueton total = sumatoria de descuento por linea
+                if ili.discount:
+                    discount_sum += round(price_unit * (ili.discount / 100), 2)
+                else:
+                    discount_sum += 0.0
+
                 overall_weight += ili.quantity
                 unit_price_without_tax = 0.0
                 for ti in ili.tax_ids:
-                    if ili.discount:
-                        discount_sum += round(ili.price_unit * (ili.discount / 100), 2)
-                    else:
-                        discount_sum += 0.0
-
                     if ti.x_tipoimpuesto == 'IVA':
-                        unit_price_without_tax = round(ili.price_unit / ((100 + ti.amount) / 100), 2)
-                        tax_base += ili.price_subtotal
+                        unit_price_without_tax = round(price_total / ((100 + ti.amount) / 100), 2)
+                        tax_base += price_total
                         line_iva_id = docs.line_ids.search([('name', '=', ti.name), ('move_id', '=', docs.id)])
                         tax_iva = abs(line_iva_id.amount_currency)
                         # if docs.x_tipodoc == 'Nota de Crédito':
@@ -97,10 +96,10 @@ class ImportInvoice(models.AbstractModel):
                         #     tax_iva = line_iva_id.credit
                         percentage = line_iva_id.name
                     else:
-                        unit_price_without_tax = ili.price_unit
+                        unit_price_without_tax = price_total
 
                     if ti.x_tipoimpuesto == 'EXENTO':
-                        exempt_sum += ili.price_subtotal
+                        exempt_sum += price_total
                     if ti.x_tipoimpuesto == 'RIVA':
                         line_riva_id = docs.line_ids.search([('name', '=', ti.name), ('move_id', '=', docs.id)])
                         if docs.x_tipodoc == 'Nota de Crédito':
@@ -122,16 +121,17 @@ class ImportInvoice(models.AbstractModel):
                         lote.append([lot])
 
             vals = {
-                'price_subtotal': locale.format_string(' % 10.2f', ili.price_subtotal, grouping=True),
-                'price_total': locale.format_string('%10.2f', ili.price_total, grouping=True),
+                'display_type': ili.display_type if ili.display_type else "product",
                 'default_code': ili.product_id.default_code,
-                'name': self.description_format(ili.name),
-                'lote': lote,
+                'quantity': ili.quantity,
                 'product_uom_id': ili.product_uom_id.name,
-                'quantity': locale.format_string('%10.2f', ili.quantity, grouping=True),
-                'price_unit': locale.format_string('%10.2f', ili.price_unit, grouping=True),
+                'description': ili.product_id.name,
+                'name': self.description_format(ili.name) if not ili.display_type else ili.name,
                 'discount': ili.discount,
-                'display_type': ili.display_type,
+                'price_unit':price_unit,
+                'price_subtotal': price_subtotal,
+                'price_total': price_total,
+                'lote': lote,
                 'code': code
             }
             lines.append(vals)
@@ -180,7 +180,7 @@ class ImportInvoice(models.AbstractModel):
             # 'untaxed_rate_amount': locale.format_string('%10.2f', untaxed_rate_amount, grouping=True),
             # 'iva_rate_amount': locale.format_string('%10.2f', iva_rate_amount, grouping=True),
             # 'total_rate_amount': locale.format_string('%10.2f', total_rate_amount, grouping=True),
-            'lines': lines,
+            'account_lines': lines,
             'purchase_order': purchase_order,
             'delivery_note':  ", ".join(list_name),
         }
