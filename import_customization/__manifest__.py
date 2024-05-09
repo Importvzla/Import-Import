@@ -34,7 +34,7 @@
         'reports/import_import_bill.xml',
         'reports/import_invoice_ves.xml',
         'reports/import_invoice_usd.xml',
-        # 'reports/budget_official_rate.xml',
+        'reports/report_invoice.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
