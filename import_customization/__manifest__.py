@@ -35,6 +35,7 @@
         'reports/import_invoice_ves.xml',
         'reports/import_invoice_usd.xml',
         'reports/report_invoice.xml',
+        'reports/inc_invoice_usd.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
