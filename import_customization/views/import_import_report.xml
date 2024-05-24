@@ -38,6 +38,18 @@
           <field name="paperformat_id" ref="invoice_paperformat"/>
       </record>
 
+      <record id="usd_invoice_report" model="ir.actions.report">
+          <field name="name">Facturacia INC</field>
+          <field name="model">account.move</field>
+          <field name="binding_model_id" ref="account.model_account_move"/>
+          <field name="binding_type">report</field>
+          <field name="report_type">qweb-pdf</field>
+          <field name="report_name">import_customization.inc_usd_invoice</field>
+          <field name="report_file">import_customization.inc_usd_invoice</field>
+          <field name="print_report_name">'Factura_INC_%s' % (object.name)</field>
+          <field name="paperformat_id" ref="invoice_paperformat"/>
+      </record>
+
 
 <!--    <record id="budget_official_rate_report" model="ir.actions.report">-->
 <!--        <field name="name">Presupuesto Tasa Oficial</field>-->
