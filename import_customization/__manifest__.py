@@ -30,6 +30,7 @@
         'views/account_move.xml',
         'views/import_import_report.xml',
         'views/res_partner_views.xml',
+        'views/res_company_views.xml',
         # 'views/sale_order_line.xml',
         'reports/import_import_bill.xml',
         'reports/import_invoice_ves.xml',
