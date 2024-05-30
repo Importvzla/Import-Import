@@ -3,6 +3,61 @@
 <odoo>
     <data>
 
+        <template id="default_total_tagline_inc">
+            <div id="total_tagline">
+
+                <t t-if="o.company_id.currency_id.name == 'VES'">
+                    <t t-set="subtotal" t-value="o.amount_untaxed"/>
+                    <t t-set="impuesto" t-value="o.amount_tax"/>
+                    <t t-set="total" t-value="o.amount_total"/>
+                </t>
+                <t t-else="">
+                    <t t-set="subtotal" t-value="o.amount_untaxed * o.x_tasa"/>
+                    <t t-set="impuesto" t-value="o.amount_tax * o.x_tasa"/>
+                    <t t-set="total" t-value="o.amount_total * o.x_tasa"/>
+                </t>
+                <div id="total" class="row border-top border-dark">
+                    <div class="col-2">
+                    </div>
+                    <div class="col-10">
+                        <t t-if="o.amount_tax != 0.0">
+                            <div class="row">
+                                <div class="col text-right" style="width: 82%;">
+                                    <strong>Subtotal</strong>
+                                </div>
+                                <div class="col text-right" style="width: 18%;">
+                                    <span t-esc="subtotal" t-options='{"widget": "monetary", "display_currency": currency_obj}'/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col text-right" style="width: 82%;">
+                                    <span>Impuesto al Valor Agregado (IVA) 16% sobre BASE IMPONIBLE </span>
+                                    <span t-esc="subtotal" t-options='{"widget": "monetary", "display_currency": currency_obj}'/>
+                                </div>
+                                <div class="col text-right" style="width: 18%;">
+                                    <span t-esc="impuesto" t-options='{"widget": "monetary", "display_currency": currency_obj}'/>
+                                </div>
+                            </div>
+                        </t>
+                        <div class="row">
+                            <div class="col text-right" style="width: 82%;">
+                                <strong>Total</strong>
+                            </div>
+                            <div class="col text-right" style="width: 18%;">
+                                <span t-esc="total" t-options='{"widget": "monetary", "display_currency": currency_obj}'/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <t t-if="o.currency_id.name == 'VES' and o.partner_id.type_invoice_ves == 'type_1' and o.x_tipodoc not in ['Nota de Crédito', 'Nota de Débito']" name="tax_conversion_rate_2">
+                    <t t-set="amount_untaxed_rate" t-value="o.amount_untaxed / o.x_tasa"/>
+                    <t t-set="amount_tax_rate" t-value="o.amount_tax / o.x_tasa"/>
+                    <t t-set="amount_total_rate" t-value="o.amount_total / o.x_tasa"/>
+                </t>
+            </div>
+        </template>
+
         <template id="middle_section_usd">
             <table class="table table-sm table-borderless table-condensed" name="invoice_line_table">
                 <thead>
@@ -208,35 +263,7 @@
 
             </t>
 
-            <t t-call="import_customization.default_total_tagline"/>
-
-            <!-- <t t-if="o.partner_id.type_invoice_usd == 'type_1'">
-                <t t-call="import_customization.usd_type_1_tagline"/>
-            </t>
-            <t t-elif="o.partner_id.type_invoice_usd == 'type_2'">
-                <t t-call="import_customization.usd_type_2_total_tagline"/>
-            </t>
-            <t t-elif="o.partner_id.type_invoice_usd == 'type_3'">
-                <t t-call="import_customization.usd_type_3_tagline"/>
-            </t>
-            <t t-else="">
-                <span></span>
-            </t> -->
-
-            <!-- <t t-if="o.currency_id.name == 'VES' and o.partner_id.type_invoice_ves == 'type_2'"/>
-            <t t-else="">
-                <br/>
-            </t>
-            <div>
-                <span>BI IGTF 3%</span>
-                <span>&#160;</span>
-                <span t-esc="subtotal" t-options='{"widget": "monetary", "display_currency": currency_obj}'/>
-                <span>&#160;&#160;&#160;&#160;&#160;</span>
-                <span>IGTF 3% </span>
-                <span>&#160;</span>
-                <t t-set="igtg" t-value="(subtotal * 3) / 100"/>
-                <span t-esc="'{0:,.2f}'.format(igtg).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
-            </div> -->
+            <t t-call="import_customization.default_total_tagline_inc"/>
         </template>
 
         <template id="inc_usd_invoice">
@@ -248,11 +275,8 @@
                             <div class="col-3">
                                 <img t-if="o.company_id.inc_logo" t-att-src="image_data_uri(o.company_id.inc_logo)" style="max-height: 65px;" alt="INC_Logo"/>
                             </div>
-                            <div class="text-left" style="height:8mm;">
-                                <span t-field="o.company_id.name"/>
-                            </div>
                         </div>
-
+                        <br/>
                         <div class="page" style="font-size: 10pt; font-family: Arial, Helvetica, sans-serif;">
                             <div class="oe_structure"/>
                             <t t-if="o.company_id.currency_id.name == 'USD'">
