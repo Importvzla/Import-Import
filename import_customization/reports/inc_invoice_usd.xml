@@ -6,15 +6,15 @@
         <template id="default_total_tagline_inc">
             <div id="total_tagline">
 
-                <t t-if="o.company_id.currency_id.name == 'VES'">
+                <t t-if="o.company_id.currency_id.name == 'USD'">
                     <t t-set="subtotal" t-value="o.amount_untaxed"/>
                     <t t-set="impuesto" t-value="o.amount_tax"/>
                     <t t-set="total" t-value="o.amount_total"/>
                 </t>
                 <t t-else="">
-                    <t t-set="subtotal" t-value="o.amount_untaxed * o.x_tasa"/>
-                    <t t-set="impuesto" t-value="o.amount_tax * o.x_tasa"/>
-                    <t t-set="total" t-value="o.amount_total * o.x_tasa"/>
+                    <t t-set="subtotal" t-value="o.amount_untaxed / o.x_tasa"/>
+                    <t t-set="impuesto" t-value="o.amount_tax / o.x_tasa"/>
+                    <t t-set="total" t-value="o.amount_total / o.x_tasa"/>
                 </t>
                 <div id="total" class="row border-top border-dark">
                     <div class="col-2">
@@ -50,11 +50,11 @@
                     </div>
                 </div>
 
-                <t t-if="o.currency_id.name == 'VES' and o.partner_id.type_invoice_ves == 'type_1' and o.x_tipodoc not in ['Nota de Crédito', 'Nota de Débito']" name="tax_conversion_rate_2">
+                <!-- <t t-if="o.currency_id.name == 'VES' and o.partner_id.type_invoice_ves == 'type_1' and o.x_tipodoc not in ['Nota de Crédito', 'Nota de Débito']" name="tax_conversion_rate_2">
                     <t t-set="amount_untaxed_rate" t-value="o.amount_untaxed / o.x_tasa"/>
                     <t t-set="amount_tax_rate" t-value="o.amount_tax / o.x_tasa"/>
                     <t t-set="amount_total_rate" t-value="o.amount_total / o.x_tasa"/>
-                </t>
+                </t> -->
             </div>
         </template>
 
