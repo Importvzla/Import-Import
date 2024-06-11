@@ -38,7 +38,7 @@
           <field name="paperformat_id" ref="invoice_paperformat"/>
       </record>
 
-      <record id="usd_invoice_report" model="ir.actions.report">
+      <record id="inc_usd_invoice_report" model="ir.actions.report">
           <field name="name">Facturacia INC</field>
           <field name="model">account.move</field>
           <field name="binding_model_id" ref="account.model_account_move"/>
