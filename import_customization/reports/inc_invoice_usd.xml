@@ -272,8 +272,15 @@
                     <t t-call="web.basic_layout">
                         <div class="head">
                             <!-- <div class="col-3 mb4"> -->
-                            <div class="col-3">
-                                <img t-if="o.company_id.inc_logo" t-att-src="image_data_uri(o.company_id.inc_logo)" style="max-height: 65px;" alt="INC_Logo"/>
+                            <div class="row">
+                                <div class="col" style="width: 20%;">
+                                    <img t-if="o.company_id.inc_logo" t-att-src="image_data_uri(o.company_id.inc_logo)" style="max-height: 65px;" alt="INC_Logo"/>
+                                </div>
+                                <div class="col" style="width: 80%;">
+                                    <br/>
+                                    <br/>
+                                    <span>8550 NW 61 STREET, MIAMI, FLORIDA 33166</span>
+                                </div>
                             </div>
                         </div>
                         <br/>
