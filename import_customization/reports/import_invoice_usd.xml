@@ -221,14 +221,14 @@
                 <span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</span>
                 <span>IGTF 3% </span>
                 <span>&#160;</span>
-                <t t-set="igtg" t-value="(subtotal * 3) / 100"/>
-                <span t-esc="igtg)" t-options='{"widget": "monetary", "display_currency": currency_obj}'/>
+                <t t-set="igtf" t-value="(subtotal * 3) / 100"/>
+                <span t-esc="igtf" t-options='{"widget": "monetary", "display_currency": currency_obj}'/>
                 <t t-if="o.partner_id.type_invoice_usd == 'type_4'">
                     <span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</span>
                     <span>TOTAL </span>
                     <span>&#160;</span>
-                    <t t-set="total_igtg" t-value="subtotal + igtf"/>
-                    <span t-esc="total_igtg" t-options='{"widget": "monetary", "display_currency": currency_obj}'/>
+                    <t t-set="total_igtf" t-value="subtotal + igtf"/>
+                    <span t-esc="total_igtf" t-options='{"widget": "monetary", "display_currency": currency_obj}'/>
                 </t>
             </div>
         </template>
