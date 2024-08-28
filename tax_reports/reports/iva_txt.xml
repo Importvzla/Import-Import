@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?><odoo><data><template id="iva_txt"><t t-foreach="data_txt_iva" t-as="txt_iva"><t t-esc="txt_iva['rif_company']"/>&#09;<t t-esc="txt_iva['fiscal_period']"/>&#09;<t t-esc="txt_iva['date']"/>&#09;<t t-esc="txt_iva['column_4']"/>&#09;<t t-esc="txt_iva['transaction_type']"/>&#09;<t t-esc="txt_iva['rif_supplier']"/>&#09;<t t-esc="txt_iva['invoice_number']"/>&#09;<t t-esc="txt_iva['control_number']"/>&#09;<t t-esc="txt_iva['amount_total']"/>&#09;<t t-esc="txt_iva['tax_base']"/>&#09;<t t-esc="txt_iva['iva_withheld']"/>&#09;<t t-esc="txt_iva['affected_invoice_number']"/>&#09;<t t-esc="txt_iva['voucher_number']"/>&#09;<t t-esc="txt_iva['exempt_amount']"/>&#09;<t t-esc="txt_iva['retention_percentage']"/>&#09;<t t-esc="txt_iva['column_16']"/>&#10;</t>
-</template>
-</data>
-</odoo>
