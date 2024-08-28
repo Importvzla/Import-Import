@@ -52,7 +52,7 @@ class ImportInvoice(models.AbstractModel):
         lotes = docs._get_invoiced_lot_values()
 
         for ili in docs.invoice_line_ids:
-            if not ili.display_type:
+            if ili.display_type == "product":
                 if stock_move_lines:
                     for sml in stock_move_lines:
                         if sml.product_id == ili.product_id:
@@ -98,7 +98,7 @@ class ImportInvoice(models.AbstractModel):
                         lote.append([lot])
 
             vals = {
-                'price_subtotal': locale.format_string(' % 10.2f', ili.price_subtotal, grouping=True),
+                'price_subtotal': locale.format_string('%10.2f', ili.price_subtotal, grouping=True),
                 'price_total': locale.format_string('%10.2f', ili.price_total, grouping=True),
                 'default_code': ili.product_id.default_code,
                 'name': self.description_format(ili.name),
