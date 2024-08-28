@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'account', 'base_report_to_printer', 'tax_report'],
+    'depends': ['base', 'account', 'tax_report'],
 
     # always loaded
     'data': [
