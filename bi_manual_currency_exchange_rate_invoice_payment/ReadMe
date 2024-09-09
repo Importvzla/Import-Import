@@ -1,2 +1,0 @@
-
-17.0.0.1 ==> Fixed issue of when we create payment and chnage currency and save it at that time trace back occur.
