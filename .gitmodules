@@ -14,3 +14,7 @@
 	path = personalized_ledger
 	url = git@gitlab.com:addons_arkisoft/personalized_ledger.git
 	branch = 17.0
+[submodule "api_exchange_rate"]
+	path = api_exchange_rate
+	url = git@gitlab.com:addons_arkisoft/api_exchange_rate.git
+	branch = 17.0
