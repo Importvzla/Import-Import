@@ -10,7 +10,7 @@ from odoo.tests import common
 
 class TestReport(common.HttpCase):
     def setUp(self):
-        super(TestReport, self).setUp()
+        super().setUp()
         self.Model = self.env["ir.actions.report"]
         self.server = self.env["printing.server"].create({})
         self.report_vals = {
@@ -18,7 +18,7 @@ class TestReport(common.HttpCase):
             "model": "ir.actions.report",
             "report_name": "Test Report",
         }
-        self.report_view = self.env["ir.ui.view"].create(
+        self.report_pdf_view = self.env["ir.ui.view"].create(
             {
                 "name": "Test",
                 "type": "qweb",
@@ -27,15 +27,36 @@ class TestReport(common.HttpCase):
             </t>""",
             }
         )
-        self.report_imd = (
+        self.report_pdf_imd = (
             self.env["ir.model.data"]
             .sudo()
             .create(
                 {
-                    "name": "test",
+                    "name": "test_pdf",
                     "module": "base_report_to_printer",
                     "model": "ir.ui.view",
-                    "res_id": self.report_view.id,
+                    "res_id": self.report_pdf_view.id,
+                }
+            )
+        )
+        self.report_text_view = self.env["ir.ui.view"].create(
+            {
+                "name": "Test",
+                "type": "qweb",
+                "arch": """<t t-name="base_report_to_printer.test_text">
+                Test
+                </t>""",
+            }
+        )
+        self.report_text_imd = (
+            self.env["ir.model.data"]
+            .sudo()
+            .create(
+                {
+                    "name": "test_text",
+                    "module": "base_report_to_printer",
+                    "model": "ir.ui.view",
+                    "res_id": self.report_text_view.id,
                 }
             )
         )
@@ -44,7 +65,15 @@ class TestReport(common.HttpCase):
                 "name": "Test",
                 "report_type": "qweb-pdf",
                 "model": "res.partner",
-                "report_name": "base_report_to_printer.test",
+                "report_name": "base_report_to_printer.test_pdf",
+            }
+        )
+        self.report_text = self.Model.create(
+            {
+                "name": "Test",
+                "report_type": "qweb-text",
+                "model": "res.partner",
+                "report_name": "base_report_to_printer.test_text",
             }
         )
         self.partners = self.env["res.partner"]
@@ -92,7 +121,7 @@ class TestReport(common.HttpCase):
             "printing_printer.PrintingPrinter."
             "print_document"
         ) as print_document:
-            self.report._render_qweb_pdf(self.partners.ids)
+            self.report._render_qweb_pdf(self.report.report_name, self.partners.ids)
             print_document.assert_not_called()
 
     def test_render_qweb_pdf_printable(self):
@@ -104,12 +133,34 @@ class TestReport(common.HttpCase):
         ) as print_document:
             self.report.property_printing_action_id.action_type = "server"
             self.report.printing_printer_id = self.new_printer()
-            document = self.report._render_qweb_pdf(self.partners.ids)
+            document = self.report._render_qweb_pdf(
+                self.report.report_name, self.partners.ids
+            )
             print_document.assert_called_once_with(
                 self.report,
                 document[0],
                 action="server",
                 doc_format="qweb-pdf",
+                tray=False,
+            )
+
+    def test_render_qweb_text_printable(self):
+        """It should print the report, only if it is printable"""
+        with mock.patch(
+            "odoo.addons.base_report_to_printer.models."
+            "printing_printer.PrintingPrinter."
+            "print_document"
+        ) as print_document:
+            self.report_text.property_printing_action_id.action_type = "server"
+            self.report_text.printing_printer_id = self.new_printer()
+            document = self.report_text._render_qweb_text(
+                self.report_text.report_name, self.partners.ids
+            )
+            print_document.assert_called_once_with(
+                self.report_text,
+                document[0],
+                action="server",
+                doc_format="qweb-text",
                 tray=False,
             )
 
@@ -140,3 +191,13 @@ class TestReport(common.HttpCase):
         """It should raise an error"""
         with self.assertRaises(exceptions.UserError):
             self.report.print_document(self.partners.ids)
+
+    def test_print_document_string(self):
+        """Test string encoding"""
+        with mock.patch(
+            "odoo.addons.base_report_to_printer.models."
+            "printing_printer.PrintingPrinter."
+            "print_file"
+        ) as print_file:
+            self.new_printer().print_document("", "test")
+            print_file.assert_called_once()

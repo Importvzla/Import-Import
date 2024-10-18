@@ -5,7 +5,7 @@
 		<field name="name">account.partial.reconcile.tree</field>
 		<field name="model">account.partial.reconcile</field>
 		<field name="arch" type="xml">
-			<tree>
+			<tree create="false" delete="false">
 				<field name="debit_move_id" />
 				<field name="credit_move_id" />
 				<field name="full_reconcile_id" />

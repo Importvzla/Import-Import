@@ -1,15 +1,20 @@
 [submodule "tax_report"]
 	path = tax_report
 	url = git@gitlab.com:addons_arkisoft/tax_report.git
-	branch = 15.0
+	branch = 17.0
 [submodule "exchange_rate_quotes"]
 	path = exchange_rate_quotes
 	url = git@gitlab.com:addons_arkisoft/exchange_rate_quotes.git
-	branch = 15.0
+	branch = 17.0
 [submodule "custom_account_report"]
 	path = custom_account_report
 	url = git@gitlab.com:addons_arkisoft/custom_account_report.git
+	branch = 17.0
 [submodule "personalized_ledger"]
-	branch = 15.0
 	path = personalized_ledger
 	url = git@gitlab.com:addons_arkisoft/personalized_ledger.git
+	branch = 17.0
+[submodule "api_exchange_rate"]
+	path = api_exchange_rate
+	url = git@gitlab.com:addons_arkisoft/api_exchange_rate.git
+	branch = 17.0

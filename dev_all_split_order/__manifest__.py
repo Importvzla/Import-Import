@@ -10,12 +10,12 @@
 
 {
     'name': 'All in One Split Orders - Sale, Purchase, Picking/Delivery, Sale Split, Purchase Split, Delivery Split',
-    'version': '15.0.1.0',
+    'version': '17.0.1.0',
     'sequence': 1,
     'category': 'Sales',
     'description':
         """
-        This Module add below functionality into odoo
+This Module add below functionality into odoo
 
         1.Create separate sale order for selected lines of selected sale order\n
         2.Create separate purchase order for selected lines of selected purchase order\n
@@ -69,9 +69,10 @@ Odoo sale splitting
     'website': 'http://www.devintellecs.com',    
     'maintainer': 'DevIntelle Consulting Service Pvt.Ltd', 
     'support': 'devintelle@gmail.com',
-    'price':15.0,
+    'price':25.0,
     'currency':'EUR',
     #'live_test_url':'https://youtu.be/A5kEBboAh_k',
+    'pre_init_hook' :'pre_init_check',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

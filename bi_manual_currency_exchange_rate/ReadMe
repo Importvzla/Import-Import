@@ -1,0 +1,16 @@
+
+17.0.0.1 ==> When inventory valuation based on automated and create purchase order and bill for different rate at that time wrong journal entry will be created for that.
+
+17.0.0.2 ==> Added manual currency rate boolean and manual currency rate field in account payment.
+
+17.0.0.3 ==> When create invoice with company currency and after that in register payment change currency and do payment for that invoice at that time trace back occurs.
+
+17.0.0.4 ==> Fixed issue of when we chnage uom at that time unit price can't be updated based on manual currency rate in sale,purchase and invoice.
+
+17.0.0.6 ==> Update inventory valuation layer total value based on manual currency rate.
+
+17.0.0.7 ==> When create landed cost from bills at that time currecny rate is not applied on landed cost price unit.
+
+17.0.0.8 ==> Fixed issue of when we chnage pricelist in sale order and click on update prices at that time trace back occurs.
+
+17.0.0.9 ==> Fixed issue of in customer invoice advance currency rane lable not show. (caz of updated clone.)

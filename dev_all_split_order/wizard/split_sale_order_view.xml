@@ -16,11 +16,22 @@
             </field>
         </record>
         
-        <act_window name="Split Sale Order"
-	        res_model="split.so.order.confirm"
-            binding_model="sale.order.line"
-            view_mode="form"
-            target="new"	
-            id="view_so_split_confirm"/>
+<!--        <act_window name="Split Sale Order"-->
+<!--	        res_model="split.so.order.confirm"-->
+<!--            binding_model="sale.order.line"-->
+<!--            view_mode="form"-->
+<!--            target="new"	-->
+<!--            id="view_so_split_confirm"/>-->
+
+
+	
+	 <record id="view_so_split_confirm" model="ir.actions.act_window">
+		<field name="name">Split Sale Order</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">split.so.order.confirm</field>
+		<field name="view_mode">form</field>
+		<field name="target">new</field>
+		<field name="binding_model_id" ref="sale.model_sale_order_line"/>
+        </record>
 
 </odoo>

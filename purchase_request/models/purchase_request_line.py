@@ -14,10 +14,9 @@ _STATES = [
 
 
 class PurchaseRequestLine(models.Model):
-
     _name = "purchase.request.line"
     _description = "Purchase Request Line"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
+    _inherit = ["mail.thread", "mail.activity.mixin", "analytic.mixin"]
     _order = "id desc"
 
     name = fields.Char(string="Description", tracking=True)
@@ -44,14 +43,6 @@ class PurchaseRequestLine(models.Model):
         related="request_id.company_id",
         string="Company",
         store=True,
-    )
-    analytic_account_id = fields.Many2one(
-        comodel_name="account.analytic.account",
-        string="Analytic Account",
-        tracking=True,
-    )
-    analytic_tag_ids = fields.Many2many(
-        "account.analytic.tag", string="Analytic Tags", tracking=True
     )
     requested_by = fields.Many2one(
         comodel_name="res.users",
@@ -250,14 +241,8 @@ class PurchaseRequestLine(models.Model):
                 request.qty_cancelled = qty_cancelled
 
     @api.depends(
-        "product_id",
-        "name",
-        "product_uom_id",
-        "product_qty",
-        "analytic_account_id",
-        "date_required",
-        "specifications",
         "purchase_lines",
+        "request_id.state",
     )
     def _compute_is_editable(self):
         for rec in self:
@@ -272,16 +257,16 @@ class PurchaseRequestLine(models.Model):
     def _compute_supplier_id(self):
         for rec in self:
             sellers = rec.product_id.seller_ids.filtered(
-                lambda si: not si.company_id or si.company_id == rec.company_id
+                lambda si, rec=rec: not si.company_id or si.company_id == rec.company_id
             )
-            rec.supplier_id = sellers[0].name if sellers else False
+            rec.supplier_id = sellers[0].partner_id if sellers else False
 
     @api.onchange("product_id")
     def onchange_product_id(self):
         if self.product_id:
             name = self.product_id.name
             if self.product_id.code:
-                name = "[{}] {}".format(self.product_id.code, name)
+                name = f"[{self.product_id.code}] {name}"
             if self.product_id.description_purchase:
                 name += "\n" + self.product_id.description_purchase
             self.product_uom_id = self.product_id.uom_id.id
@@ -297,7 +282,7 @@ class PurchaseRequestLine(models.Model):
         self.write({"cancelled": False})
 
     def write(self, vals):
-        res = super(PurchaseRequestLine, self).write(vals)
+        res = super().write(vals)
         if vals.get("cancelled"):
             requests = self.mapped("request_id")
             requests.check_auto_reject()
@@ -342,9 +327,9 @@ class PurchaseRequestLine(models.Model):
     def _get_supplier_min_qty(self, product, partner_id=False):
         seller_min_qty = 0.0
         if partner_id:
-            seller = product.seller_ids.filtered(lambda r: r.name == partner_id).sorted(
-                key=lambda r: r.min_qty
-            )
+            seller = product.seller_ids.filtered(
+                lambda r: r.partner_id == partner_id
+            ).sorted(key=lambda r: r.min_qty)
         else:
             seller = product.seller_ids.sorted(key=lambda r: r.min_qty)
         if seller:
@@ -393,7 +378,7 @@ class PurchaseRequestLine(models.Model):
                         "if the purchase request is in draft state."
                     )
                 )
-        return super(PurchaseRequestLine, self).unlink()
+        return super().unlink()
 
     def action_show_details(self):
         self.ensure_one()
