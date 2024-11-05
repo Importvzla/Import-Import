@@ -2,8 +2,8 @@
 # Part of BrowseInfo. See LICENSE file for full copyright and licensing details.
 {
     "name" : "Manual Currency Exchange Rate on Invoice/Payment/Sale/Purchase in Odoo",
-    "version" : "15.0.0.0",
-    "depends" : ['base','account','purchase','sale_management','stock'],
+    "version" : "17.0.0.8",
+    "depends" : ['base','account','purchase','sale_management','stock','stock_landed_costs'],
     "author": "BrowseInfo",
     "summary": "Apps apply manual currency rate on invoice manual currency rate on payment manual currency rate on sales manual currency rate on purchase custom currency rate on invoice manual Currency Exchange Rate on Invoice custom Currency Exchange Rate on sales order",
     "description": """
@@ -128,7 +128,7 @@
     "price": 22,
     "currency": "EUR",
     'category': 'Accounting',
-    "website" : "https://www.browseinfo.in",
+    "website" : "https://www.browseinfo.com",
     "data" :[
              "views/customer_invoice.xml",
              "views/account_payment_view.xml",
@@ -139,7 +139,7 @@
     "auto_install": False,
     "installable": True,
     'live_test_url':'https://youtu.be/nRdIuuxi9yI',
-	"images":['static/description/Banner.png'],
+	"images":['static/description/Banner.gif'],
     "license": "OPL-1",
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

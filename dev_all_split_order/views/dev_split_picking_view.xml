@@ -19,7 +19,8 @@ For Module Support : devintelle@gmail.com  or Skype : devintelle
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml"> 
                 <xpath expr="//div[@name='button_box']/button[@name='action_picking_move_tree']" position="after">
-					<button class="oe_stat_button oe_right" type="action" id="sale_split_button" icon="fa-scissors" name="%(dev_all_split_order.active_stock_transfer_line)d" attrs="{'invisible': [('state', '!=', 'draft')]}">
+					<button class="oe_stat_button oe_right" type="action" id="sale_split_button" icon="fa-scissors" name="%(dev_all_split_order.active_stock_transfer_line)d"  invisible="state != 'draft'">
+<!--					attrs="{'invisible': [('state', '!=', 'draft')]}"-->
                         <div class="o_form_field o_stat_info">
                             <span class="o_stat_text">Split Transfers</span>
                         </div>

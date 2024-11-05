@@ -64,7 +64,7 @@ class ImportInvoice(models.AbstractModel):
         lotes = docs._get_invoiced_lot_values()
 
         for ili in docs.invoice_line_ids:
-            if not ili.display_type:
+            if ili.display_type == "product":
                 if stock_move_lines:
                     for sml in stock_move_lines:
                         if sml.product_id == ili.product_id:

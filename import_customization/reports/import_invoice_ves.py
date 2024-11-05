@@ -56,7 +56,7 @@ class ImportInvoice(models.AbstractModel):
         lotes = docs._get_invoiced_lot_values()
 
         for ili in docs.invoice_line_ids:
-            if not ili.display_type:
+            if ili.display_type == "product":
 
                 # Calcular subtotales de lineas en ves y usd
                 if docs.currency_id.name != 'VES':
@@ -128,7 +128,7 @@ class ImportInvoice(models.AbstractModel):
                 'description': ili.product_id.name,
                 'name': self.description_format(ili.name) if not ili.display_type else ili.name,
                 'discount': ili.discount,
-                'price_unit':price_unit,
+                'price_unit': price_unit,
                 'price_subtotal': price_subtotal,
                 'price_total': price_total,
                 'lote': lote,

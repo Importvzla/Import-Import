@@ -20,7 +20,8 @@ For Module Support : devintelle@gmail.com  or Skype : devintelle
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml"> 
                 <xpath expr="//div[@name='button_box']" position="inside">
-                  	<button type="action" class="oe_stat_button oe_right" id="sale_split_button" icon="fa-scissors" name="%(dev_all_split_order.action_active_purchase_order_line)d" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Split Order" />
+                  	<button type="action" class="oe_stat_button oe_right" id="sale_split_button" icon="fa-scissors" name="%(dev_all_split_order.action_active_purchase_order_line)d" invisible="state != 'draft'" string="Split Order" />
+<!--                  	attrs="{'invisible': [('state', '!=', 'draft')]}"-->
 			 </xpath>  
 		</field>
     </record>
