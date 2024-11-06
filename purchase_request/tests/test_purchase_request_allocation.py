@@ -7,7 +7,7 @@ from odoo.tests import common
 
 class TestPurchaseRequestToRfq(common.TransactionCase):
     def setUp(self):
-        super(TestPurchaseRequestToRfq, self).setUp()
+        super().setUp()
         self.purchase_request = self.env["purchase.request"]
         self.purchase_request_line = self.env["purchase.request.line"]
         self.wiz = self.env["purchase.request.line.make.purchase.order"]
@@ -25,13 +25,13 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
         )
         self.env["product.supplierinfo"].create(
             {
-                "name": vendor.id,
+                "partner_id": vendor.id,
                 "product_tmpl_id": self.service_product.product_tmpl_id.id,
             }
         )
         self.env["product.supplierinfo"].create(
             {
-                "name": vendor.id,
+                "partner_id": vendor.id,
                 "product_tmpl_id": self.product_product.product_tmpl_id.id,
             }
         )
@@ -81,18 +81,47 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
         self.assertEqual(purchase_request_line1.qty_in_progress, 2.0)
         self.assertEqual(purchase_request_line2.qty_in_progress, 2.0)
         picking = purchase.picking_ids[0]
-        picking.move_line_ids[0].write({"qty_done": 2.0})
+
+        # Check the move
+        move = picking.move_ids
+        self.assertEqual(move.purchase_request_ids, purchase_request1)
+        # Do a move split/merge roundtrip and check that the allocatable
+        # quantity remains the same.
+        self.assertEqual(
+            sum(move.purchase_request_allocation_ids.mapped("open_product_qty")), 4
+        )
+        split_move = self.env["stock.move"].create(move._split(1))
+        split_move._action_confirm(merge=False)
+        self.assertEqual(split_move.purchase_request_ids, purchase_request1)
+        # The quantity of 4 is now split between the two moves
+        self.assertEqual(
+            sum(move.purchase_request_allocation_ids.mapped("open_product_qty")), 3
+        )
+        self.assertEqual(
+            sum(split_move.purchase_request_allocation_ids.mapped("open_product_qty")),
+            1,
+        )
+        split_move._merge_moves(merge_into=move)
+        self.assertFalse(split_move.exists())
+        self.assertEqual(
+            sum(move.purchase_request_allocation_ids.mapped("open_product_qty")), 4
+        )
+        # Reset reserved quantities messed up by the roundtrip
+        move._do_unreserve()
+        move._action_assign()
+
+        picking.move_line_ids[0].write({"quantity": 2.0})
         backorder_wiz_id = picking.button_validate()
         common.Form(
             self.env[backorder_wiz_id["res_model"]].with_context(
                 **backorder_wiz_id["context"]
             )
         ).save().process()
-        self.assertEqual(purchase_request_line1.qty_done, 2.0)
-        self.assertEqual(purchase_request_line2.qty_done, 0.0)
+        request_lines = purchase_request_line1 + purchase_request_line2
+        self.assertEqual(sum(request_lines.mapped("qty_done")), 2.0)
 
         backorder_picking = purchase.picking_ids.filtered(lambda p: p.id != picking.id)
-        backorder_picking.move_line_ids[0].write({"qty_done": 1.0})
+        backorder_picking.move_line_ids[0].write({"quantity": 1.0})
         backorder_wiz_id2 = backorder_picking.button_validate()
         common.Form(
             self.env[backorder_wiz_id2["res_model"]].with_context(
@@ -100,15 +129,12 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
             )
         ).save().process()
 
-        self.assertEqual(purchase_request_line1.qty_done, 2.0)
-        self.assertEqual(purchase_request_line2.qty_done, 1.0)
+        self.assertEqual(sum(request_lines.mapped("qty_done")), 3.0)
         for pick in purchase.picking_ids:
             if pick.state == "assigned":
                 pick.action_cancel()
-        self.assertEqual(purchase_request_line1.qty_cancelled, 0.0)
-        self.assertEqual(purchase_request_line2.qty_cancelled, 1.0)
-        self.assertEqual(purchase_request_line1.pending_qty_to_receive, 0.0)
-        self.assertEqual(purchase_request_line2.pending_qty_to_receive, 1.0)
+        self.assertEqual(sum(request_lines.mapped("qty_cancelled")), 1.0)
+        self.assertEqual(sum(request_lines.mapped("pending_qty_to_receive")), 1.0)
 
     def test_purchase_request_allocation_services(self):
         vals = {
@@ -165,7 +191,7 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
             active_model="purchase.request.line", active_ids=[purchase_request_line2.id]
         ).create(vals)
         wiz_id.make_purchase_order()
-        purchase_request2.action_view_purchase_order()
+        (purchase_request1 + purchase_request2).action_view_purchase_order()
         po_line = purchase_request_line2.purchase_lines[0]
         purchase2 = po_line.order_id
         purchase2.button_confirm()
@@ -192,7 +218,7 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
         vendor1 = self.env.ref("base.res_partner_1")
         self.env["product.supplierinfo"].create(
             {
-                "name": vendor1.id,
+                "partner_id": vendor1.id,
                 "product_tmpl_id": self.product_product.product_tmpl_id.id,
                 "min_qty": 8,
             }
@@ -281,7 +307,7 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
         )
         purchase.button_confirm()
         picking = purchase.picking_ids[0]
-        picking.move_line_ids[0].write({"qty_done": 24.0})
+        picking.move_line_ids[0].write({"quantity": 24.0})
         picking.button_validate()
         self.assertEqual(
             purchase_request_line1.purchase_request_allocation_ids[
@@ -379,7 +405,7 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
         vendor3 = self.env["res.partner"].create({"name": "Partner #3"})
         supinfo = self.env["product.supplierinfo"].create(
             {
-                "name": vendor3.id,
+                "partner_id": vendor3.id,
                 "product_tmpl_id": product.product_tmpl_id.id,
                 "company_id": self.env.ref("stock.res_company_1").id,
             }
@@ -389,7 +415,7 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
         vendor4 = self.env["res.partner"].create({"name": "Partner #4"})
         supinfo = self.env["product.supplierinfo"].create(
             {
-                "name": vendor4.id,
+                "partner_id": vendor4.id,
                 "product_tmpl_id": product.product_tmpl_id.id,
                 "company_id": self.env.ref("base.main_company").id,
             }
@@ -400,7 +426,7 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
         # A supplierinfo without company leads to supplier assignment as well
         self.env["product.supplierinfo"].create(
             {
-                "name": vendor4.id,
+                "partner_id": vendor4.id,
                 "product_tmpl_id": product.product_tmpl_id.id,
                 "company_id": False,
             }

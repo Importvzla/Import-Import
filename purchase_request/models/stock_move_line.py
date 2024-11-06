@@ -18,7 +18,8 @@ class StockMoveLine(models.Model):
         message = "<h3>%s</h3>" % title
         message += _(
             "The following requested items from Purchase Request %(request_name)s "
-            "have now been received in %(location_name)s using Picking %(picking_name)s:"
+            "have now been received in %(location_name)s using Picking "
+            "%(picking_name)s:"
         ) % {
             "request_name": message_data["request_name"],
             "location_name": message_data["location_name"],
@@ -38,8 +39,8 @@ class StockMoveLine(models.Model):
 
     @api.model
     def _picking_confirm_done_message_content(self, message_data):
-        title = _("Receipt confirmation for Request %s") % (
-            message_data["request_name"]
+        title = (
+            _("Receipt confirmation for Request %s") % (message_data["request_name"])
         )
         message = "<h3>%s</h3>" % title
         message += _(
@@ -67,10 +68,10 @@ class StockMoveLine(models.Model):
         return {
             "request_name": request.name,
             "picking_name": ml.picking_id.name,
-            "product_name": ml.product_id.name_get()[0][1],
+            "product_name": ml.product_id.display_name,
             "product_qty": allocated_qty,
             "product_uom": ml.product_uom_id.name,
-            "location_name": ml.location_dest_id.name_get()[0][1],
+            "location_name": ml.location_dest_id.display_name,
             "requestor": request.requested_by.partner_id.name,
         }
 
@@ -78,10 +79,9 @@ class StockMoveLine(models.Model):
         for ml in self.filtered(
             lambda m: m.exists() and m.move_id.purchase_request_allocation_ids
         ):
-
             # We do sudo because potentially the user that completes the move
             #  may not have permissions for purchase.request.
-            to_allocate_qty = ml.qty_done
+            to_allocate_qty = ml.quantity
             to_allocate_uom = ml.product_uom_id
             for allocation in ml.move_id.purchase_request_allocation_ids.sudo():
                 allocated_qty = 0.0
@@ -121,6 +121,6 @@ class StockMoveLine(models.Model):
                 allocation._compute_open_product_qty()
 
     def _action_done(self):
-        res = super(StockMoveLine, self)._action_done()
+        res = super()._action_done()
         self.allocate()
         return res

@@ -1,13 +1,15 @@
 # Copyright 2018-2019 ForgeFlow, S.L.
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0)
 
+import pytz
+
 from odoo import SUPERUSER_ID
 from odoo.tests import common
 
 
 class TestPurchaseRequestToRfq(common.TransactionCase):
     def setUp(self):
-        super(TestPurchaseRequestToRfq, self).setUp()
+        super().setUp()
         self.purchase_request_obj = self.env["purchase.request"]
         self.purchase_request_line_obj = self.env["purchase.request.line"]
         self.wiz = self.env["purchase.request.line.make.purchase.order"]
@@ -18,7 +20,7 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
         )
         self.env["product.supplierinfo"].create(
             {
-                "name": vendor.id,
+                "partner_id": vendor.id,
                 "product_tmpl_id": self.service_product.product_tmpl_id.id,
             }
         )
@@ -136,7 +138,7 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
         request_lines.mapped("is_editable")
 
         # Test also for onchanges on non created lines
-        self.purchase_request_line_obj.new({}).is_editable
+        self.assertTrue(self.purchase_request_line_obj.new({}).is_editable)
 
     def test_purchase_request_to_purchase_rfq_minimum_order_qty(self):
         vals = {
@@ -306,10 +308,12 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
             {
                 "name": "Widget",
                 "type": "product",
-                "seller_ids": [(0, 0, {"name": supplier.id, "min_qty": 5})],
+                "seller_ids": [
+                    (0, 0, {"partner_id": supplier.id, "delay": 10, "min_qty": 5})
+                ],
             }
         )
-        # Create Purchase Order with qty = 3 throw Purchase Request
+        # Create Purchase Order with qty = 3 through Purchase Request
         vals = {
             "picking_type_id": self.env.ref("stock.picking_type_in").id,
             "requested_by": SUPERUSER_ID,
@@ -328,6 +332,12 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
             active_model="purchase.request.line", active_ids=[purchase_request_line1.id]
         ).create(vals)
         wiz_id.make_purchase_order()
+        # The planned date is taken from the request, not from the supplier
+        user_tz = pytz.timezone(self.env.user.tz or "UTC")
+        self.assertEqual(
+            purchase_request_line1.date_required.day,
+            purchase_request_line1.purchase_lines.date_planned.astimezone(user_tz).day,
+        )
         po = purchase_request_line1.purchase_lines[0].order_id
         # Create Purchase Request
         vals = {
@@ -360,14 +370,18 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
         # auto change state to done
         po_line.order_id.button_confirm()
         picking = po_line.order_id.picking_ids[0]
-        picking.move_line_ids[0].write({"qty_done": 6.0})
+        picking.move_line_ids[0].write({"quantity": 6.0})
         picking.button_validate()
 
-    def test_purchase_request_to_purchase_order_analytic_data_propagation(self):
-        analytic_tags = self.env.ref("analytic.tag_contract")
+    def _setup_analytic_distribution(self):
+        analytic_plan = self.env["account.analytic.plan"].create({"name": "Plan Test"})
         analytic_account = self.env["account.analytic.account"].create(
-            {"name": "Test analytic account"}
+            {"name": "default", "plan_id": analytic_plan.id}
         )
+        return {str(analytic_account.id): 100}
+
+    def test_purchase_request_to_purchase_order_analytic_data_propagation(self):
+        analytic_distribution = self._setup_analytic_distribution()
         vals = {
             "picking_type_id": self.env.ref("stock.picking_type_in").id,
             "requested_by": SUPERUSER_ID,
@@ -379,8 +393,7 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
                         "product_id": self.env.ref("product.product_product_10").id,
                         "product_uom_id": self.env.ref("uom.product_uom_unit").id,
                         "product_qty": 5.0,
-                        "analytic_account_id": analytic_account.id,
-                        "analytic_tag_ids": [(6, 0, analytic_tags.ids)],
+                        "analytic_distribution": analytic_distribution,
                     },
                 )
             ],
@@ -399,5 +412,4 @@ class TestPurchaseRequestToRfq(common.TransactionCase):
         ).create(vals)
         wiz_id.make_purchase_order()
         po_line = purchase_request["line_ids"][0].purchase_lines[0]
-        self.assertEqual(po_line.account_analytic_id, analytic_account)
-        self.assertEqual(po_line.analytic_tag_ids.ids, analytic_tags.ids)
+        self.assertEqual(po_line.analytic_distribution, analytic_distribution)

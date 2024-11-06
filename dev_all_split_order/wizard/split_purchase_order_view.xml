@@ -21,11 +21,21 @@ For Module Support : devintelle@gmail.com  or Skype : devintelle
             </field>
         </record>
         
-        <act_window name="Split Purchase Order"
-	        res_model="split.po.order.confirm"
-            binding_model="purchase.order.line"
-            view_mode="form"
-            target="new"	
-            id="view_po_split_confirm"/>
+<!--        <act_window name="Split Purchase Order"-->
+<!--	        res_model="split.po.order.confirm"-->
+<!--            binding_model="purchase.order.line"-->
+<!--            view_mode="form"-->
+<!--            target="new"	-->
+<!--            id="view_po_split_confirm"/>-->
+            
+            
+         <record id="view_po_split_confirm" model="ir.actions.act_window">
+		<field name="name">Split Purchase Order</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">split.po.order.confirm</field>
+		<field name="view_mode">form</field>
+		<field name="target">new</field>
+		<field name="binding_model_id" ref="purchase.model_purchase_order_line"/>
+        </record>   
 
 </odoo>
