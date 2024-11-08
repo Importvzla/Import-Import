@@ -117,8 +117,48 @@ class ImportInvoice(models.AbstractModel):
                 if sale_order_id:
                     purchase_order = sale_order_id.x_ocompra
 
+        # Valores de ejemplo (estos deben ser obtenidos del contexto real)
+        # currency_name = docs.currency_id.name
+        # tax_base = docs.tax_base
+        # exempt_sum = docs.exempt_sum
+        # tax_iva = docs.tax_iva
         amount_total = tax_iva + tax_base + exempt_sum
+        # amount_total = docs.amount_total
+        exchange_rate = docs.x_tasa
 
+        if docs.currency_id.name == 'USD':
+            base_imponible = tax_base
+            exento = exempt_sum
+            subtotal = tax_base + exempt_sum
+            impuesto = tax_iva
+            total = amount_total
+
+            base_imponible_rate = round(base_imponible * exchange_rate, 2)
+            subtotal_rate = subtotal * exchange_rate
+
+            if impuesto > 0.0:
+                impuesto_rate = round(subtotal_rate * 0.16, 2)
+            else:
+                impuesto_rate = 0.0
+
+            total_rate = round(subtotal_rate + impuesto_rate, 2)
+        else:
+            base_imponible = tax_base / exchange_rate
+            exento = exempt_sum / exchange_rate
+            subtotal = (tax_base + exempt_sum) / exchange_rate
+            impuesto = tax_iva / exchange_rate
+            total = amount_total / exchange_rate
+
+            base_imponible_rate = tax_base
+            subtotal_rate = tax_base + exempt_sum
+
+            if tax_iva > 0.0:
+                impuesto_rate = subtotal_rate * 0.16
+            else:
+                impuesto_rate = 0.0
+
+            total_rate = subtotal_rate + impuesto_rate
+        
         docargs = {
             'doc_ids': docids,
             'doc_model': 'account.move',
@@ -136,5 +176,9 @@ class ImportInvoice(models.AbstractModel):
             'lines': lines,
             'purchase_order': purchase_order,
             'delivery_note':  ", ".join(list_name),
+            'tasa_base_imponible': base_imponible_rate,
+            'tasa_impuesto': impuesto_rate,
+            'tasa_total': total_rate
+
         }
         return docargs

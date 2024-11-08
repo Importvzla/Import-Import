@@ -354,7 +354,8 @@
                                     <span>EQUIVALENTE A Bs</span>
                                 </div>
                                 <div class="col text-end" style="width: 15%;">
-                                    <span t-esc="'{0:,.2f}'.format(base_imponible_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
+                                    <!-- <span t-esc="'{0:,.2f}'.format(base_imponible_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/> -->
+                                    <span t-esc="tasa_base_imponible"  t-options='{"widget": "float", "precision": 2}'/>
                                 </div>
                                 <div style="width: 3%;"/>
                             </div>
@@ -370,7 +371,8 @@
                                     <span>EQUIVALENTE A Bs</span>
                                 </div>
                                 <div class="col text-end" style="width: 15%;">
-                                    <span t-esc="'{0:,.2f}'.format(impuesto_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
+                                    <!-- <span t-esc="'{0:,.2f}'.format(impuesto_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/> -->
+                                    <span t-esc="tasa_impuesto" t-options='{"widget": "float", "precision": 2}'/>
                                 </div>
                                 <div style="width: 3%;"/>
                             </div>
@@ -386,7 +388,8 @@
                                     <span>EQUIVALENTE A Bs</span>
                                 </div>
                                 <div class="col text-end" style="width: 15%;">
-                                    <span t-esc="'{0:,.2f}'.format(total_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/>
+                                    <!-- <span t-esc="'{0:,.2f}'.format(total_rate).replace('.', ' ').replace(',', '.').replace(' ', ',')"/> -->
+                                    <span t-esc="tasa_total" t-options='{"widget": "float", "precision": 2}'/>
                                 </div>
                                 <div style="width: 3%;"/>
                             </div>
