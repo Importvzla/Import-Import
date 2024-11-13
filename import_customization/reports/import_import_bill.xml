@@ -417,7 +417,8 @@
                             </div>
                         </div>
 
-                        <div class="page" style="font-size: 11pt; font-family: Arial, Helvetica, sans-serif;">
+                        <!-- <div class="page" style="font-size: 11pt; font-family: Arial, Helvetica, sans-serif;"> -->
+                        <div class="page" style="font-size: 11pt; font-family: Tahoma, Verdana, Arial, Geneva, Helvetica, sans-serif;">
                             <div class="oe_structure"/>
                             <t t-if="o.company_id.currency_id.name == 'VES'">
                                 <t t-set="currency_obj" t-value="o.currency_id"/>
