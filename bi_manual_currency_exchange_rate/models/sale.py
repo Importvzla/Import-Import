@@ -83,7 +83,7 @@ class PricelistItem(models.Model):
                 price = new_price
         elif self.compute_price == 'percentage':
             base_price = self._compute_base_price(product, quantity, uom, date, currency)
-            new_price = (base_price - (base_price * (self.percent_price / 100))) or 0.0 
+            new_price = (base_price - (base_price * (self.percent_price / 100))) or 0.0
             if manual_currency_rate_active:
                 price = new_price * manual_currency_rate
             else:
@@ -112,7 +112,7 @@ class PricelistItem(models.Model):
             if manual_currency_rate_active:
                 self = self.with_context(manual_currency_rate_active=manual_currency_rate_active,manual_currency_rate=manual_currency_rate)
             price = self._compute_base_price(product, quantity, uom, date, currency)
-        
+
         return price
 
     def _compute_base_price(self, product, quantity, uom, date, currency):
@@ -134,17 +134,16 @@ class PricelistItem(models.Model):
 
         rule_base = self.base or 'list_price'
         if rule_base == 'pricelist' and self.base_pricelist_id:
-            price = self.base_pricelist_id._get_product_price(product, quantity, uom, date)
+            price = self.base_pricelist_id._get_product_price(product, quantity,currency=self.base_pricelist_id.currency_id, uom=uom,date=date)
             src_currency = self.base_pricelist_id.currency_id
 
         elif rule_base == "standard_price":
             src_currency = product.cost_currency_id
 
             price = product._price_compute(rule_base, uom=uom, date=date)[product.id]
-        else: # list_price
+        else:  # list_price
             src_currency = product.currency_id
             price = product._price_compute(rule_base, uom=uom, date=date)[product.id]
-
 
         if src_currency != currency:
 
@@ -152,5 +151,5 @@ class PricelistItem(models.Model):
                 price = price * manual_currency_rate
             else:
                 price = src_currency._convert(price, currency, self.env.company, date, round=False)
-        
+
         return price
