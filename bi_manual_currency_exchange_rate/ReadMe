@@ -13,4 +13,23 @@
 
 17.0.0.8 ==> Fixed issue of when we chnage pricelist in sale order and click on update prices at that time trace back occurs.
 
-17.0.0.9 ==> Fixed issue of in customer invoice advance currency rane lable not show. (caz of updated clone.)
+17.0.0.9 ==> Fixed issue of in customer invoice advance currency rate lable not show. (caz of updated clone.)/ fixed issue of when inventory valuation based on AVCO at that time wrong amount currency updated in journal entry and also show wrong amount of cost in product.
+
+17.0.1.0 ==> Fixed issue of when added only account and price in invoice after that create payment of that invoice at that time payment can't be link with that invoice.
+
+17.0.1.1 ==> Fixed issue of when we do register payment with difference currency at that time show wrong amount in invoice payment.
+
+17.0.1.2 ==> Fixed issue of when we create picking from purchase order and after that create return picking from that and when we validate return picking at that time validation occurs.
+
+17.0.1.3 ==> Fixed issue of when inventory valuation based on automated at that time when create picking from purchase order in inventory valuation show wrong amount of value.
+
+17.0.1.4 ==> When we added same product with different price in multiple purchase order line and create inventory valuation at that time inventory valuation show same amount in total.
+
+17.0.1.5 ==> Fixed issue of when we create payment with differen currecny at that time in payment wizard show wrong amount and also currency rate can't be updated on journal entry.
+
+=> 17.0.1.6 :- Date 18 Dec 2024
+:- The error occurred when we applied pricelists to individual products and then created sale orders for those products, so I fixed that issue.
+
+
+Version : 17.0.1.7 (26/12/24)
+	- fixed issue related to mismatch journal entry  for refund.

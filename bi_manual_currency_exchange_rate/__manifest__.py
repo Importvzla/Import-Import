@@ -2,9 +2,9 @@
 # Part of BrowseInfo. See LICENSE file for full copyright and licensing details.
 {
     "name" : "Manual Currency Exchange Rate on Invoice/Payment/Sale/Purchase in Odoo",
-    "version" : "17.0.0.8",
+    "version" : "17.0.1.7",
     "depends" : ['base','account','purchase','sale_management','stock','stock_landed_costs'],
-    "author": "BrowseInfo",
+    "author": "BROWSEINFO",
     "summary": "Apps apply manual currency rate on invoice manual currency rate on payment manual currency rate on sales manual currency rate on purchase custom currency rate on invoice manual Currency Exchange Rate on Invoice custom Currency Exchange Rate on sales order",
     "description": """
     Odoo/OpenERP module for manul currency rate converter
@@ -128,7 +128,7 @@
     "price": 22,
     "currency": "EUR",
     'category': 'Accounting',
-    "website" : "https://www.browseinfo.com",
+    "website" : "https://www.browseinfo.com/demo-request?app=bi_manual_currency_exchange_rate&version=17&edition=Community",
     "data" :[
              "views/customer_invoice.xml",
              "views/account_payment_view.xml",
@@ -138,7 +138,7 @@
     'qweb':[],
     "auto_install": False,
     "installable": True,
-    'live_test_url':'https://youtu.be/nRdIuuxi9yI',
+    'live_test_url':'https://www.browseinfo.com/demo-request?app=bi_manual_currency_exchange_rate&version=17&edition=Community',
 	"images":['static/description/Banner.gif'],
     "license": "OPL-1",
 }
