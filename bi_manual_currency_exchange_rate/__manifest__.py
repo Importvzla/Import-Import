@@ -2,8 +2,8 @@
 # Part of BrowseInfo. See LICENSE file for full copyright and licensing details.
 {
     "name" : "Manual Currency Exchange Rate on Invoice/Payment/Sale/Purchase in Odoo",
-    "version" : "17.0.1.7",
-    "depends" : ['base','account','purchase','sale_management','stock','stock_landed_costs'],
+    "version" : "17.0.2.3",
+    "depends" : ['base','account','purchase','sale_management','stock','stock_landed_costs','hr_expense'],
     "author": "BROWSEINFO",
     "summary": "Apps apply manual currency rate on invoice manual currency rate on payment manual currency rate on sales manual currency rate on purchase custom currency rate on invoice manual Currency Exchange Rate on Invoice custom Currency Exchange Rate on sales order",
     "description": """
@@ -130,10 +130,12 @@
     'category': 'Accounting',
     "website" : "https://www.browseinfo.com/demo-request?app=bi_manual_currency_exchange_rate&version=17&edition=Community",
     "data" :[
+             "views/res_config_inherit.xml",
              "views/customer_invoice.xml",
              "views/account_payment_view.xml",
              "views/purchase_view.xml",
              "views/sale_view.xml",
+             "views/expense_view.xml",
         ],
     'qweb':[],
     "auto_install": False,

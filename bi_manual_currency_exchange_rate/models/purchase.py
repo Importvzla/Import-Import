@@ -22,6 +22,19 @@ class PurchaseOrder(models.Model):
 			})
 		return res
 
+	@api.constrains("purchase_manual_currency_rate")
+	def _check_sale_manual_currency_rate(self):
+		for record in self:
+			if record.purchase_manual_currency_rate_active:
+				if record.purchase_manual_currency_rate == 0:
+					raise UserError(
+						_('Exchange Rate Field is required , Please fill that.'))
+				is_inverted_rate = self.env['ir.config_parameter'].sudo().get_param("bi_manual_currency_exchange_rate.inverted_rate")
+				if is_inverted_rate:
+					if record.purchase_manual_currency_rate <1 :
+						raise UserError(_('Exchange Rate must be greater than or equal to 1 .'))
+
+
 	@api.onchange('purchase_manual_currency_rate_active', 'currency_id')
 	def check_currency_id(self):
 		if self.purchase_manual_currency_rate_active:
@@ -46,6 +59,13 @@ class PurchaseOrderLine(models.Model):
 				date=line.order_id.date_order and line.order_id.date_order.date() or fields.Date.context_today(line),
 				uom_id=line.product_uom,
 				params=params)
+			po_line_uom = line.product_uom or line.product_id.uom_po_id
+			price_unit = line.env['account.tax']._fix_tax_included_price_company(
+				line.product_id.uom_id._compute_price(line.product_id.standard_price, po_line_uom),
+				line.product_id.supplier_taxes_id,
+				line.taxes_id,
+				line.company_id,
+			)
 
 			if seller or not line.date_planned:
 				line.date_planned = line._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
@@ -66,7 +86,12 @@ class PurchaseOrderLine(models.Model):
 					line.company_id,
 				)
 				if line.order_id.purchase_manual_currency_rate_active:
-					price_unit = price_unit * line.order_id.purchase_manual_currency_rate
+					is_inverted_rate = self.env['ir.config_parameter'].sudo().get_param("bi_manual_currency_exchange_rate.inverted_rate")
+					if is_inverted_rate:
+						price_unit = price_unit / line.order_id.purchase_manual_currency_rate
+					else:
+						price_unit = price_unit * line.order_id.purchase_manual_currency_rate
+					
 				else:
 					price_unit = line.product_id.cost_currency_id._convert(
 						price_unit,
@@ -78,9 +103,32 @@ class PurchaseOrderLine(models.Model):
 				line.price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
 				continue
 
-			price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, line.company_id) if seller else 0.0
+			is_inverted_rate = self.env['ir.config_parameter'].sudo().get_param(
+				"bi_manual_currency_exchange_rate.inverted_rate")
+			po_line_uom = line.product_uom or line.product_id.uom_po_id
+			price_unit = line.env['account.tax']._fix_tax_included_price_company(
+				line.product_id.uom_id._compute_price(line.product_id.standard_price, po_line_uom),
+				line.product_id.supplier_taxes_id,
+				line.taxes_id,
+				line.company_id,
+			)
+			# price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, line.company_id) if seller else 0.0
+			if is_inverted_rate:
+				price_unit = line.product_id.standard_price
+			else:
+				price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price,
+																					 line.product_id.supplier_taxes_id,
+																					 line.taxes_id,
+																					 line.company_id) if seller else 0.0
+
+			# price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, line.company_id) if seller else 0.0
 			if line.order_id.purchase_manual_currency_rate_active:
-				price_unit = price_unit * line.order_id.purchase_manual_currency_rate
+				is_inverted_rate = self.env['ir.config_parameter'].sudo().get_param("bi_manual_currency_exchange_rate.inverted_rate")
+				if is_inverted_rate:
+					price_unit = price_unit / line.order_id.purchase_manual_currency_rate
+				else:
+					price_unit = price_unit * line.order_id.purchase_manual_currency_rate
+
 			else:
 				price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
 			price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))

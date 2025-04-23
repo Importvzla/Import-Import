@@ -16,6 +16,18 @@ class SaleOrder(models.Model):
         res.update({'manual_currency_rate_active':self.sale_manual_currency_rate_active,'manual_currency_rate':self.sale_manual_currency_rate})
         return res
 
+    @api.constrains("sale_manual_currency_rate")
+    def _check_sale_manual_currency_rate(self):
+        for record in self:
+            if record.sale_manual_currency_rate_active:
+                if record.sale_manual_currency_rate == 0:
+                    raise UserError(
+                        _('Exchange Rate Field is required , Please fill that.'))
+                is_inverted_rate = self.env['ir.config_parameter'].sudo().get_param("bi_manual_currency_exchange_rate.inverted_rate")
+                if is_inverted_rate:
+                    if record.sale_manual_currency_rate <1 :
+                        raise UserError(_('Exchange Rate must be greater than or equal to 1 .'))
+
     @api.onchange('sale_manual_currency_rate_active', 'currency_id')
     def check_currency_id(self):
         if self.sale_manual_currency_rate_active:
@@ -112,7 +124,6 @@ class PricelistItem(models.Model):
             if manual_currency_rate_active:
                 self = self.with_context(manual_currency_rate_active=manual_currency_rate_active,manual_currency_rate=manual_currency_rate)
             price = self._compute_base_price(product, quantity, uom, date, currency)
-
         return price
 
     def _compute_base_price(self, product, quantity, uom, date, currency):
@@ -148,8 +159,11 @@ class PricelistItem(models.Model):
         if src_currency != currency:
 
             if manual_currency_rate_active:
-                price = price * manual_currency_rate
+                is_inverted_rate = self.env['ir.config_parameter'].sudo().get_param("bi_manual_currency_exchange_rate.inverted_rate")
+                if is_inverted_rate:
+                    price = price / manual_currency_rate
+                else:
+                    price = price * manual_currency_rate
             else:
                 price = src_currency._convert(price, currency, self.env.company, date, round=False)
-
         return price
