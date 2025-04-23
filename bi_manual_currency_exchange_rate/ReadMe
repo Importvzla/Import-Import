@@ -33,3 +33,29 @@
 
 Version : 17.0.1.7 (26/12/24)
 	- fixed issue related to mismatch journal entry  for refund.
+
+Version : 17.0.1.8 (07/01/2025)
+	- Add Configuration and functionality for inverted rate and normal rate.
+
+Version : 17.0.1.9 (23/01/2025)
+	- Fixed the bug where clicking the 'Register Payment' button shows a Payment Difference even when the Amount and Amount Due are the same
+	- Fixed the bug where an error occurs when there is a payment difference, and the 'Mark as Fully Paid' option is used
+	- Fixed the bug where selecting the accounting line first and then selecting the exchange rate results in a 'float division by zero' error.
+
+=> 17.0.2.0 :- Date 20 Mar 2025
+:- When we add multiple products to a purchase order that has manual exchange rates, the cost of the product appears wrong in stock valuation, so I fixed it.
+:- Fixed the inverted rate issue in the purchase order.
+
+
+
+
+
+17.0.2.1 :- Date 28 Mar 2025
+==>Fixed the issue when we creat the expense that time it get the error.
+==>Add The manual currency functionality in hr expense module.
+
+=> 17.0.2.2:- Date 09 Apr 2025
+:- The stock valuation appears incorrect when we add multiple of the same product to a purchase order using manual exchange rates.
+
+=> 17.0.2.3:- Date 14 Apr 2025
+:- Fixed issue when make payment from the expense with direct company.

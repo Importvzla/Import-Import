@@ -71,21 +71,34 @@ class stock_move(models.Model):
     _inherit = 'stock.move'
 
     def _create_in_svl(self, forced_quantity=None):
-        """Create a `stock.valuation.layer` from `self`.
+        all_valuation = self.env['stock.valuation.layer']
 
-        :param forced_quantity: under some circunstances, the quantity to value is different than
-            the initial demand of the move (Default value = None)
-        """
+        for line in self:
+            valuation = super(stock_move, line)._create_in_svl(forced_quantity)
 
-        rec = super(stock_move, self)._create_in_svl(forced_quantity=None)
-        for rc in rec:
-            for line in rec.stock_move_id:
-                if line.purchase_line_id and line.purchase_line_id == rc.purchase_line_id :
-                    if line.purchase_line_id.order_id.purchase_manual_currency_rate_active:
-                        price_unit = line.purchase_line_id.order_id.currency_id.round((line.purchase_line_id.price_subtotal)/line.purchase_line_id.order_id.purchase_manual_currency_rate)
-                        rc.write({'unit_cost': price_unit, 'value': price_unit, 'remaining_value': price_unit})
-        return rec
+            if line.purchase_line_id:
+                purchase_order = line.purchase_line_id.order_id
+                if purchase_order.purchase_manual_currency_rate_active:
+                    is_inverted_rate = self.env['ir.config_parameter'].sudo().get_param(
+                        "bi_manual_currency_exchange_rate.inverted_rate")
+                    price_subtotal = line.purchase_line_id.price_subtotal
+                    manual_rate = purchase_order.purchase_manual_currency_rate
+                    currency = purchase_order.currency_id
 
+                    if is_inverted_rate:
+                        price_unit = currency.round(price_subtotal * manual_rate)
+                    else:
+                        price_unit = currency.round(price_subtotal / manual_rate)
+
+                    for val in valuation:
+                        val.write({
+                            'unit_cost': price_unit,
+                            'value': price_unit,
+                            'remaining_value': price_unit
+                        })
+
+            all_valuation |= valuation
+        return all_valuation
 
     def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description):
         """ Overridden from stock_account to support amount_currency on valuation lines generated from po
@@ -98,10 +111,22 @@ class stock_move(models.Model):
         if not self.purchase_line_id or purchase_currency == company_currency:
             return rslt
         svl = self.env['stock.valuation.layer'].browse(svl_id)
+
+        is_inverted_rate = self.env['ir.config_parameter'].sudo().get_param(
+            "bi_manual_currency_exchange_rate.inverted_rate")
         if not svl.account_move_line_id:
             if self.purchase_line_id.order_id.purchase_manual_currency_rate_active:
-                rslt['credit_line_vals']['amount_currency'] = rslt['credit_line_vals']['balance'] * self.purchase_line_id.order_id.purchase_manual_currency_rate
-                rslt['debit_line_vals']['amount_currency'] =  rslt['debit_line_vals']['balance'] * self.purchase_line_id.order_id.purchase_manual_currency_rate
+                if is_inverted_rate:
+                    rslt['credit_line_vals']['amount_currency'] = rslt['credit_line_vals'][
+                                                                      'balance'] / self.purchase_line_id.order_id.purchase_manual_currency_rate
+                    rslt['debit_line_vals']['amount_currency'] = rslt['debit_line_vals'][
+                                                                     'balance'] / self.purchase_line_id.order_id.purchase_manual_currency_rate
+                else:
+                    rslt['credit_line_vals']['amount_currency'] = rslt['credit_line_vals'][
+                                                                      'balance'] * self.purchase_line_id.order_id.purchase_manual_currency_rate
+                    rslt['debit_line_vals']['amount_currency'] = rslt['debit_line_vals'][
+                                                                     'balance'] * self.purchase_line_id.order_id.purchase_manual_currency_rate
+
             else:
                 rslt['credit_line_vals']['amount_currency'] = company_currency._convert(
                     rslt['credit_line_vals']['balance'],
@@ -243,7 +268,11 @@ class stock_move(models.Model):
             # done, then date of actual move processing. See:
             # https://github.com/odoo/odoo/blob/2f789b6863407e63f90b3a2d4cc3be09815f7002/addons/stock/models/stock_move.py#L36
             if order.purchase_manual_currency_rate_active:
-                price_unit = price_unit / order.purchase_manual_currency_rate
+                is_inverted_rate = self.env['ir.config_parameter'].sudo().get_param("bi_manual_currency_exchange_rate.inverted_rate")
+                if is_inverted_rate:
+                    price_unit = price_unit * order.purchase_manual_currency_rate
+                else:
+                    price_unit = price_unit / order.purchase_manual_currency_rate
             else:
                 price_unit = order.currency_id._convert(
                     price_unit, order.company_id.currency_id, order.company_id, fields.Date.context_today(self), round=False)
@@ -259,7 +288,7 @@ class InheritStockValuationlayer(models.Model):
 
 class account_invoice_line(models.Model):
     _inherit = 'account.move.line'
-
+    
     @api.depends('product_id', 'product_uom_id')
     def _compute_price_unit(self):
         for line in self:
@@ -295,7 +324,17 @@ class account_invoice_line(models.Model):
             )
         for line in self:
             if line.move_id.manual_currency_rate_active:
-                line.currency_rate = line.move_id.manual_currency_rate or 1.0
+                is_inverted_rate = self.env['ir.config_parameter'].sudo().get_param("bi_manual_currency_exchange_rate.inverted_rate")
+                if is_inverted_rate:
+                    rate = line.move_id.manual_currency_rate
+                    
+                    if not rate:
+                        raise UserError(
+                        _('The Exchange Rate field is required. Please enter the rate first before adding the products.'))
+                    
+                    line.currency_rate = (1/rate)
+                else:
+                    line.currency_rate = line.move_id.manual_currency_rate or 1.0
             else:
                 line.currency_rate = get_rate(
                     from_currency=line.company_currency_id,
@@ -306,6 +345,7 @@ class account_invoice_line(models.Model):
 
     @api.model
     def _prepare_move_line_residual_amounts(self, aml_values, counterpart_currency, shadowed_aml_values=None, other_aml_values=None):
+
         """ Prepare the available residual amounts for each currency.
         :param aml_values: The values of account.move.line to consider.
         :param counterpart_currency: The currency of the opposite line this line will be reconciled with.
@@ -368,6 +408,7 @@ class account_invoice_line(models.Model):
                 'rate': new_rate,
             }
 
+
         if currency == company_currency \
             and is_rec_pay_account \
             and not has_zero_residual \
@@ -386,7 +427,12 @@ class account_invoice_line(models.Model):
             and currency != company_currency \
             and not has_zero_residual_currency:
             if aml.move_id.manual_currency_rate_active and aml.move_id.manual_currency_rate:
-                new_rate = aml.move_id.manual_currency_rate or False
+                is_inverted_rate = self.env['ir.config_parameter'].sudo().get_param("bi_manual_currency_exchange_rate.inverted_rate")
+                if is_inverted_rate:
+                    new_rate = get_accounting_rate(aml, currency)  
+                else:
+                    new_rate = aml.move_id.manual_currency_rate or False
+
             else:
                 new_rate = get_accounting_rate(aml, currency)  
             available_residual_per_currency[counterpart_currency] = {
@@ -668,7 +714,6 @@ class account_invoice_line(models.Model):
             res['debit_values'] = None
         if recon_currency.is_zero(recon_credit_amount) or credit_fully_matched:
             res['credit_values'] = None
-
         return res
 
     def _generate_price_difference_vals(self, layers):
@@ -855,7 +900,6 @@ class account_invoice_line(models.Model):
                 svl_vals = self._prepare_pdiff_svl_vals(layer, sign * qty_to_correct, unit_valuation_difference, price_difference_curr)
                 layer.remaining_value += svl_vals['value']
                 svl_vals_list.append(svl_vals)
-    
         return svl_vals_list, aml_vals_list
 
 class account_invoice(models.Model):
@@ -871,6 +915,10 @@ class account_invoice(models.Model):
                 if record.manual_currency_rate == 0:
                     raise UserError(
                         _('Exchange Rate Field is required , Please fill that.'))
+                is_inverted_rate = self.env['ir.config_parameter'].sudo().get_param("bi_manual_currency_exchange_rate.inverted_rate")
+                if is_inverted_rate:
+                    if record.manual_currency_rate <1 :
+                        raise UserError(_('Exchange Rate must be greater than or equal to 1 .'))
 
     @api.onchange('manual_currency_rate_active', 'currency_id')
     def check_currency_id(self):
@@ -1053,7 +1101,11 @@ class ProductProduct(models.Model):
 
         if currency != product_currency:
             if manual_currency_rate_active:
-                product_price_unit = product_price_unit * manual_currency_rate
+                is_inverted_rate = self.env['ir.config_parameter'].sudo().get_param("bi_manual_currency_exchange_rate.inverted_rate")
+                if is_inverted_rate:
+                    product_price_unit = product_price_unit / manual_currency_rate
+                else:
+                    product_price_unit = product_price_unit * manual_currency_rate
             else:
                 product_price_unit = product_currency._convert(product_price_unit, currency, company, document_date)
 
